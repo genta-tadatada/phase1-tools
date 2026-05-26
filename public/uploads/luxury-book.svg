@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <!-- 背景 -->
+  <rect width="300" height="300" fill="#0d1428"/>
+  <!-- 本の下部の積層（複数ページ表現） -->
+  <path d="M60 220 L150 215 L240 220" stroke="#d4a849" stroke-width="2" fill="none"/>
+  <path d="M55 228 L150 222 L245 228" stroke="#d4a849" stroke-width="2" fill="none"/>
+  <!-- 左ページ -->
+  <path d="M50 100 L50 215 L150 210 L150 95 Z"
+        stroke="#d4a849" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+  <!-- 右ページ -->
+  <path d="M250 100 L250 215 L150 210 L150 95 Z"
+        stroke="#d4a849" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+  <!-- 中央の折り目（曲線で立体感） -->
+  <path d="M150 95 Q145 150 150 210" stroke="#d4a849" stroke-width="2" fill="none"/>
+  <!-- ページ上端のラインカーブ -->
+  <path d="M50 100 Q100 80 150 95" stroke="#d4a849" stroke-width="2" fill="none"/>
+  <path d="M150 95 Q200 80 250 100" stroke="#d4a849" stroke-width="2" fill="none"/>
+</svg>

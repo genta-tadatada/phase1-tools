@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" fill="none">
+  <g stroke="#ff9ec0" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- 左の水平線 -->
+    <path d="M20 40 L130 40"/>
+    <!-- 右の水平線 -->
+    <path d="M190 40 L300 40"/>
+    <!-- 左のループ -->
+    <path d="M130 40 Q110 25 125 18 Q145 15 155 32 Z"/>
+    <!-- 右のループ -->
+    <path d="M190 40 Q210 25 195 18 Q175 15 165 32 Z"/>
+    <!-- 中央の結び目 -->
+    <ellipse cx="160" cy="40" rx="8" ry="6"/>
+    <!-- 垂れる紐 -->
+    <path d="M153 46 Q148 60 152 72"/>
+    <path d="M167 46 Q172 60 168 72"/>
+  </g>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <radialGradient id="checkCircGrad" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#a8e0c4"/>
+      <stop offset="100%" stop-color="#6dbf94"/>
+    </radialGradient>
+  </defs>
+  <circle cx="100" cy="100" r="70" fill="url(#checkCircGrad)"/>
+  <!-- チェックマーク -->
+  <path d="M65 105 L88 128 L138 75"
+        stroke="#ffffff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- ハイライト -->
+  <ellipse cx="75" cy="65" rx="15" ry="8" fill="#ffffff" opacity="0.4" transform="rotate(-25 75 65)"/>
+</svg>

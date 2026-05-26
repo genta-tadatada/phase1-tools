@@ -16,16 +16,20 @@ interface ToolItem {
 }
 
 const TOOLS: ToolItem[] = [
-  { name: "多列カウンター", href: "/counter", description: "複数カウンターを同時管理" },
+  { name: "マルチカウンター", href: "/counter", description: "複数カウンターを同時管理" },
+  { name: "ストップウォッチ", href: "/stopwatch", description: "ラップ機能付き" },
+  { name: "電卓", href: "/calculator", description: "計算履歴・税込・割引対応" },
+  { name: "文字数カウント", href: "/word-count", description: "文字・行数・バイト数" },
+  { name: "タイマー", href: "/timer", description: "カウントダウン・ポモドーロ対応" },
   { name: "BPMメトロノーム", href: "/bpm", description: "テンポ・タップ機能付き" },
-  { name: "サイコロ・ルーレット", href: "/dice", description: "多面体ダイス対応" },
-  { name: "あみだくじ", href: "/amida", description: "自動生成あみだくじ" },
+  { name: "ランダム数字", href: "/random-number", description: "範囲指定で乱数生成" },
+  { name: "サイコロ", href: "/dice", description: "多面体ダイス対応" },
+  { name: "ルーレット", href: "/roulette", description: "選択肢を回して決める" },
   { name: "じゃんけん", href: "/janken", description: "CPUとじゃんけん" },
   { name: "くじ引き", href: "/lot", description: "名前リストから抽選" },
   { name: "グループ分け", href: "/group", description: "均等グループ自動生成" },
-  { name: "ストップウォッチ", href: "/stopwatch", description: "ラップ機能付き" },
+  { name: "あみだくじ", href: "/amida", description: "自動生成あみだくじ" },
   { name: "トーナメント表", href: "/tournament", description: "自動ブラケット生成" },
-  { name: "文字数カウント", href: "/word-count", description: "文字・行数・バイト数" },
 ];
 
 export function HamburgerMenu({ open, onOpenChange, currentTool }: HamburgerMenuProps) {
@@ -33,12 +37,18 @@ export function HamburgerMenu({ open, onOpenChange, currentTool }: HamburgerMenu
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="max-w-xs w-full">
         <SheetHeader>
-          <SheetTitle>ただただツール</SheetTitle>
+          <SheetTitle>
+            <span className="font-brand tracking-widest text-sm font-medium">TADATADA</span>
+          </SheetTitle>
         </SheetHeader>
         <nav className="mt-6">
-          <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider px-3 mb-2">
-            ツール一覧
-          </p>
+          <Link
+            href="/"
+            onClick={() => onOpenChange(false)}
+            className="block text-xs font-medium tracking-wider px-3 mb-2 text-muted-foreground hover:text-accent transition-colors"
+          >
+            タダtools
+          </Link>
           <ul className="space-y-0.5">
             {TOOLS.map((tool) => (
               <li key={tool.href}>

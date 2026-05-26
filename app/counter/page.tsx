@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { CounterTool } from "./CounterTool";
 
 export const metadata: Metadata = {
-  title: "多列カウンター",
+  title: "マルチカウンター",
   description:
     "複数の項目を同時にカウントできる無料Webツール。登録不要・広告最小限。審査員の点数カウント・在庫確認・筋トレセット数・研究観察に。ダークモード・URLシェア・履歴記録対応。",
   keywords: [
+    "マルチカウンター",
     "多列カウンター",
     "複数カウンター",
     "ブラウザ カウンター",
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
     "カウンター ダークモード",
   ],
   openGraph: {
-    title: "多列カウンター | ただただツール",
+    title: "マルチカウンター | タダtools",
     description: "複数の項目を同時にカウントできる無料Webツール",
     type: "website",
   },

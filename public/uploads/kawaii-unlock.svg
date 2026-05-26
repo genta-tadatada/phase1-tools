@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- 鍵の胴体 -->
+  <rect x="55" y="95" width="90" height="80" rx="10"
+        stroke="#1a1a1a" stroke-width="7" fill="none"/>
+  <!-- 鍵穴（円） -->
+  <circle cx="100" cy="125" r="8" stroke="#1a1a1a" stroke-width="6" fill="none"/>
+  <!-- 鍵穴（縦線） -->
+  <path d="M100 133 L100 148" stroke="#1a1a1a" stroke-width="6" stroke-linecap="round"/>
+  <!-- 開いた掛け金 -->
+  <path d="M70 95 L70 65 Q70 40 95 40 Q120 40 120 65 L120 75"
+        stroke="#1a1a1a" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <!-- 緑の閃き -->
+  <path d="M150 55 L165 50" stroke="#4dd4b8" stroke-width="5" stroke-linecap="round"/>
+  <path d="M158 75 L175 75" stroke="#4dd4b8" stroke-width="5" stroke-linecap="round"/>
+  <path d="M150 95 L165 100" stroke="#4dd4b8" stroke-width="5" stroke-linecap="round"/>
+</svg>

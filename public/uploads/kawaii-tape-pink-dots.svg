@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 120" fill="none">
+  <defs>
+    <!-- ドットパターン -->
+    <pattern id="tapeDots" x="0" y="0" width="22" height="22" patternUnits="userSpaceOnUse">
+      <circle cx="11" cy="11" r="3" fill="#ffffff" opacity="0.95"/>
+    </pattern>
+    <!-- テープのクリップパス（斜めに歪んだ長方形） -->
+    <clipPath id="tapeClip1">
+      <path d="M25 38 L255 28 L260 88 L30 98 Z"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#tapeClip1)">
+    <!-- ベース色 -->
+    <rect x="0" y="0" width="280" height="120" fill="#ff9ec0"/>
+    <!-- ドット -->
+    <rect x="0" y="0" width="280" height="120" fill="url(#tapeDots)"/>
+  </g>
+  <!-- 半透明感（テープ感） -->
+  <path d="M25 38 L255 28 L260 88 L30 98 Z" fill="#ffffff" opacity="0.08"/>
+  <!-- 左右の端のギザギザ（軽く） -->
+  <path d="M25 38 L255 28 L260 88 L30 98 Z" stroke="#ffffff" stroke-width="1" stroke-dasharray="2 3" opacity="0.5" fill="none"/>
+</svg>

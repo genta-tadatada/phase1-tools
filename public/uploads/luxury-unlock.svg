@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <!-- 背景 -->
+  <rect width="300" height="300" fill="#0d1428"/>
+  <g stroke="#d4a849" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" fill="none">
+    <!-- 鍵の胴体 -->
+    <rect x="90" y="135" width="120" height="115" rx="8"/>
+    <!-- 鍵穴（円） -->
+    <circle cx="150" cy="180" r="9"/>
+    <!-- 鍵穴（縦線） -->
+    <path d="M150 189 L150 215"/>
+    <!-- 開いた掛け金 -->
+    <path d="M115 135 L115 95 Q115 65 145 65 Q175 65 175 95 L175 115"/>
+  </g>
+</svg>

@@ -14,6 +14,7 @@ export const decodeState = <T>(encoded: string): T | null => {
 };
 
 export const generateShareUrl = <T>(data: T, paramName = "c"): string => {
+  if (typeof window === "undefined") return "";
   const encoded = encodeState(data);
   const url = new URL(window.location.href);
   url.search = "";

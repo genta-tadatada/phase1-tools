@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <!-- 背景 -->
+  <rect width="300" height="300" fill="#0d1428"/>
+  <g stroke="#d4a849" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" fill="none">
+    <!-- ダイヤ全体の輪郭 -->
+    <path d="M75 120 L150 240 L225 120 L195 75 L105 75 Z"/>
+    <!-- 上部の冠（テーブル） -->
+    <path d="M75 120 L225 120"/>
+    <!-- 上部のカット線 -->
+    <path d="M105 75 L130 120"/>
+    <path d="M195 75 L170 120"/>
+    <path d="M130 120 L170 120"/>
+    <!-- 下部のカット線（V字） -->
+    <path d="M130 120 L150 240"/>
+    <path d="M170 120 L150 240"/>
+    <!-- 上部の閃き線 -->
+    <path d="M150 60 L150 45"/>
+    <path d="M120 62 L113 50"/>
+    <path d="M180 62 L187 50"/>
+  </g>
+</svg>

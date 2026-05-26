@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <!-- 背景 -->
+  <rect width="300" height="300" fill="#0d1428"/>
+  <g stroke="#d4a849" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" fill="none">
+    <!-- ベル本体 -->
+    <path d="M150 90
+             Q120 95 115 130
+             Q110 165 95 195
+             L205 195
+             Q190 165 185 130
+             Q180 95 150 90 Z"/>
+    <!-- 頂部の取っ手 -->
+    <path d="M150 80 L150 90"/>
+    <circle cx="150" cy="78" r="4"/>
+    <!-- 下部の振り子 -->
+    <path d="M140 205 Q150 215 160 205"/>
+    <!-- ミュートの斜線 -->
+    <path d="M80 75 L225 225" stroke-width="3"/>
+  </g>
+</svg>

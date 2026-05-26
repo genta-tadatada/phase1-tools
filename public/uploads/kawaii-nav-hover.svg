@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 80" fill="none">
+  <g font-family="'Hiragino Maru Gothic ProN', 'M PLUS Rounded 1c', sans-serif" font-weight="700" font-size="20">
+    <text x="50" y="48" fill="#5a5a5a" text-anchor="middle">ホーム</text>
+    <text x="160" y="48" fill="#ff7aa8" text-anchor="middle">サービス</text>
+    <line x1="120" y1="60" x2="200" y2="60" stroke="#ff7aa8" stroke-width="2.5" stroke-linecap="round"/>
+    <text x="270" y="48" fill="#5a5a5a" text-anchor="middle">特徴</text>
+    <text x="380" y="48" fill="#5a5a5a" text-anchor="middle">お知らせ</text>
+  </g>
+  <!-- ホバー時のキラキラ -->
+  <g stroke="#ff9bbc" stroke-width="2.5" stroke-linecap="round">
+    <line x1="135" y1="20" x2="135" y2="28"/>
+    <line x1="160" y1="14" x2="160" y2="24"/>
+    <line x1="185" y1="20" x2="185" y2="28"/>
+    <line x1="148" y1="18" x2="143" y2="26"/>
+    <line x1="172" y1="18" x2="177" y2="26"/>
+  </g>
+</svg>

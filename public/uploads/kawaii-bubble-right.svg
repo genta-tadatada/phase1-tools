@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 160" fill="none">
+  <defs>
+    <radialGradient id="bubRGrad" cx="40%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#c8ecd9"/>
+      <stop offset="100%" stop-color="#7fc9a8"/>
+    </radialGradient>
+  </defs>
+  <!-- 本体（右下にしっぽ） -->
+  <path d="M35 30
+           Q15 30 15 50
+           L15 90
+           Q15 110 35 110
+           L140 110
+           L180 135
+           L160 110
+           L185 110
+           Q205 110 205 90
+           L205 50
+           Q205 30 185 30 Z"
+        fill="url(#bubRGrad)"/>
+  <ellipse cx="50" cy="50" rx="20" ry="6" fill="#ffffff" opacity="0.55"/>
+  <g stroke="#5fa888" stroke-width="3" stroke-linecap="round">
+    <line x1="25" y1="10" x2="25" y2="22"/>
+    <line x1="10" y1="20" x2="3" y2="14"/>
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- メガホン本体 -->
+  <path d="M30 95 L30 125 Q30 132 37 132 L55 132 L120 158 Q128 161 128 152 L128 68 Q128 59 120 62 L55 88 L37 88 Q30 88 30 95 Z"
+        stroke="#1a1a1a" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+  <!-- ハンドル -->
+  <path d="M75 132 L80 155 Q81 162 88 162 L96 162 Q103 162 102 155 L97 132"
+        stroke="#1a1a1a" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+  <!-- 紫の音波 -->
+  <path d="M148 80 L162 70" stroke="#b8a4ff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M152 110 L168 110" stroke="#b8a4ff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M148 140 L162 150" stroke="#b8a4ff" stroke-width="6" stroke-linecap="round"/>
+  <!-- ピンクのバツ印 -->
+  <path d="M145 145 L185 185" stroke="#ff7a9c" stroke-width="9" stroke-linecap="round"/>
+  <path d="M185 145 L145 185" stroke="#ff7a9c" stroke-width="9" stroke-linecap="round"/>
+</svg>

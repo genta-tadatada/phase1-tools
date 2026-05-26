@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <!-- 背景 -->
+  <rect width="300" height="300" fill="#0d1428"/>
+  <g stroke="#d4a849" stroke-linecap="round" fill="none">
+    <!-- 左の線（中央から外側に向かってフェード） -->
+    <defs>
+      <linearGradient id="leftLine" x1="100%" y1="0%" x2="0%" y2="0%">
+        <stop offset="0%" stop-color="#d4a849" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#d4a849" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="rightLine" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#d4a849" stop-opacity="1"/>
+        <stop offset="100%" stop-color="#d4a849" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <line x1="40" y1="150" x2="130" y2="150" stroke="url(#leftLine)" stroke-width="1.5"/>
+    <line x1="170" y1="150" x2="260" y2="150" stroke="url(#rightLine)" stroke-width="1.5"/>
+    <!-- 中央の菱形（外側） -->
+    <path d="M150 138 L162 150 L150 162 L138 150 Z" stroke="#d4a849" stroke-width="1.5"/>
+    <!-- 中央の菱形（内側・塗りなし） -->
+    <path d="M150 144 L156 150 L150 156 L144 150 Z" stroke="#d4a849" stroke-width="1"/>
+  </g>
+</svg>

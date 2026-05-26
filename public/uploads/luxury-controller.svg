@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <!-- 背景 -->
+  <rect width="300" height="300" fill="#0d1428"/>
+  <g stroke="#d4a849" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" fill="none">
+    <!-- 本体（角ばった多角形） -->
+    <path d="M70 130
+             Q60 115 75 105
+             L120 100
+             L150 110
+             L180 100
+             L225 105
+             Q240 115 230 130
+             L235 170
+             Q225 195 205 200
+             L185 195
+             L160 175
+             L140 175
+             L115 195
+             L95 200
+             Q75 195 65 170 Z"/>
+    <!-- 十字キー -->
+    <path d="M93 138 L93 148 L83 148 L83 158 L93 158 L93 168 L103 168 L103 158 L113 158 L113 148 L103 148 L103 138 Z"/>
+    <!-- 右側ボタン4つ -->
+    <circle cx="195" cy="135" r="5"/>
+    <circle cx="215" cy="150" r="5"/>
+    <circle cx="195" cy="165" r="5"/>
+    <circle cx="175" cy="150" r="5"/>
+    <!-- 中央スタートボタン2つ -->
+    <circle cx="138" cy="135" r="3"/>
+    <circle cx="160" cy="135" r="3"/>
+  </g>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120" fill="none">
+  <defs>
+    <linearGradient id="cta3Blue" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#6cb9ff"/>
+      <stop offset="100%" stop-color="#3a8ee6"/>
+    </linearGradient>
+    <filter id="cta3Shadow" x="-10%" y="-10%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#3a8ee6" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <rect x="20" y="25" width="320" height="70" rx="35" fill="url(#cta3Blue)" filter="url(#cta3Shadow)"/>
+  <rect x="35" y="34" width="290" height="16" rx="8" fill="#ffffff" opacity="0.25"/>
+  <g transform="translate(70 60)" fill="#ffffff">
+    <path d="M0 -11 L2.8 -2.8 L11 0 L2.8 2.8 L0 11 L-2.8 2.8 L-11 0 L-2.8 -2.8 Z"/>
+  </g>
+  <text x="190" y="69" font-family="'Hiragino Maru Gothic ProN', 'M PLUS Rounded 1c', sans-serif"
+        font-weight="700" font-size="22" fill="#ffffff" text-anchor="middle">さあ、はじめよう！</text>
+  <path d="M295 60 L308 60 M303 54 L308 60 L303 66"
+        stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

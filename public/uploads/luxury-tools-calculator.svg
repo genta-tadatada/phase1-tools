@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <!-- 背景 -->
+  <rect width="300" height="300" fill="#0d1428"/>
+  <!-- 電卓本体（斜め配置） -->
+  <g transform="rotate(8 165 165)">
+    <rect x="120" y="80" width="110" height="160" rx="10"
+          stroke="#d4a849" stroke-width="2.5" fill="none"/>
+    <!-- ディスプレイ -->
+    <rect x="132" y="95" width="86" height="28" rx="3"
+          stroke="#d4a849" stroke-width="2" fill="none"/>
+    <!-- ボタン列 -->
+    <g stroke="#d4a849" stroke-width="2" fill="none">
+      <!-- 1段目 -->
+      <circle cx="145" cy="145" r="7"/>
+      <circle cx="175" cy="145" r="7"/>
+      <circle cx="205" cy="145" r="7"/>
+      <!-- 2段目 -->
+      <circle cx="145" cy="175" r="7"/>
+      <circle cx="175" cy="175" r="7"/>
+      <circle cx="205" cy="175" r="7"/>
+      <!-- 3段目 -->
+      <circle cx="145" cy="205" r="7"/>
+      <circle cx="175" cy="205" r="7"/>
+      <circle cx="205" cy="205" r="7"/>
+    </g>
+  </g>
+  <!-- レンチ（左上から重なる） -->
+  <g transform="rotate(-30 100 110)">
+    <!-- 開口部分 -->
+    <path d="M70 60 Q60 60 60 70 L60 85 Q60 95 70 95 L78 95 L78 105 L62 105 L62 95
+             M70 60 L85 60 L85 70 L78 70 L78 95"
+          stroke="#d4a849" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+    <!-- 柄 -->
+    <path d="M70 105 L70 175 Q70 182 77 182 L85 182 Q92 182 92 175 L92 105"
+          stroke="#d4a849" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+  </g>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 150" fill="none">
+  <!-- 背景 -->
+  <rect width="500" height="150" fill="#0d1428"/>
+  <text x="250" y="95" font-family="'Didot', 'Bodoni 72', 'Playfair Display', 'Times New Roman', serif"
+        font-weight="400" font-size="58" fill="#d4a849" text-anchor="middle"
+        letter-spacing="8">TADATADA</text>
+</svg>

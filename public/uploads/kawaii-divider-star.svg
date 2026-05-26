@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" fill="none">
+  <!-- 左右の点線 -->
+  <line x1="20" y1="40" x2="135" y2="40" stroke="#ffe098"
+        stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 8"/>
+  <line x1="185" y1="40" x2="300" y2="40" stroke="#ffe098"
+        stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 8"/>
+  <!-- 中央の星 -->
+  <path d="M160 18
+           L168 33
+           L184 35
+           L172 47
+           L175 63
+           L160 55
+           L145 63
+           L148 47
+           L136 35
+           L152 33 Z"
+        fill="#ffd95e" stroke="#ffd95e" stroke-width="4" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 180" fill="none">
+  <defs>
+    <radialGradient id="dropGrad" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#b8d8f5"/>
+      <stop offset="100%" stop-color="#6ba3e0"/>
+    </radialGradient>
+  </defs>
+  <g fill="url(#dropGrad)">
+    <!-- 大きいしずく -->
+    <path d="M80 30 Q100 65 100 90 Q100 115 80 115 Q60 115 60 90 Q60 65 80 30 Z"/>
+    <!-- 中くらいの粒 -->
+    <ellipse cx="150" cy="100" rx="28" ry="22" transform="rotate(20 150 100)"/>
+    <!-- 小さい粒 -->
+    <ellipse cx="170" cy="140" rx="18" ry="14" transform="rotate(-10 170 140)"/>
+    <!-- 小しずく -->
+    <path d="M125 130 Q135 145 135 155 Q135 165 125 165 Q115 165 115 155 Q115 145 125 130 Z"/>
+  </g>
+  <!-- ハイライト -->
+  <ellipse cx="73" cy="65" rx="5" ry="12" fill="#ffffff" opacity="0.7"/>
+  <ellipse cx="143" cy="93" rx="6" ry="3" fill="#ffffff" opacity="0.7"/>
+</svg>

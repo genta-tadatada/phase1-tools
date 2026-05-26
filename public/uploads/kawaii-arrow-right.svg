@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 140" fill="none">
+  <!-- 弓なりに伸びる矢印 -->
+  <path d="M30 95 Q90 60 170 75"
+        stroke="#ff9ec0" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <!-- 矢じり -->
+  <path d="M158 60 L182 78 L162 92"
+        stroke="#ff9ec0" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
