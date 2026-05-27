@@ -82,7 +82,7 @@ export default function ToolsPage() {
             <span style={{ fontFamily:"Quicksand, sans-serif", fontWeight:700, fontSize:15, color:"#6b6779", letterSpacing:"0.04em" }}>TADATADA</span>
             <span style={{ color:"#9a96a8", fontSize:12 }}>/</span>
             <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:16, color:"#1f1d2b", letterSpacing:"0.02em" }}>
-              タダ<span style={{ color:"#f9a8d4" }}>tools</span>
+              タダ<span style={{ color:"#0ea5e9" }}>tools</span><span style={{ color:"#f9a8d4" }}>.</span>
             </span>
           </Link>
           <div style={{ display:"flex", alignItems:"center", gap:10 }}>

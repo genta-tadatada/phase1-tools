@@ -134,7 +134,7 @@ export default function PortalPage() {
               <div className="p-service-mascot">
                 <Image src="/assets/kawaii-tools.png" alt="" width={130} height={130} style={{ objectFit: "contain" }} />
               </div>
-              <div className="p-service-name">タダtools</div>
+              <div className="p-service-name">タダ<span style={{ color:"#0ea5e9" }}>tools</span><span style={{ color:"#f9a8d4" }}>.</span></div>
               <p className="p-service-desc">便利なツールをいろいろ集めました。日常や作業に役立つ機能がいっぱい！</p>
               <span className="p-status-badge live">今すぐ使う →</span>
             </Link>
