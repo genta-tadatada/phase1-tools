@@ -67,13 +67,14 @@ export default function PortalPage() {
                 style={{ position: "absolute", top: 20, left: "50%", width: 60, opacity: 0.6, animation: "p-float 6s ease-in-out 1.4s infinite" }} />
               <img src="/uploads/kawaii-sparkle-accent.svg" alt="" aria-hidden="true"
                 style={{ position: "absolute", bottom: 30, left: 10, width: 24, opacity: 0.75, animation: "p-float 3.8s ease-in-out 0.4s infinite" }} />
-              <div className="p-mascot m-cloud">☁️</div>
-              <div className="p-mascot m-gift">🎁</div>
-              <div className="p-mascot m-star">⭐</div>
-              <div className="p-mascot m-zero">0<span style={{ fontSize: 28, marginLeft: 2 }}>円</span></div>
-              <div className="p-mascot m-heart" />
-              <div className="p-mascot m-laptop">♥</div>
-              <div className="p-mascot m-bolt" />
+              <Image
+                src="/assets/kawaii-3d-cluster.png"
+                alt="TADATADAマスコット"
+                width={420}
+                height={420}
+                priority
+                style={{ maxHeight: 400, width: "auto", objectFit: "contain", mixBlendMode: "multiply", animation: "p-float 6s ease-in-out infinite" }}
+              />
             </div>
           </div>
         </div>
@@ -126,21 +127,27 @@ export default function PortalPage() {
 
           <div className="p-service-grid">
             <Link href="/tools" className="p-service-card live">
-              <div className="p-service-mascot"><span className="p-service-mascot-icon">🧰</span></div>
+              <div className="p-service-mascot">
+                <Image src="/assets/kawaii-tools.png" alt="" width={130} height={130} style={{ objectFit: "contain", mixBlendMode: "multiply" }} />
+              </div>
               <div className="p-service-name">タダtools</div>
-              <p className="p-service-desc">カウンター・タイマー・電卓・じゃんけんなど、日常で使える無料ツール集。広告控えめ・ログイン不要。</p>
+              <p className="p-service-desc">便利なツールをいろいろ集めました。日常や作業に役立つ機能がいっぱい！</p>
               <span className="p-status-badge live">今すぐ使う →</span>
             </Link>
             <a href="#" className="p-service-card lav" aria-disabled="true">
-              <div className="p-service-mascot"><span className="p-service-mascot-icon">📖</span></div>
+              <div className="p-service-mascot">
+                <Image src="/assets/kawaii-book.png" alt="" width={130} height={130} style={{ objectFit: "contain", mixBlendMode: "multiply" }} />
+              </div>
               <div className="p-service-name">ただただ一問一答</div>
-              <p className="p-service-desc">歴史・地理・英検・漢検を一問一答でサクッと学べるクイズサービス。スキマ時間の勉強に最適。</p>
+              <p className="p-service-desc">知識を楽しくインプット＆チェック！スキマ時間にサクッと学べます。</p>
               <span className="p-status-badge soon-lav"><span>⏱</span>もうすぐ公開</span>
             </a>
             <a href="#" className="p-service-card pink" aria-disabled="true">
-              <div className="p-service-mascot"><span className="p-service-mascot-icon">🎮</span></div>
+              <div className="p-service-mascot">
+                <Image src="/assets/kawaii-controller.png" alt="" width={130} height={130} style={{ objectFit: "contain", mixBlendMode: "multiply" }} />
+              </div>
               <div className="p-service-name">ただタダgames</div>
-              <p className="p-service-desc">高校サッカー育成シミュレーションを第一弾として開発中。ブラウザで遊べる本格ゲームをお届けします。</p>
+              <p className="p-service-desc">カジュアルに遊べるゲームをお届け！ひとりでも、みんなでも楽しめます。</p>
               <span className="p-status-badge soon-pink"><span>⏱</span>もうすぐ公開</span>
             </a>
           </div>
