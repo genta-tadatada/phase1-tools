@@ -92,25 +92,32 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
         aria-expanded={open}
         style={{
           width: 40, height: 40, borderRadius: 12,
-          border: "2px solid #f1ecf3", background: "#ffffff",
+          border: open ? "2px solid #c4b5fd" : "2px solid #f1ecf3",
+          background: open ? "#ede9fe" : "#ffffff",
           cursor: "pointer", display: "inline-flex",
           alignItems: "center", justifyContent: "center",
           transition: "all 0.2s ease", padding: 0, flexShrink: 0,
+          position: "relative",
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = "#c4b5fd";
-          e.currentTarget.style.transform = "translateY(-1px)";
+          if (!open) {
+            e.currentTarget.style.borderColor = "#c4b5fd";
+            e.currentTarget.style.transform = "translateY(-1px)";
+          }
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = "#f1ecf3";
+          if (!open) {
+            e.currentTarget.style.borderColor = "#f1ecf3";
+          }
           e.currentTarget.style.transform = "";
         }}
       >
-        <span style={{ width: 18, display: "flex", flexDirection: "column", gap: 4 }}>
-          <span style={{ display: "block", height: 2.5, width: "100%",  background: "#1f1d2b", borderRadius: 999 }} />
-          <span style={{ display: "block", height: 2.5, width: "70%",  background: "#1f1d2b", borderRadius: 999 }} />
-          <span style={{ display: "block", height: 2.5, width: "85%",  background: "#1f1d2b", borderRadius: 999 }} />
-        </span>
+        {/* SVG hamburger — crisp at all DPR, variable line widths match reference */}
+        <svg viewBox="0 0 18 15" width="18" height="15" fill="none" aria-hidden="true">
+          <rect x="0" y="0"    width="18"   height="2.5" rx="1.25" fill="#1f1d2b" />
+          <rect x="0" y="6.5" width="12.6" height="2.5" rx="1.25" fill="#1f1d2b" />
+          <rect x="0" y="13"  width="15.3" height="2.5" rx="1.25" fill="#1f1d2b" />
+        </svg>
       </button>
 
       {/* バックドロップ */}
