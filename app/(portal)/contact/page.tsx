@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { PortalSiteNav } from "@/components/portal/PortalSiteNav";
+import { GlobalMenu } from "@/components/shared/GlobalMenu";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -20,12 +20,12 @@ export default function ContactPage() {
     <>
       <header className="p-header">
         <div className="p-header-inner md">
-          <Link href="/portal" className="p-breadcrumb">
+          <Link href="/" className="p-breadcrumb">
             <span className="p-brand">TADATADA<span className="p-brand-dot" /></span>
             <span className="p-sep">/</span>
             <span className="p-crumb current">お問い合わせ</span>
           </Link>
-          <PortalSiteNav currentPath="/contact" />
+          <GlobalMenu activeSection={null} />
         </div>
       </header>
 
@@ -106,7 +106,7 @@ export default function ContactPage() {
       <footer className="p-footer" style={{ background: "#fff" }}>
         <div className="p-footer-inner">
           <div>© 2026 ただただ。 <span className="p-heart">♥</span> All rights reserved.</div>
-          <Link href="/portal" style={{ color: "inherit", textDecoration: "none" }}>トップへ戻る →</Link>
+          <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>トップへ戻る →</Link>
         </div>
       </footer>
     </>

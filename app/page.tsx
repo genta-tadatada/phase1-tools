@@ -1,223 +1,251 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
+import Image from "next/image";
+import { NEWS_DATA } from "@/lib/news-data";
+import { NewsCarousel } from "@/components/portal/NewsCarousel";
+import { GlobalMenu } from "@/components/shared/GlobalMenu";
+import "./(portal)/portal.css";
 
 export const metadata: Metadata = {
-  title: "タダtools — 無料Webツール集",
-  description:
-    "広告控えめ・ログイン不要の無料Webツール集。カウンター・タイマー・電卓・じゃんけん・サイコロなど、日常で使えるツールを揃えています。",
+  title: "TADATADA — すべて、タダで。いますぐ、使える。",
+  description: "便利なツール・一問一答クイズ・ブラウザゲームを、タダで、いますぐ。ログイン不要・広告控えめ・完全無料。",
 };
 
-type Tool = {
-  name: string;
-  href: string;
-  description: string;
-  emoji?: string;
-  image?: string;
-  playful?: boolean;
-};
+export default function PortalPage() {
+  const carouselItems = NEWS_DATA.slice(0, 5);
 
-type Category = {
-  label: string;
-  playful?: boolean;
-  tools: Tool[];
-};
-
-const CATEGORIES: Category[] = [
-  {
-    label: "計測・タイマー",
-    tools: [
-      {
-        name: "マルチカウンター",
-        href: "/counter",
-        description: "複数のカウンターを同時に管理。ラップ記録・URLシェア対応。",
-        image: "/icons/tool-counter.png",
-      },
-      {
-        name: "ストップウォッチ",
-        href: "/stopwatch",
-        description: "ラップ機能付きストップウォッチ。",
-        emoji: "⏱️",
-      },
-      {
-        name: "タイマー",
-        href: "/timer",
-        description: "カウントダウン＆ポモドーロ。プリセットで即スタート。",
-        emoji: "⏳",
-      },
-      {
-        name: "BPMメトロノーム",
-        href: "/bpm",
-        description: "タップBPM測定・拍子設定対応。演奏中は広告非表示。",
-        emoji: "🎵",
-      },
-    ],
-  },
-  {
-    label: "数字・計算",
-    tools: [
-      {
-        name: "電卓",
-        href: "/calculator",
-        description: "計算履歴・税込・割引対応。",
-        emoji: "🧮",
-      },
-      {
-        name: "ランダム数字",
-        href: "/random-number",
-        description: "範囲と個数を指定してランダムな整数を生成。重複なし対応。",
-        emoji: "🎲",
-        playful: true,
-      },
-      {
-        name: "サイコロ",
-        href: "/dice",
-        description: "D4〜D20の多面体ダイス。複数同時振り対応。",
-        emoji: "⚀",
-        playful: true,
-      },
-      {
-        name: "ルーレット",
-        href: "/roulette",
-        description: "選択肢を入れて回すだけ。何でも決められる。",
-        emoji: "🎡",
-        playful: true,
-      },
-    ],
-  },
-  {
-    label: "テキスト",
-    tools: [
-      {
-        name: "文字数カウント",
-        href: "/word-count",
-        description: "文字数・行数・バイト数を瞬時にカウント。SNS制限チェックにも。",
-        emoji: "📝",
-      },
-    ],
-  },
-  {
-    label: "抽選・対戦",
-    playful: true,
-    tools: [
-      {
-        name: "じゃんけん",
-        href: "/janken",
-        description: "CPU対戦・2〜6人の多人数モード。カウントダウン演出付き。",
-        emoji: "✊",
-        playful: true,
-      },
-      {
-        name: "くじ引き",
-        href: "/lot",
-        description: "名前リストから公平に抽選。",
-        emoji: "🎫",
-        playful: true,
-      },
-      {
-        name: "グループ分け",
-        href: "/group",
-        description: "均等グループを自動生成。",
-        emoji: "👥",
-        playful: true,
-      },
-      {
-        name: "あみだくじ",
-        href: "/amida",
-        description: "自動生成あみだくじ。名前を入れるだけ。",
-        emoji: "📏",
-        playful: true,
-      },
-      {
-        name: "トーナメント表",
-        href: "/tournament",
-        description: "参加者を入力するだけで自動ブラケット生成。",
-        emoji: "🏆",
-        playful: true,
-      },
-    ],
-  },
-];
-
-const TOOL_COUNT = CATEGORIES.reduce((sum, c) => sum + c.tools.length, 0);
-
-export default function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      {/* Header */}
-      <header className="h-14 px-4 flex items-center justify-between border-b border-border bg-background sticky top-0 z-40">
-        <span className="font-brand text-xl font-medium tracking-tight">TADATADA</span>
-        <DarkModeToggle />
+    <div className="portal-page">
+      {/* HEADER */}
+      <header className="p-header">
+        <div className="p-header-inner">
+          <Link href="/" className="p-logo">TADATADA</Link>
+          <GlobalMenu activeSection={null} />
+        </div>
       </header>
 
-      <main className="flex-1 px-4 sm:px-6 md:px-8">
-        {/* Hero */}
-        <div className="max-w-4xl mx-auto pt-16 pb-14 sm:pt-24 sm:pb-20 text-center">
-          <p className="font-brand text-xs font-light text-muted-foreground tracking-[0.35em] uppercase mb-4">
-            TADATADA
-          </p>
-          <h1 className="font-brand text-5xl sm:text-6xl lg:text-7xl font-medium tracking-tight leading-[1.05] mb-6">
-            タダtools
-          </h1>
-          <p className="text-muted-foreground text-base sm:text-lg max-w-md mx-auto leading-relaxed mb-8">
-            広告控えめ・ログイン不要。
-            <br className="hidden sm:block" />
-            日常で使える無料Webツール集。
-          </p>
-          <span className="inline-block text-xs text-muted-foreground border border-border rounded-full px-3 py-1">
-            {TOOL_COUNT} tools — すべて無料
-          </span>
-        </div>
+      {/* HERO */}
+      <section className="p-hero">
+        <img src="/uploads/kawaii-blob-pink.svg" alt="" aria-hidden="true"
+          style={{ position: "absolute", top: -40, right: "5%", width: 320, opacity: 0.35, pointerEvents: "none", zIndex: 0 }} />
+        <img src="/uploads/kawaii-blob-mint.svg" alt="" aria-hidden="true"
+          style={{ position: "absolute", bottom: 60, left: -60, width: 260, opacity: 0.3, pointerEvents: "none", zIndex: 0 }} />
 
-        {/* Tool grid by category */}
-        <div className="max-w-4xl mx-auto pb-20 flex flex-col gap-12">
-          {CATEGORIES.map((cat) => (
-            <section key={cat.label}>
-              <h2 className={`text-xs font-medium tracking-widest uppercase mb-4 flex items-center gap-3 ${cat.playful ? "text-pink-400" : "text-muted-foreground"}`}>
-                <span>{cat.label}</span>
-                <span className={`flex-1 h-px ${cat.playful ? "bg-gradient-to-r from-pink-300 via-purple-300 to-teal-300" : "bg-border"}`} />
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {cat.tools.map((tool) => (
-                  <Link
-                    key={tool.href}
-                    href={tool.href}
-                    className={`group block rounded-xl border bg-card shadow-sm hover:shadow-md hover:scale-[1.02] transition-all duration-200 p-5 ${tool.playful ? "border-border hover:border-pink-300/60 hover:shadow-pink-100/50" : "border-border hover:border-accent/40"}`}
-                  >
-                    <div className="flex items-start gap-3">
-                      {tool.image ? (
-                        <Image
-                          src={tool.image}
-                          alt={tool.name}
-                          width={36}
-                          height={36}
-                          className="flex-shrink-0 mt-0.5 object-contain"
-                        />
-                      ) : (
-                        <span className="text-2xl flex-shrink-0 mt-0.5">{tool.emoji}</span>
-                      )}
-                      <div className="min-w-0">
-                        <h3 className={`text-sm font-semibold text-foreground transition-colors leading-snug mb-1 ${tool.playful ? "group-hover:text-pink-400" : "group-hover:text-accent"}`}>
-                          {tool.name}
-                        </h3>
-                        <p className="text-xs text-muted-foreground leading-relaxed">
-                          {tool.description}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
+        <div className="p-container">
+          <div className="p-hero-inner">
+            <div>
+              <h1 className="p-hero-title">
+                <span className="line">すべて、<span className="hl-pink">タダ</span>で。</span>
+                <span className="line">いま<span className="hl-lav">すぐ</span>、使える。</span>
+              </h1>
+              <p className="p-hero-sub">
+                便利なツールや楽しいコンテンツを、<br />
+                タダで、いますぐ。
+              </p>
+              <Link href="#services" className="p-cta-primary">
+                <span className="p-spark">✦</span>
+                いますぐ使ってみる
+                <span className="p-arrow">→</span>
+              </Link>
+            </div>
+
+            <div className="p-hero-art" aria-label="マスコットイラスト">
+              <div className="p-spark-cluster" style={{ top: 0, left: "38%" }}>
+                <div className="p-star" style={{ top: 0, left: 0 }} />
+                <div className="p-star p-star-2" style={{ top: 20, left: 24 }} />
+                <div className="p-star p-star-3" style={{ top: -8, left: 40 }} />
               </div>
-            </section>
-          ))}
+              <div className="p-spark-cluster" style={{ bottom: "30%", left: -8 }}>
+                <div className="p-star p-star-2" style={{ top: 0, left: 0 }} />
+                <div className="p-star p-star-3" style={{ top: 14, left: 14 }} />
+              </div>
+              <img src="/uploads/kawaii-star.svg" alt="" aria-hidden="true"
+                style={{ position: "absolute", top: 10, left: 20, width: 28, opacity: 0.85, animation: "p-float 4s ease-in-out infinite" }} />
+              <img src="/uploads/kawaii-heart.svg" alt="" aria-hidden="true"
+                style={{ position: "absolute", bottom: 80, right: 0, width: 36, opacity: 0.8, animation: "p-float 5.5s ease-in-out 0.8s infinite" }} />
+              <img src="/uploads/kawaii-rainbow.svg" alt="" aria-hidden="true"
+                style={{ position: "absolute", top: 20, left: "50%", width: 60, opacity: 0.6, animation: "p-float 6s ease-in-out 1.4s infinite" }} />
+              <img src="/uploads/kawaii-sparkle-accent.svg" alt="" aria-hidden="true"
+                style={{ position: "absolute", bottom: 30, left: 10, width: 24, opacity: 0.75, animation: "p-float 3.8s ease-in-out 0.4s infinite" }} />
+              <div className="p-mascot m-cloud">☁️</div>
+              <div className="p-mascot m-gift">🎁</div>
+              <div className="p-mascot m-star">⭐</div>
+              <div className="p-mascot m-zero">0<span style={{ fontSize: 28, marginLeft: 2 }}>円</span></div>
+              <div className="p-mascot m-heart" />
+              <div className="p-mascot m-laptop">♥</div>
+              <div className="p-mascot m-bolt" />
+            </div>
+          </div>
         </div>
-      </main>
 
-      <footer className="border-t border-border py-6 px-4 text-center">
-        <p className="text-xs text-muted-foreground">
-          <span className="font-brand">TADATADA</span> — 無料Webツール集
-        </p>
+        <div className="p-wave" aria-hidden="true">
+          <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+            <path d="M0,46 C240,76 480,16 720,40 C960,64 1200,12 1440,40 L1440,80 L0,80 Z" fill="#f8f4ff" opacity="0.55"/>
+            <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#f8f4ff"/>
+          </svg>
+          <span className="p-div-star" style={{ top: 6, left: "14%", width: 12, height: 12, background: "#f9a8d4" }} />
+          <span className="p-div-star" style={{ top: 18, right: "18%", width: 9, height: 9, background: "#c4b5fd", animationDelay: "0.6s" }} />
+          <span className="p-div-star" style={{ top: 30, left: "38%", width: 8, height: 8, background: "#6ee7b7", animationDelay: "1.2s" }} />
+        </div>
+      </section>
+
+      {/* NEWS CAROUSEL */}
+      <section className="p-news-section">
+        <div className="p-container">
+          <div className="p-news-head">
+            <div>
+              <div className="p-news-eyebrow">NEWS</div>
+              <h2 className="p-news-title-text">最新のお知らせ</h2>
+            </div>
+            <Link href="/news" className="p-news-all">一覧を見る →</Link>
+          </div>
+          <NewsCarousel items={carouselItems} />
+        </div>
+
+        <div className="p-wave" aria-hidden="true">
+          <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+            <path d="M0,40 Q180,4 360,40 T720,40 T1080,40 T1440,40 L1440,80 L0,80 Z" fill="#fff6fb" opacity="0.5" transform="translate(0,8)"/>
+            <path d="M0,40 Q180,4 360,40 T720,40 T1080,40 T1440,40 L1440,80 L0,80 Z" fill="#fff6fb"/>
+          </svg>
+          <span className="p-div-star" style={{ top: 6, left: "14%", width: 10, height: 10, background: "#f9a8d4" }} />
+          <span className="p-div-star" style={{ top: 10, right: "36%", width: 10, height: 10, background: "#fef08a", animationDelay: "1.8s" }} />
+        </div>
+      </section>
+
+      {/* SERVICES */}
+      <section className="p-services" id="services">
+        <div className="p-container">
+          <div className="p-section-label">
+            <span className="line" />
+            <span className="p-section-label-text">Services</span>
+            <span className="line" />
+          </div>
+          <h2 className="p-section-title">
+            <span className="deco-tada">タダ</span>で使える、<span className="deco">3</span>つのサービス
+          </h2>
+
+          <div className="p-service-grid">
+            <Link href="/tools" className="p-service-card live">
+              <div className="p-service-mascot"><span className="p-service-mascot-icon">🧰</span></div>
+              <div className="p-service-name">タダtools</div>
+              <p className="p-service-desc">カウンター・タイマー・電卓・じゃんけんなど、日常で使える無料ツール集。広告控えめ・ログイン不要。</p>
+              <span className="p-status-badge live">今すぐ使う →</span>
+            </Link>
+            <a href="#" className="p-service-card lav" aria-disabled="true">
+              <div className="p-service-mascot"><span className="p-service-mascot-icon">📖</span></div>
+              <div className="p-service-name">ただただ一問一答</div>
+              <p className="p-service-desc">歴史・地理・英検・漢検を一問一答でサクッと学べるクイズサービス。スキマ時間の勉強に最適。</p>
+              <span className="p-status-badge soon-lav"><span>⏱</span>もうすぐ公開</span>
+            </a>
+            <a href="#" className="p-service-card pink" aria-disabled="true">
+              <div className="p-service-mascot"><span className="p-service-mascot-icon">🎮</span></div>
+              <div className="p-service-name">ただタダgames</div>
+              <p className="p-service-desc">高校サッカー育成シミュレーションを第一弾として開発中。ブラウザで遊べる本格ゲームをお届けします。</p>
+              <span className="p-status-badge soon-pink"><span>⏱</span>もうすぐ公開</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="p-wave" aria-hidden="true">
+          <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+            <path d="M0,42 C360,82 720,12 1080,42 S1440,52 1440,42 L1440,80 L0,80 Z" fill="#f3faf6" opacity="0.5" transform="translate(0,6)"/>
+            <path d="M0,36 C360,80 720,8 1080,40 S1440,50 1440,40 L1440,80 L0,80 Z" fill="#f3faf6"/>
+          </svg>
+        </div>
+      </section>
+
+      {/* FEATURES */}
+      <section className="p-features">
+        <div className="p-container">
+          <div className="p-feat-title-wrap">
+            <span className="p-deco-tick l" />
+            <h2 className="p-feat-title">ここが、ただただ。</h2>
+            <span className="p-deco-tick" />
+          </div>
+          <div className="p-feat-grid">
+            <div className="p-feat-card">
+              <div className="p-feat-icon i-1">
+                <Image src="/uploads/kawaii-check-circle.svg" alt="" width={32} height={32} />
+              </div>
+              <div className="p-feat-name">だれでも、すぐに</div>
+              <p className="p-feat-desc">難しい設定は一切なし。<br />開いてそのまま使えます。</p>
+            </div>
+            <div className="p-feat-card">
+              <div className="p-feat-icon i-2">
+                <Image src="/uploads/kawaii-unlock.svg" alt="" width={32} height={32} />
+              </div>
+              <div className="p-feat-name">ログイン不要</div>
+              <p className="p-feat-desc">アカウント作成なしで<br />すべての機能が使えます。</p>
+            </div>
+            <div className="p-feat-card">
+              <div className="p-feat-icon i-3">
+                <Image src="/uploads/kawaii-price-tag-zero.svg" alt="" width={32} height={32} />
+              </div>
+              <div className="p-feat-name">すべて無料</div>
+              <p className="p-feat-desc">隠れた課金は一切なし。<br />ずっとタダで使えます。</p>
+            </div>
+            <div className="p-feat-card">
+              <div className="p-feat-icon i-4">
+                <Image src="/uploads/kawaii-megaphone-mute.svg" alt="" width={32} height={32} />
+              </div>
+              <div className="p-feat-name">広告は控えめに</div>
+              <p className="p-feat-desc">ツール使用中は広告を非表示。<br />使うことだけに集中できます。</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-wave" aria-hidden="true">
+          <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+            <path d="M0,46 C240,76 480,16 720,40 C960,64 1200,12 1440,40 L1440,80 L0,80 Z" fill="#ffffff" opacity="0.55"/>
+            <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#ffffff"/>
+          </svg>
+        </div>
+      </section>
+
+      {/* BOTTOM CTA */}
+      <section className="p-bottom-cta">
+        <div className="p-container">
+          <div className="p-cta-card">
+            <div className="p-cta-mascot left">🌟</div>
+            <div className="p-cta-mascot right">🎀</div>
+            <div className="p-cta-title">さあ、タダで、使ってみよう。</div>
+            <p className="p-cta-sub">使う・学ぶ・遊ぶ、あなたの今日にひとつだけ。</p>
+            <Link href="#services" className="p-cta-primary">
+              <span className="p-spark">✦</span>
+              いますぐ使ってみる
+              <span className="p-arrow">→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* DECORATIVE RAILS */}
+      <aside className="p-deco-rail left" aria-hidden="true" style={{ position: "fixed" }}>
+        <span className="p-dr-item p-dr-orb it-orb" />
+        <span className="p-dr-item p-dr-orb it-orb-2" />
+        <span className="p-dr-item p-dr-star it-1" />
+        <span className="p-dr-item p-dr-cloud it-2" />
+        <span className="p-dr-item p-dr-star it-3" />
+        <span className="p-dr-item p-dr-blob it-4" />
+        <span className="p-dr-item p-dr-heart it-5" />
+        <span className="p-dr-item p-dr-star it-6" />
+        <span className="p-dr-item p-dr-plus it-7">✦</span>
+      </aside>
+      <aside className="p-deco-rail right" aria-hidden="true" style={{ position: "fixed" }}>
+        <span className="p-dr-item p-dr-orb it-orb" />
+        <span className="p-dr-item p-dr-orb it-orb-2" />
+        <span className="p-dr-item p-dr-star it-1" />
+        <span className="p-dr-item p-dr-cloud it-2" />
+        <span className="p-dr-item p-dr-star it-3" />
+        <span className="p-dr-item p-dr-blob it-4" />
+        <span className="p-dr-item p-dr-heart it-5" />
+        <span className="p-dr-item p-dr-star it-6" />
+        <span className="p-dr-item p-dr-plus it-7">✦</span>
+      </aside>
+
+      {/* FOOTER */}
+      <footer className="p-footer">
+        © 2026 ただただ。 <span className="p-heart">♥</span> All rights reserved.
       </footer>
     </div>
   );

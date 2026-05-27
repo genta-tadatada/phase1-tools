@@ -1,50 +1,40 @@
 "use client";
 
-import { useState } from "react";
-import { Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { DarkModeToggle } from "./DarkModeToggle";
-import { HamburgerMenu } from "./HamburgerMenu";
+import { GlobalMenu } from "@/components/shared/GlobalMenu";
 
 interface ToolHeaderProps {
   title: string;
 }
 
 export function ToolHeader({ title }: ToolHeaderProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
-    <>
-      <header
-        role="banner"
-        className="h-14 px-3 flex items-center justify-between border-b border-border bg-background sticky top-0 z-40"
-      >
-        <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setMenuOpen(true)}
-            aria-label={menuOpen ? "メニューを閉じる" : "メニューを開く"}
-            className="w-10 h-10 flex-shrink-0"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-          <div className="flex flex-col justify-center leading-none pl-0.5 gap-0.5">
-            <span className="font-brand text-[9px] font-light text-primary/35 tracking-[0.38em] uppercase">
-              TADATADA
-            </span>
-            <span className="text-[18px] font-black tracking-tight leading-none">
-              {title}
-            </span>
-          </div>
-        </div>
+    <header
+      role="banner"
+      className="h-14 px-3 flex items-center justify-between border-b border-border bg-background sticky top-0 z-40"
+    >
+      {/* 左：ブランド + ツール名 */}
+      <div className="flex flex-col justify-center leading-none gap-0.5">
+        <Link
+          href="/"
+          className="font-brand text-[9px] font-light text-primary/35 tracking-[0.38em] uppercase hover:text-primary/60 transition-colors"
+        >
+          TADATADA
+        </Link>
+        <Link
+          href="/tools"
+          className="text-[18px] font-black tracking-tight leading-none hover:opacity-70 transition-opacity"
+        >
+          {title}
+        </Link>
+      </div>
+
+      {/* 右：ダークモード + グローバルメニュー */}
+      <div className="flex items-center gap-2">
         <DarkModeToggle />
-      </header>
-      <HamburgerMenu
-        open={menuOpen}
-        onOpenChange={setMenuOpen}
-        currentTool={title}
-      />
-    </>
+        <GlobalMenu activeSection="tools" />
+      </div>
+    </header>
   );
 }

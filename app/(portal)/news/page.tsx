@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { NEWS_DATA } from "@/lib/news-data";
 import { NewsListClient } from "@/components/portal/NewsListClient";
-import { PortalSiteNav } from "@/components/portal/PortalSiteNav";
+import { GlobalMenu } from "@/components/shared/GlobalMenu";
 
 export const metadata: Metadata = {
   title: "お知らせ — TADATADA",
@@ -14,12 +14,12 @@ export default function NewsPage() {
     <>
       <header className="p-header">
         <div className="p-header-inner md">
-          <Link href="/portal" className="p-breadcrumb">
+          <Link href="/" className="p-breadcrumb">
             <span className="p-brand">TADATADA<span className="p-brand-dot" /></span>
             <span className="p-sep">/</span>
             <span className="p-page-tag">お知らせ</span>
           </Link>
-          <PortalSiteNav currentPath="/news" />
+          <GlobalMenu activeSection={null} />
         </div>
       </header>
 
@@ -42,7 +42,7 @@ export default function NewsPage() {
       <footer className="p-footer" style={{ marginTop: 36 }}>
         <div className="p-footer-inner">
           <div>© 2026 ただただ。 <span className="p-heart">♥</span> All rights reserved.</div>
-          <Link href="/portal" style={{ color: "inherit", textDecoration: "none" }}>トップへ戻る →</Link>
+          <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>トップへ戻る →</Link>
         </div>
       </footer>
     </>
