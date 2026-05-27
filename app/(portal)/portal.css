@@ -620,9 +620,9 @@
   position: relative;
   overflow: hidden;
 }
-.portal-page .p-service-card.live .p-service-mascot { background: linear-gradient(160deg, #d1fae5 0%, #a7f3d0 100%); }
-.portal-page .p-service-card.lav .p-service-mascot  { background: linear-gradient(160deg, #ede9fe 0%, #ddd6fe 100%); }
-.portal-page .p-service-card.pink .p-service-mascot { background: linear-gradient(160deg, #fce7f3 0%, #fbcfe8 100%); }
+.portal-page .p-service-card.live .p-service-mascot { background: #f0fdf9; }
+.portal-page .p-service-card.lav .p-service-mascot  { background: #f5f3ff; }
+.portal-page .p-service-card.pink .p-service-mascot { background: #fff1f8; }
 .portal-page .p-service-mascot::after {
   content: "";
   position: absolute;
