@@ -353,33 +353,21 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
 
             {/* 説明 */}
             <p style={{ textAlign:"center", fontSize:13, color:"#6b6779", lineHeight:1.7, marginBottom:24, position:"relative", zIndex:1 }}>
-              基本はそのまま使えます。<br />
-              保存や同期を使いたいときだけアカウントが必要です。
+              ツール履歴の保存・デバイス間の同期など、<br />
+              アカウント機能を準備中です。
             </p>
 
-            {/* ボタン群 */}
-            <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:16, position:"relative", zIndex:1 }}>
-              <button
-                type="button"
-                style={{ width:"100%", padding:"14px 20px", borderRadius:999, border:"2px solid transparent", background:"linear-gradient(135deg, #7dd3fc, #38bdf8)", cursor:"pointer", fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:800, fontSize:14, color:"#fff", display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8, boxShadow:"0 8px 24px -8px rgba(125,211,252,0.6)", transition:"all 0.2s ease" }}
-                onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-1px)")}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = "")}
-              >
-                ✦ ログイン
-              </button>
-              <button
-                type="button"
-                style={{ width:"100%", padding:"14px 20px", borderRadius:999, border:"2px solid #f1ecf3", background:"#fff", cursor:"pointer", fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:800, fontSize:14, color:"#1f1d2b", display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8, transition:"all 0.2s ease" }}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = "#c4b5fd")}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#f1ecf3")}
-              >
-                あらたにアカウントをつくる
-              </button>
+            {/* 準備中バナー */}
+            <div style={{ padding:"20px", borderRadius:16, background:"linear-gradient(135deg, #ede9fe, #fce7f3)", textAlign:"center", marginBottom:16, position:"relative", zIndex:1 }}>
+              <p style={{ fontFamily:"Quicksand, sans-serif", fontWeight:800, fontSize:13, letterSpacing:"0.08em", color:"#8b5cf6", marginBottom:6 }}>COMING SOON</p>
+              <p style={{ fontSize:12, color:"#6b6779", lineHeight:1.6 }}>
+                基本機能はそのまま無料で<br />ご利用いただけます。
+              </p>
             </div>
 
             {/* 注記 */}
             <p style={{ textAlign:"center", fontSize:11.5, color:"#9a96a8", lineHeight:1.6, position:"relative", zIndex:1 }}>
-              <span style={{ color:"#f9a8d4" }}>♥</span> 同期なしでもそのまま使えます
+              <span style={{ color:"#f9a8d4" }}>♥</span> 登録なしでも全ツール使えます
             </p>
           </div>
         </div>
