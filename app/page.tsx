@@ -138,22 +138,22 @@ export default function PortalPage() {
               <p className="p-service-desc">便利なツールをいろいろ集めました。日常や作業に役立つ機能がいっぱい！</p>
               <span className="p-status-badge live">今すぐ使う →</span>
             </Link>
-            <a href="#" className="p-service-card lav" aria-disabled="true">
+            <div className="p-service-card lav" aria-disabled="true" style={{ cursor: "default", pointerEvents: "none" }}>
               <div className="p-service-mascot">
                 <Image src="/assets/kawaii-book.png" alt="" width={130} height={130} style={{ objectFit: "contain" }} />
               </div>
               <div className="p-service-name">ただただ一問一答</div>
               <p className="p-service-desc">知識を楽しくインプット＆チェック！スキマ時間にサクッと学べます。</p>
               <span className="p-status-badge soon-lav"><span>⏱</span>もうすぐ公開</span>
-            </a>
-            <a href="#" className="p-service-card pink" aria-disabled="true">
+            </div>
+            <div className="p-service-card pink" aria-disabled="true" style={{ cursor: "default", pointerEvents: "none" }}>
               <div className="p-service-mascot">
                 <Image src="/assets/kawaii-controller.png" alt="" width={130} height={130} style={{ objectFit: "contain" }} />
               </div>
               <div className="p-service-name">ただタダgames</div>
               <p className="p-service-desc">カジュアルに遊べるゲームをお届け！ひとりでも、みんなでも楽しめます。</p>
               <span className="p-status-badge soon-pink"><span>⏱</span>もうすぐ公開</span>
-            </a>
+            </div>
           </div>
         </div>
 
