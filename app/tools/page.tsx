@@ -76,21 +76,14 @@ export default function ToolsPage() {
       `}</style>
 
       {/* ヘッダー */}
-      <header style={{ position:"sticky", top:0, zIndex:50, background:"rgba(255,255,255,0.85)", backdropFilter:"saturate(180%) blur(14px)", WebkitBackdropFilter:"saturate(180%) blur(14px)", borderBottom:"1px solid #f1ecf3" }}>
-        <div style={{ height:64, padding:"0 24px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-          <Link href="/" style={{ display:"flex", alignItems:"center", gap:10, textDecoration:"none", color:"inherit" }}>
-            <span style={{ fontFamily:"Quicksand, sans-serif", fontWeight:700, fontSize:15, color:"#6b6779", letterSpacing:"0.04em" }}>TADATADA</span>
-            <span style={{ color:"#9a96a8", fontSize:12 }}>/</span>
-            <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:16, color:"#1f1d2b", letterSpacing:"0.02em" }}>
-              タダ<span style={{ color:"#0ea5e9" }}>tools</span><span style={{ color:"#f9a8d4" }}>.</span>
-            </span>
+      <header className="p-header">
+        <div className="p-header-inner md">
+          <Link href="/" className="p-breadcrumb">
+            <span className="p-brand">TADATADA<span className="p-brand-dot" /></span>
+            <span className="p-sep">/</span>
+            <span className="p-page-tag">タダtools</span>
           </Link>
-          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-            <span style={{ display:"inline-flex", alignItems:"center", gap:6, padding:"6px 12px", background:"#fdf9fb", border:"1px solid #f1ecf3", color:"#6b6779", borderRadius:999, fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:700, fontSize:12 }}>
-              <strong style={{ fontFamily:"Quicksand, sans-serif", fontWeight:800, color:"#0ea5e9", fontSize:13 }}>{TOOLS.length}</strong> tools掲載中
-            </span>
-            <GlobalMenu activeSection="tools" />
-          </div>
+          <GlobalMenu activeSection="tools" />
         </div>
       </header>
 
@@ -109,7 +102,7 @@ export default function ToolsPage() {
         <div style={{ maxWidth:896, margin:"0 auto", padding:"0 24px", position:"relative" }}>
           <div style={{ textAlign:"center", maxWidth:640, margin:"0 auto" }}>
             <div style={{ display:"inline-flex", alignItems:"center", gap:8, padding:"6px 14px", background:"#ede9fe", color:"#8b5cf6", borderRadius:999, fontFamily:"Quicksand, sans-serif", fontWeight:700, fontSize:11, letterSpacing:"0.18em", marginBottom:24 }}>
-              ✦ FREE TOOLS
+              ✦ FREE TOOLS &nbsp;·&nbsp; {TOOLS.length} tools
             </div>
             <h1 style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:"clamp(48px,8vw,80px)", lineHeight:1.1, letterSpacing:"0.02em", color:"#1f1d2b", marginBottom:24, position:"relative", display:"inline-block" }}>
               <span style={{ position:"relative", display:"inline-block" }}>

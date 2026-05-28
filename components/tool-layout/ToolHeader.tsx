@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
+import "@/app/(portal)/portal.css";
 
 interface ToolHeaderProps {
   title: string;
@@ -12,26 +13,31 @@ export function ToolHeader({ title }: ToolHeaderProps) {
   return (
     <header
       role="banner"
-      className="h-16 px-6 flex items-center justify-between border-b border-border bg-background sticky top-0 z-40"
+      style={{
+        position: "sticky", top: 0, zIndex: 40,
+        background: "rgba(255,255,255,0.85)",
+        backdropFilter: "saturate(180%) blur(14px)",
+        WebkitBackdropFilter: "saturate(180%) blur(14px)",
+        borderBottom: "1px solid #f1ecf3",
+      }}
     >
-      {/* 左：breadcrumb */}
-      <div className="flex items-center gap-1.5 leading-none">
-        <Link
-          href="/"
-          className="font-brand text-[13px] font-black tracking-[0.06em] text-foreground hover:opacity-70 transition-opacity"
-        >
-          TADATADA
+      <div style={{ height: 64, padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        {/* 左：breadcrumb */}
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", color: "inherit" }}>
+          <span style={{ fontFamily: "Quicksand, sans-serif", fontWeight: 800, fontSize: 18, letterSpacing: "0.05em", color: "#1f1d2b" }}>
+            TADATADA
+          </span>
+          <span style={{ color: "#9a96a8", fontSize: 12 }}>/</span>
+          <span style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 700, fontSize: 14, color: "#1f1d2b" }}>
+            {title}
+          </span>
         </Link>
-        <span className="text-[13px] font-light text-foreground/30 select-none">/</span>
-        <span className="text-[13px] font-black tracking-tight text-accent">
-          {title}
-        </span>
-      </div>
 
-      {/* 右：ダークモード + グローバルメニュー */}
-      <div className="flex items-center gap-2">
-        <DarkModeToggle />
-        <GlobalMenu activeSection="tools" />
+        {/* 右：ダークモード + グローバルメニュー */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <DarkModeToggle />
+          <GlobalMenu activeSection="tools" />
+        </div>
       </div>
     </header>
   );
