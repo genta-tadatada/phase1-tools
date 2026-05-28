@@ -8,10 +8,10 @@ interface Props {
 }
 
 export function TadatadaLogo({
-  charSize = 58,
-  textW = 124,
-  textH = 41,
-  scale = 1.4,
+  charSize = 64,
+  textW = 90,
+  textH = 48,
+  scale = 1.05,
 }: Props) {
   const s = `scale(${scale})`;
   return (
