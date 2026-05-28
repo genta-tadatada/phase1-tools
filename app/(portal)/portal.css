@@ -141,7 +141,7 @@
 .portal-page .p-header-inner {
   max-width: 1120px;
   margin: 0 auto;
-  height: 72px;
+  height: 88px;
   padding: 0 28px;
   display: flex;
   align-items: center;
@@ -149,7 +149,7 @@
   overflow: hidden;
 }
 .portal-page .p-header-inner.md {
-  height: 64px;
+  height: 80px;
   padding: 0 24px;
 }
 .portal-page .p-logo {
@@ -1157,7 +1157,7 @@
   .portal-page .p-form-card { padding: 24px 22px; }
 }
 @media (max-width: 520px) {
-  .portal-page .p-header-inner { height: 60px; padding: 0 20px; }
+  .portal-page .p-header-inner { height: 68px; padding: 0 20px; }
   .portal-page .p-logo { font-size: 20px; }
   .portal-page .p-container { padding: 0 20px; }
   .portal-page .p-hero { padding: 48px 0 32px; }

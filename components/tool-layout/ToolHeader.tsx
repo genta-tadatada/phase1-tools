@@ -22,7 +22,7 @@ export function ToolHeader({ title }: ToolHeaderProps) {
         borderBottom: "1px solid #f1ecf3",
       }}
     >
-      <div style={{ height: 64, padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", overflow: "hidden" }}>
+      <div style={{ height: 80, padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", overflow: "hidden" }}>
         {/* 左：breadcrumb */}
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
           <TadatadaLogo />
