@@ -656,8 +656,8 @@
 }
 /* PNG 内蔵の灰色矩形ラインを clip-path で除去し、scale で見た目サイズを補正 */
 .portal-page .p-service-mascot .p-mascot-img {
-  clip-path: inset(3.5% round 4px);
-  transform: scale(1.07);
+  clip-path: inset(6% round 4px);
+  transform: scale(1.14);
 }
 .portal-page .p-service-mascot-icon { font-size: 64px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08)); }
 .portal-page .p-service-name { font-family: var(--p-font-jp); font-weight: 900; font-size: 22px; letter-spacing: 0.02em; margin-bottom: 10px; }

@@ -69,20 +69,28 @@ export default function PortalPage() {
                 style={{ position: "absolute", top: 20, left: "50%", width: 60, opacity: 0.6, animation: "p-float 6s ease-in-out 1.4s infinite" }} />
               <img src="/uploads/kawaii-sparkle-accent.svg" alt="" aria-hidden="true"
                 style={{ position: "absolute", bottom: 30, left: 10, width: 24, opacity: 0.75, animation: "p-float 3.8s ease-in-out 0.4s infinite" }} />
-              {/* 3D PNGs — 個別配置・それぞれ異なるアニメーション */}
-              {/* clip-path で PNG 内蔵の灰色矩形ラインを除去（scale で見た目サイズを維持） */}
-              <Image src="/assets/kawaii-tools.png" alt="" width={170} height={170} priority
-                style={{ position: "absolute", top: 18, right: 50, objectFit: "contain",
-                  clipPath: "inset(3.2% round 4px)", transform: "scale(1.065)",
-                  animation: "p-float 4.6s ease-in-out infinite" }} />
-              <Image src="/assets/kawaii-book.png" alt="" width={148} height={148}
-                style={{ position: "absolute", top: "42%", left: 0, objectFit: "contain",
-                  clipPath: "inset(3.2% round 4px)", transform: "translateY(-50%) scale(1.065)",
-                  animation: "p-float 5.4s ease-in-out 0.9s infinite" }} />
-              <Image src="/assets/kawaii-controller.png" alt="" width={158} height={158}
-                style={{ position: "absolute", bottom: 28, right: 10, objectFit: "contain",
-                  clipPath: "inset(3.2% round 4px)", transform: "scale(1.065)",
-                  animation: "p-float 5.0s ease-in-out 1.7s infinite" }} />
+              {/* 3D PNGs: アニメーション用wrapperとclip+scale用imgを分離
+                  (animationがtransformを上書きするため、同要素に両方書いてもscaleが効かない) */}
+              <div style={{ position: "absolute", top: 18, right: 50, width: 170, height: 170,
+                animation: "p-float 4.6s ease-in-out infinite" }}>
+                <Image src="/assets/kawaii-tools.png" alt="" width={170} height={170} priority
+                  style={{ objectFit: "contain",
+                    clipPath: "inset(6% round 6px)", transform: "scale(1.14)" }} />
+              </div>
+              <div style={{ position: "absolute", top: "42%", left: 0, transform: "translateY(-50%)" }}>
+                <div style={{ width: 148, height: 148,
+                  animation: "p-float 5.4s ease-in-out 0.9s infinite" }}>
+                  <Image src="/assets/kawaii-book.png" alt="" width={148} height={148}
+                    style={{ objectFit: "contain",
+                      clipPath: "inset(6% round 6px)", transform: "scale(1.14)" }} />
+                </div>
+              </div>
+              <div style={{ position: "absolute", bottom: 28, right: 10, width: 158, height: 158,
+                animation: "p-float 5.0s ease-in-out 1.7s infinite" }}>
+                <Image src="/assets/kawaii-controller.png" alt="" width={158} height={158}
+                  style={{ objectFit: "contain",
+                    clipPath: "inset(6% round 6px)", transform: "scale(1.14)" }} />
+              </div>
             </div>
           </div>
         </div>
