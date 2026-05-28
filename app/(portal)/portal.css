@@ -152,16 +152,11 @@
   padding: 0 24px;
 }
 .portal-page .p-logo {
-  font-family: var(--p-font-en);
-  font-weight: 800;
-  font-size: 24px;
-  letter-spacing: 0.04em;
-  color: var(--p-fg);
   text-decoration: none;
   position: relative;
   display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
 }
 .portal-page .p-logo::after {
   content: "";

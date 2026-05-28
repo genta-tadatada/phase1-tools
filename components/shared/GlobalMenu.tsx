@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import Image from "next/image";
 
 type Section = "tools" | "quiz" | "games" | null;
 
@@ -29,7 +30,7 @@ const TOOLS = [
 
 interface NavItem {
   href: string;
-  icon: string;
+  iconImg: string;
   iconBg: string;
   label: string;
   soon?: boolean;
@@ -38,14 +39,14 @@ interface NavItem {
 }
 
 const NAV: NavItem[] = [
-  { href: "/",        icon: "🏠", iconBg: "#fef9c3", label: "ホーム" },
-  { href: "/news",    icon: "📢", iconBg: "#fce7f3", label: "お知らせ" },
+  { href: "/",        iconImg: "/assets/kawaii-house.png",    iconBg: "#fef9c3", label: "ホーム" },
+  { href: "/news",    iconImg: "/assets/kawaii-bell.png",     iconBg: "#fce7f3", label: "お知らせ" },
   {
-    href: "/tools",   icon: "🧰", iconBg: "#d1fae5", label: "タダtools",
+    href: "/tools",   iconImg: "/assets/kawaii-tools.png",    iconBg: "#d1fae5", label: "タダtools",
     section: "tools", children: TOOLS,
   },
   {
-    href: "#",        icon: "📖", iconBg: "#ede9fe", label: "ただただ一問一答",
+    href: "#",        iconImg: "/assets/kawaii-book.png",     iconBg: "#ede9fe", label: "ただただ一問一答",
     soon: true,       section: "quiz",
     children: [
       { href: "#", label: "地理", soon: true },
@@ -57,14 +58,14 @@ const NAV: NavItem[] = [
     ],
   },
   {
-    href: "#",        icon: "🎮", iconBg: "#fce7f3", label: "ただタダgames",
+    href: "#",        iconImg: "/assets/kawaii-controller.png", iconBg: "#fce7f3", label: "ただタダgames",
     soon: true,       section: "games",
     children: [
       { href: "#", label: "高校サッカー育成シミュレーション", soon: true },
     ],
   },
-  { href: "/contact", icon: "✉️", iconBg: "#ede9fe", label: "お問い合わせ" },
-  { href: "/privacy", icon: "🔒", iconBg: "#f1ecf3", label: "プライバシーポリシー" },
+  { href: "/contact", iconImg: "/assets/kawaii-envelope.png", iconBg: "#ede9fe", label: "お問い合わせ" },
+  { href: "/privacy", iconImg: "/assets/kawaii-padlock.png",  iconBg: "#f1ecf3", label: "プライバシーポリシー" },
 ];
 
 const PersonSVG = ({ size = 20, color = "#1f1d2b" }: { size?: number; color?: string }) => (
@@ -248,8 +249,8 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                         onMouseEnter={(e) => (e.currentTarget.style.background = "#fafafa")}
                         onMouseLeave={(e) => (e.currentTarget.style.background = "")}
                       >
-                        <span aria-hidden="true" style={{ width:32, height:32, borderRadius:10, display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:18, flexShrink:0, background:item.iconBg }}>
-                          {item.icon}
+                        <span aria-hidden="true" style={{ width:32, height:32, borderRadius:10, display:"inline-flex", alignItems:"center", justifyContent:"center", flexShrink:0, background:item.iconBg, overflow:"hidden" }}>
+                          <Image src={item.iconImg} alt="" width={28} height={28} style={{ objectFit:"contain" }} />
                         </span>
                         <span style={{ flex:1 }}>{item.label}</span>
                         {item.soon && (
@@ -308,7 +309,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
             </nav>
 
             <div style={{ padding:"16px 24px 24px", borderTop:"1px dashed #f1ecf3", textAlign:"center", fontSize:11, color:"#9a96a8", fontFamily:"Quicksand, sans-serif", letterSpacing:"0.06em", position:"relative", zIndex:1 }}>
-              © 2026 ただただ。 <span style={{ color:"#f9a8d4" }}>♥</span>
+              © 2026 ただただ <span style={{ color:"#f9a8d4" }}>♥</span>
             </div>
           </aside>
 
