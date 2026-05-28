@@ -65,65 +65,117 @@ const NAV: NavItem[] = [
   { href: "/contact", icon: "✉️", iconBg: "#ede9fe", label: "お問い合わせ" },
 ];
 
-export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
-  const [open, setOpen] = useState(false);
-  const [openGroups, setOpenGroups] = useState<Record<number, boolean>>({});
+const PersonSVG = ({ size = 20, color = "#1f1d2b" }: { size?: number; color?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+    style={{ width: size, height: size }} aria-hidden="true">
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21c0-4 4-6 8-6s8 2 8 6" />
+  </svg>
+);
 
-  function handleOpen() {
+const iconBtnBase: React.CSSProperties = {
+  width: 40, height: 40, borderRadius: 12,
+  border: "2px solid #f1ecf3", background: "#ffffff",
+  cursor: "pointer", display: "inline-flex",
+  alignItems: "center", justifyContent: "center",
+  transition: "all 0.2s ease", padding: 0, flexShrink: 0,
+  position: "relative",
+};
+
+export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
+  const [drawerOpen, setDrawerOpen]   = useState(false);
+  const [authOpen, setAuthOpen]       = useState(false);
+  const [openGroups, setOpenGroups]   = useState<Record<number, boolean>>({});
+
+  function closeAll() {
+    setDrawerOpen(false);
+    setAuthOpen(false);
+  }
+
+  function handleDrawerOpen() {
     const init: Record<number, boolean> = {};
     NAV.forEach((item, idx) => {
       if (item.section && item.section === activeSection) init[idx] = true;
     });
     setOpenGroups(init);
-    setOpen(true);
+    setAuthOpen(false);
+    setDrawerOpen(true);
+  }
+
+  function handleAuthOpen() {
+    setDrawerOpen(false);
+    setAuthOpen(true);
   }
 
   function toggleGroup(idx: number) {
     setOpenGroups((prev) => ({ ...prev, [idx]: !prev[idx] }));
   }
 
+  const showBackdrop = drawerOpen || authOpen;
+
   return (
     <>
-      {/* ハンバーガーボタン */}
-      <button
-        type="button"
-        onClick={handleOpen}
-        aria-label="メニューを開く"
-        aria-expanded={open}
-        style={{
-          width: 40, height: 40, borderRadius: 12,
-          border: open ? "2px solid #c4b5fd" : "2px solid #f1ecf3",
-          background: open ? "#ede9fe" : "#ffffff",
-          cursor: "pointer", display: "inline-flex",
-          alignItems: "center", justifyContent: "center",
-          transition: "all 0.2s ease", padding: 0, flexShrink: 0,
-          position: "relative",
-        }}
-        onMouseEnter={(e) => {
-          if (!open) {
+      {/* ヘッダーボタン群 */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+
+        {/* アカウントボタン */}
+        <button
+          type="button"
+          onClick={handleAuthOpen}
+          aria-label="アカウント"
+          style={iconBtnBase}
+          onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = "#c4b5fd";
             e.currentTarget.style.transform = "translateY(-1px)";
-          }
-        }}
-        onMouseLeave={(e) => {
-          if (!open) {
+          }}
+          onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = "#f1ecf3";
-          }
-          e.currentTarget.style.transform = "";
-        }}
-      >
-        {/* SVG hamburger — crisp at all DPR, variable line widths match reference */}
-        <svg viewBox="0 0 18 15" width="18" height="15" fill="none" aria-hidden="true">
-          <rect x="0" y="0"    width="18"   height="2.5" rx="1.25" fill="#1f1d2b" />
-          <rect x="0" y="6.5" width="12.6" height="2.5" rx="1.25" fill="#1f1d2b" />
-          <rect x="0" y="13"  width="15.3" height="2.5" rx="1.25" fill="#1f1d2b" />
-        </svg>
-      </button>
+            e.currentTarget.style.transform = "";
+          }}
+        >
+          <PersonSVG />
+          {/* ピンクバッジ */}
+          <span style={{
+            position: "absolute", top: 6, right: 6,
+            width: 7, height: 7, borderRadius: "50%",
+            background: "#f9a8d4", border: "2px solid #fff",
+          }} />
+        </button>
 
-      {/* バックドロップ */}
-      {open && (
+        {/* ハンバーガーボタン */}
+        <button
+          type="button"
+          onClick={handleDrawerOpen}
+          aria-label="メニューを開く"
+          aria-expanded={drawerOpen}
+          style={{
+            ...iconBtnBase,
+            border: drawerOpen ? "2px solid #c4b5fd" : "2px solid #f1ecf3",
+            background: drawerOpen ? "#ede9fe" : "#ffffff",
+          }}
+          onMouseEnter={(e) => {
+            if (!drawerOpen) {
+              e.currentTarget.style.borderColor = "#c4b5fd";
+              e.currentTarget.style.transform = "translateY(-1px)";
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!drawerOpen) e.currentTarget.style.borderColor = "#f1ecf3";
+            e.currentTarget.style.transform = "";
+          }}
+        >
+          <svg viewBox="0 0 18 15" width="18" height="15" fill="none" aria-hidden="true">
+            <rect x="0" y="0"    width="18"   height="2.5" rx="1.25" fill="#1f1d2b" />
+            <rect x="0" y="6.5" width="12.6" height="2.5" rx="1.25" fill="#1f1d2b" />
+            <rect x="0" y="13"  width="15.3" height="2.5" rx="1.25" fill="#1f1d2b" />
+          </svg>
+        </button>
+      </div>
+
+      {/* バックドロップ（ドロワー・認証モーダル共通） */}
+      {showBackdrop && (
         <div
-          onClick={() => setOpen(false)}
+          onClick={closeAll}
           aria-hidden="true"
           style={{
             position: "fixed", inset: 0,
@@ -135,31 +187,29 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
         />
       )}
 
-      {/* ドロワー */}
+      {/* ナビドロワー */}
       <aside
-        aria-hidden={!open}
+        aria-hidden={!drawerOpen}
         style={{
           position: "fixed", top: 0, right: 0,
           height: "100vh", width: 340, maxWidth: "86vw",
           background: "#ffffff", zIndex: 101,
-          transform: open ? "translateX(0)" : "translateX(100%)",
+          transform: drawerOpen ? "translateX(0)" : "translateX(100%)",
           transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)",
           boxShadow: "-16px 0 40px -16px rgba(120,80,140,0.3)",
           display: "flex", flexDirection: "column", overflow: "hidden",
         }}
       >
-        {/* 装飾ブロブ */}
         <div style={{ position:"absolute", top:-60, right:-60, width:200, height:200, background:"radial-gradient(circle, #fbcfe8, transparent 70%)", opacity:0.5, pointerEvents:"none" }} />
         <div style={{ position:"absolute", bottom:-40, left:-40, width:160, height:160, background:"radial-gradient(circle, #a7f3d0, transparent 70%)", opacity:0.4, pointerEvents:"none" }} />
 
-        {/* ヘッダー */}
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"22px 24px", borderBottom:"1px dashed #f1ecf3", position:"relative", zIndex:1 }}>
           <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:17, color:"#1f1d2b", letterSpacing:"0.04em" }}>
             ✦ メニュー
           </span>
           <button
             type="button"
-            onClick={() => setOpen(false)}
+            onClick={() => setDrawerOpen(false)}
             aria-label="閉じる"
             style={{ width:36, height:36, borderRadius:"50%", border:"2px solid #f1ecf3", background:"#fff", cursor:"pointer", fontSize:18, color:"#6b6779", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all 0.2s ease", padding:0 }}
             onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#f9a8d4"; e.currentTarget.style.color = "#ec4899"; }}
@@ -169,7 +219,6 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
           </button>
         </div>
 
-        {/* ナビゲーション */}
         <nav style={{ flex:1, padding:"16px", display:"flex", flexDirection:"column", gap:4, position:"relative", zIndex:1, overflowY:"auto" }}>
           {NAV.map((item, idx) => {
             const hasChildren = !!item.children?.length;
@@ -180,7 +229,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                 <div style={{ display:"flex", alignItems:"stretch", gap:2 }}>
                   <Link
                     href={item.href}
-                    onClick={() => !hasChildren && setOpen(false)}
+                    onClick={() => !hasChildren && setDrawerOpen(false)}
                     style={{
                       display:"flex", alignItems:"center", gap:14, flex:1,
                       padding:"14px 16px", borderRadius:16,
@@ -218,7 +267,6 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                   )}
                 </div>
 
-                {/* 展開リスト (grid-rows アニメーション) */}
                 {hasChildren && (
                   <div style={{ display:"grid", gridTemplateRows:isGroupOpen ? "1fr" : "0fr", transition:"grid-template-rows 0.32s cubic-bezier(0.4,0,0.2,1)" }}>
                     <div style={{ minHeight:0, overflow:"hidden", paddingLeft:56 }}>
@@ -227,7 +275,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                           <Link
                             key={ci}
                             href={child.href}
-                            onClick={() => setOpen(false)}
+                            onClick={() => setDrawerOpen(false)}
                             style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"7px 12px", borderRadius:10, textDecoration:"none", color:"#6b6779", fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:700, fontSize:13, transition:"all 0.18s ease" }}
                             onMouseEnter={(e) => { e.currentTarget.style.background = "#fafafa"; e.currentTarget.style.color = "#1f1d2b"; }}
                             onMouseLeave={(e) => { e.currentTarget.style.background = ""; e.currentTarget.style.color = "#6b6779"; }}
@@ -252,11 +300,90 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
           })}
         </nav>
 
-        {/* フッター */}
         <div style={{ padding:"16px 24px 24px", borderTop:"1px dashed #f1ecf3", textAlign:"center", fontSize:11, color:"#9a96a8", fontFamily:"Quicksand, sans-serif", letterSpacing:"0.06em", position:"relative", zIndex:1 }}>
           © 2026 ただただ。 <span style={{ color:"#f9a8d4" }}>♥</span>
         </div>
       </aside>
+
+      {/* 認証モーダル */}
+      {authOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="アカウント"
+          style={{
+            position: "fixed", inset: 0, zIndex: 101,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            padding: 20,
+          }}
+        >
+          <div style={{
+            background: "#fff", borderRadius: 28,
+            width: "100%", maxWidth: 380,
+            padding: "32px 28px 28px",
+            position: "relative",
+            boxShadow: "0 30px 80px -20px rgba(120,80,140,0.4)",
+            overflow: "hidden",
+          }}>
+            {/* 装飾ブロブ */}
+            <div style={{ position:"absolute", top:-50, right:-50, width:180, height:180, background:"radial-gradient(circle, #fbcfe8, transparent 70%)", opacity:0.4, pointerEvents:"none" }} />
+            <div style={{ position:"absolute", bottom:-40, left:-40, width:160, height:160, background:"radial-gradient(circle, #a7f3d0, transparent 70%)", opacity:0.35, pointerEvents:"none" }} />
+
+            {/* 閉じるボタン */}
+            <button
+              type="button"
+              onClick={() => setAuthOpen(false)}
+              aria-label="閉じる"
+              style={{ position:"absolute", top:18, right:18, width:32, height:32, borderRadius:"50%", border:"2px solid #f1ecf3", background:"#fff", cursor:"pointer", color:"#6b6779", fontSize:16, display:"inline-flex", alignItems:"center", justifyContent:"center", zIndex:2, padding:0, transition:"all 0.2s ease" }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#f9a8d4"; e.currentTarget.style.color = "#ec4899"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#f1ecf3"; e.currentTarget.style.color = "#6b6779"; }}
+            >
+              ✕
+            </button>
+
+            {/* アイコン */}
+            <div style={{ width:68, height:68, margin:"0 auto 16px", borderRadius:"50%", background:"linear-gradient(160deg, #ddd6fe, #c4b5fd)", display:"flex", alignItems:"center", justifyContent:"center", position:"relative", zIndex:1 }}>
+              <PersonSVG size={36} color="#fff" />
+            </div>
+
+            {/* タイトル */}
+            <h3 style={{ textAlign:"center", fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:22, color:"#1f1d2b", marginBottom:8, position:"relative", zIndex:1 }}>
+              アカウント
+            </h3>
+
+            {/* 説明 */}
+            <p style={{ textAlign:"center", fontSize:13, color:"#6b6779", lineHeight:1.7, marginBottom:24, position:"relative", zIndex:1 }}>
+              基本はそのまま使えます。<br />
+              保存や同期を使いたいときだけアカウントが必要です。
+            </p>
+
+            {/* ボタン群 */}
+            <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:16, position:"relative", zIndex:1 }}>
+              <button
+                type="button"
+                style={{ width:"100%", padding:"14px 20px", borderRadius:999, border:"2px solid transparent", background:"linear-gradient(135deg, #7dd3fc, #38bdf8)", cursor:"pointer", fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:800, fontSize:14, color:"#fff", display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8, boxShadow:"0 8px 24px -8px rgba(125,211,252,0.6)", transition:"all 0.2s ease" }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-1px)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "")}
+              >
+                ✦ ログイン
+              </button>
+              <button
+                type="button"
+                style={{ width:"100%", padding:"14px 20px", borderRadius:999, border:"2px solid #f1ecf3", background:"#fff", cursor:"pointer", fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:800, fontSize:14, color:"#1f1d2b", display:"inline-flex", alignItems:"center", justifyContent:"center", gap:8, transition:"all 0.2s ease" }}
+                onMouseEnter={(e) => (e.currentTarget.style.borderColor = "#c4b5fd")}
+                onMouseLeave={(e) => (e.currentTarget.style.borderColor = "#f1ecf3")}
+              >
+                あらたにアカウントをつくる
+              </button>
+            </div>
+
+            {/* 注記 */}
+            <p style={{ textAlign:"center", fontSize:11.5, color:"#9a96a8", lineHeight:1.6, position:"relative", zIndex:1 }}>
+              <span style={{ color:"#f9a8d4" }}>♥</span> 同期なしでもそのまま使えます
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 }
