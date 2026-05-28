@@ -42,7 +42,7 @@ interface NavItem {
 
 const NAV: NavItem[] = [
   { href: "/",        iconImg: "/assets/kawaii-house.png",    iconBg: "#fef9c3", label: "ホーム",
-    iconCover: true, iconScale: 1.7 },
+    iconCover: true, iconScale: 2.1 },
   { href: "/news",    iconImg: "/assets/kawaii-bell.png",     iconBg: "#fce7f3", label: "お知らせ",
     iconCover: true, iconScale: 2.3 },
   {
@@ -69,7 +69,7 @@ const NAV: NavItem[] = [
     ],
   },
   { href: "/contact", iconImg: "/assets/kawaii-envelope.png", iconBg: "#ede9fe", label: "お問い合わせ",
-    iconCover: true, iconScale: 1.7 },
+    iconCover: true, iconScale: 2.1 },
   { href: "/privacy", iconImg: "/assets/kawaii-padlock.png",  iconBg: "#f1ecf3", label: "プライバシーポリシー",
     iconCover: true, iconScale: 2.3 },
 ];

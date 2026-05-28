@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
+import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
 
 export const metadata: Metadata = {
@@ -30,8 +30,7 @@ export default function PrivacyPage() {
       <header className="p-header">
         <div className="p-header-inner md">
           <Link href="/" className="p-breadcrumb">
-            <Image src="/assets/tadatada-char.png" alt="ただただ" width={52} height={52} style={{ objectFit: "contain" }} />
-            <Image src="/assets/tadatada-text.png" alt="" width={124} height={41} style={{ objectFit: "contain" }} />
+            <TadatadaLogo />
             <span className="p-sep">/</span>
             <span className="p-crumb current">プライバシーポリシー</span>
           </Link>

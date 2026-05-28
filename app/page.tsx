@@ -4,6 +4,7 @@ import Image from "next/image";
 import { NEWS_DATA } from "@/lib/news-data";
 import { NewsCarousel } from "@/components/portal/NewsCarousel";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
+import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import "./(portal)/portal.css";
 
 export const metadata: Metadata = {
@@ -20,8 +21,7 @@ export default function PortalPage() {
       <header className="p-header">
         <div className="p-header-inner">
           <Link href="/" className="p-logo">
-            <Image src="/assets/tadatada-char.png" alt="ただただ" width={54} height={54} style={{ objectFit: "contain" }} />
-            <Image src="/assets/tadatada-text.png" alt="" width={128} height={43} style={{ objectFit: "contain" }} />
+            <TadatadaLogo charSize={62} textW={132} textH={44} />
           </Link>
           <GlobalMenu activeSection={null} />
         </div>

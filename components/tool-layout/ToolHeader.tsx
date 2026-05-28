@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { DarkModeToggle } from "./DarkModeToggle";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
+import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import "@/app/(portal)/portal.css";
 
 interface ToolHeaderProps {
@@ -25,8 +25,7 @@ export function ToolHeader({ title }: ToolHeaderProps) {
       <div style={{ height: 64, padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         {/* 左：breadcrumb */}
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-          <Image src="/assets/tadatada-char.png" alt="ただただ" width={52} height={52} style={{ objectFit: "contain" }} />
-          <Image src="/assets/tadatada-text.png" alt="" width={124} height={41} style={{ objectFit: "contain" }} />
+          <TadatadaLogo />
           <span style={{ color: "#9a96a8", fontSize: 12 }}>/</span>
           <span style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 700, fontSize: 14, color: "#1f1d2b" }}>
             {title}

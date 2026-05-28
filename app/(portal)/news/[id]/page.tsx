@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import { NEWS_DATA, formatDate, bannerGradient } from "@/lib/news-data";
 import { PortalSiteNav } from "@/components/portal/PortalSiteNav";
 
@@ -40,8 +40,7 @@ export default async function NewsDetailPage({ params }: Props) {
         <div className="p-header-inner md">
           <div className="p-breadcrumb">
             <Link href="/" style={{ display:"inline-flex", alignItems:"center", gap:8, textDecoration:"none" }}>
-              <Image src="/assets/tadatada-char.png" alt="ただただ" width={52} height={52} style={{ objectFit: "contain" }} />
-              <Image src="/assets/tadatada-text.png" alt="" width={124} height={41} style={{ objectFit: "contain" }} />
+              <TadatadaLogo />
             </Link>
             <span className="p-sep">/</span>
             <Link href="/news" className="p-crumb">お知らせ</Link>
