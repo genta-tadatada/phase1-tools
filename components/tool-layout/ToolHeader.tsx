@@ -12,7 +12,7 @@ export function ToolHeader({ title }: ToolHeaderProps) {
   return (
     <header
       role="banner"
-      className="h-14 px-3 flex items-center justify-between border-b border-border bg-background sticky top-0 z-40"
+      className="h-16 px-6 flex items-center justify-between border-b border-border bg-background sticky top-0 z-40"
     >
       {/* 左：breadcrumb */}
       <div className="flex items-center gap-1.5 leading-none">
