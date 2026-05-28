@@ -249,8 +249,9 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                         onMouseEnter={(e) => (e.currentTarget.style.background = "#fafafa")}
                         onMouseLeave={(e) => (e.currentTarget.style.background = "")}
                       >
-                        <span aria-hidden="true" style={{ width:32, height:32, borderRadius:10, display:"inline-flex", alignItems:"center", justifyContent:"center", flexShrink:0, background:item.iconBg, overflow:"hidden" }}>
-                          <Image src={item.iconImg} alt="" width={28} height={28} style={{ objectFit:"contain" }} />
+                        <span aria-hidden="true" style={{ width:44, height:44, borderRadius:12, display:"inline-flex", alignItems:"center", justifyContent:"center", flexShrink:0, background:item.iconBg, overflow:"hidden" }}>
+                          <Image src={item.iconImg} alt="" width={40} height={40}
+                            style={{ objectFit:"contain", transform: item.iconImg.includes("kawaii-bell") || item.iconImg.includes("kawaii-padlock") ? "scale(1.3)" : "scale(1.1)" }} />
                         </span>
                         <span style={{ flex:1 }}>{item.label}</span>
                         {item.soon && (

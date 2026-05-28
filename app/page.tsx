@@ -20,8 +20,8 @@ export default function PortalPage() {
       <header className="p-header">
         <div className="p-header-inner">
           <Link href="/" className="p-logo">
-            <Image src="/assets/tadatada-char.png" alt="ただただ" width={40} height={40} style={{ objectFit: "contain" }} />
-            <Image src="/assets/tadatada-text.png" alt="" width={100} height={32} style={{ objectFit: "contain" }} />
+            <Image src="/assets/tadatada-char.png" alt="ただただ" width={48} height={48} style={{ objectFit: "contain" }} />
+            <Image src="/assets/tadatada-text.png" alt="" width={120} height={38} style={{ objectFit: "contain" }} />
           </Link>
           <GlobalMenu activeSection={null} />
         </div>
