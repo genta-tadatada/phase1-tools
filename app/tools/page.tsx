@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import "../(portal)/portal.css";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
 
@@ -79,11 +80,12 @@ export default function ToolsPage() {
       <header className="p-header">
         <div className="p-header-inner md">
           <Link href="/" className="p-breadcrumb">
-            <span className="p-brand">TADATADA<span className="p-brand-dot" /></span>
+            <Image src="/assets/tadatada-char.png" alt="ただただ" width={52} height={52} style={{ objectFit: "contain" }} />
+            <Image src="/assets/tadatada-text.png" alt="" width={124} height={41} style={{ objectFit: "contain" }} />
             <span className="p-sep">/</span>
             <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:15, letterSpacing:"0.02em", color:"#1f1d2b" }}>
-                タダ<span style={{ color:"#0ea5e9" }}>tools</span><span style={{ color:"#f9a8d4" }}>.</span>
-              </span>
+              タダ<span style={{ color:"#0ea5e9" }}>tools</span><span style={{ color:"#f9a8d4" }}>.</span>
+            </span>
           </Link>
           <GlobalMenu activeSection="tools" />
         </div>

@@ -36,18 +36,22 @@ interface NavItem {
   soon?: boolean;
   section?: Section;
   children?: Array<{ href: string; label: string; soon?: boolean }>;
+  iconCover?: boolean;
+  iconScale?: number;
 }
 
 const NAV: NavItem[] = [
-  { href: "/",        iconImg: "/assets/kawaii-house.png",    iconBg: "#fef9c3", label: "ホーム" },
-  { href: "/news",    iconImg: "/assets/kawaii-bell.png",     iconBg: "#fce7f3", label: "お知らせ" },
+  { href: "/",        iconImg: "/assets/kawaii-house.png",    iconBg: "#fef9c3", label: "ホーム",
+    iconCover: true, iconScale: 1.7 },
+  { href: "/news",    iconImg: "/assets/kawaii-bell.png",     iconBg: "#fce7f3", label: "お知らせ",
+    iconCover: true, iconScale: 2.3 },
   {
     href: "/tools",   iconImg: "/assets/kawaii-tools.png",    iconBg: "#d1fae5", label: "タダtools",
-    section: "tools", children: TOOLS,
+    section: "tools", children: TOOLS, iconScale: 1.2,
   },
   {
     href: "#",        iconImg: "/assets/kawaii-book.png",     iconBg: "#ede9fe", label: "ただただ一問一答",
-    soon: true,       section: "quiz",
+    soon: true,       section: "quiz",  iconScale: 1.2,
     children: [
       { href: "#", label: "地理", soon: true },
       { href: "#", label: "歴史", soon: true },
@@ -59,13 +63,15 @@ const NAV: NavItem[] = [
   },
   {
     href: "#",        iconImg: "/assets/kawaii-controller.png", iconBg: "#fce7f3", label: "ただタダgames",
-    soon: true,       section: "games",
+    soon: true,       section: "games", iconScale: 1.2,
     children: [
       { href: "#", label: "高校サッカー育成シミュレーション", soon: true },
     ],
   },
-  { href: "/contact", iconImg: "/assets/kawaii-envelope.png", iconBg: "#ede9fe", label: "お問い合わせ" },
-  { href: "/privacy", iconImg: "/assets/kawaii-padlock.png",  iconBg: "#f1ecf3", label: "プライバシーポリシー" },
+  { href: "/contact", iconImg: "/assets/kawaii-envelope.png", iconBg: "#ede9fe", label: "お問い合わせ",
+    iconCover: true, iconScale: 1.7 },
+  { href: "/privacy", iconImg: "/assets/kawaii-padlock.png",  iconBg: "#f1ecf3", label: "プライバシーポリシー",
+    iconCover: true, iconScale: 2.3 },
 ];
 
 const PersonSVG = ({ size = 20, color = "#1f1d2b" }: { size?: number; color?: string }) => (
@@ -251,7 +257,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                       >
                         <span aria-hidden="true" style={{ width:44, height:44, borderRadius:12, display:"inline-flex", alignItems:"center", justifyContent:"center", flexShrink:0, background:item.iconBg, overflow:"hidden" }}>
                           <Image src={item.iconImg} alt="" width={40} height={40}
-                            style={{ objectFit:"contain", transform: item.iconImg.includes("kawaii-bell") || item.iconImg.includes("kawaii-padlock") ? "scale(1.3)" : "scale(1.1)" }} />
+                            style={{ objectFit: item.iconCover ? "cover" : "contain", transform: `scale(${item.iconScale ?? 1.1})` }} />
                         </span>
                         <span style={{ flex:1 }}>{item.label}</span>
                         {item.soon && (
