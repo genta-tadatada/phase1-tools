@@ -77,7 +77,7 @@ export default function ToolsPage() {
 
       {/* ヘッダー */}
       <header style={{ position:"sticky", top:0, zIndex:50, background:"rgba(255,255,255,0.85)", backdropFilter:"saturate(180%) blur(14px)", WebkitBackdropFilter:"saturate(180%) blur(14px)", borderBottom:"1px solid #f1ecf3" }}>
-        <div style={{ maxWidth:896, margin:"0 auto", height:64, padding:"0 24px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+        <div style={{ height:64, padding:"0 24px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
           <Link href="/" style={{ display:"flex", alignItems:"center", gap:10, textDecoration:"none", color:"inherit" }}>
             <span style={{ fontFamily:"Quicksand, sans-serif", fontWeight:700, fontSize:15, color:"#6b6779", letterSpacing:"0.04em" }}>TADATADA</span>
             <span style={{ color:"#9a96a8", fontSize:12 }}>/</span>
