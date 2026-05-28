@@ -14,20 +14,18 @@ export function ToolHeader({ title }: ToolHeaderProps) {
       role="banner"
       className="h-14 px-3 flex items-center justify-between border-b border-border bg-background sticky top-0 z-40"
     >
-      {/* 左：ブランド + ツール名 */}
-      <div className="flex flex-col justify-center leading-none gap-0.5">
+      {/* 左：breadcrumb */}
+      <div className="flex items-center gap-1.5 leading-none">
         <Link
           href="/"
-          className="font-brand text-[9px] font-light text-primary/35 tracking-[0.38em] uppercase hover:text-primary/60 transition-colors"
+          className="font-brand text-[13px] font-black tracking-[0.06em] text-foreground hover:opacity-70 transition-opacity"
         >
           TADATADA
         </Link>
-        <Link
-          href="/tools"
-          className="text-[18px] font-black tracking-tight leading-none hover:opacity-70 transition-opacity"
-        >
+        <span className="text-[13px] font-light text-foreground/30 select-none">/</span>
+        <span className="text-[13px] font-black tracking-tight text-accent">
           {title}
-        </Link>
+        </span>
       </div>
 
       {/* 右：ダークモード + グローバルメニュー */}
