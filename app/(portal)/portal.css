@@ -60,6 +60,22 @@
   overflow-x: hidden;
 }
 
+/* ===== DARK MODE ===== */
+.dark .portal-page {
+  --p-bg: #1a1825;
+  --p-bg-soft: #211e30;
+  --p-fg: #f0edf5;
+  --p-fg-muted: #a89ec0;
+  --p-fg-faint: #6b6186;
+
+  --p-border: #2e2a40;
+  --p-border-soft: #252236;
+
+  --p-shadow-card: 0 4px 24px -8px rgba(0,0,0,0.4);
+  --p-shadow-card-hover: 0 12px 36px -12px rgba(0,0,0,0.6);
+  --p-shadow-cta: 0 8px 28px -8px rgba(125,211,252,0.3);
+}
+
 /* ===== KEYFRAMES ===== */
 @keyframes p-twinkle {
   0%, 100% { transform: scale(1) rotate(0); opacity: 0.9; }
