@@ -619,6 +619,7 @@ export function CounterTool() {
   const [focusHintVisible, setFocusHintVisible] = useState(true);
   const [keyboardFocusedIndex, setKeyboardFocusedIndex] = useState(0);
   const [shareSuccess, setShareSuccess] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
   const [showAllHistory, setShowAllHistory] = useState(false);
   const [globalEvents, setGlobalEvents] = useState<GlobalEvent[]>([]);
   const shareTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1039,7 +1040,30 @@ export function CounterTool() {
               <span className="text-3xl font-bold tabular-nums">{total}</span>
             </div>
             {/* Action buttons — icon-only on mobile, icon+label on sm+ */}
-            <div className="flex gap-1.5 flex-shrink-0">
+            <div className="flex gap-1.5 flex-shrink-0 relative">
+              {/* Keyboard shortcuts popup */}
+              {showShortcuts && (
+                <div className="absolute bottom-full right-0 mb-2 w-64 rounded-lg border border-border bg-background shadow-lg p-3 z-50 text-xs text-muted-foreground">
+                  <p className="font-semibold text-foreground mb-2">キーボードショートカット</p>
+                  <div className="space-y-1">
+                    <div className="flex justify-between"><span>1〜9</span><span>カウンターを選択</span></div>
+                    <div className="flex justify-between"><span>↑ / +</span><span>+1</span></div>
+                    <div className="flex justify-between"><span>↓ / −</span><span>−1</span></div>
+                    <div className="flex justify-between"><span>r</span><span>選択中をリセット</span></div>
+                    <div className="flex justify-between"><span>Shift+R</span><span>全体リセット</span></div>
+                    <div className="flex justify-between"><span>n</span><span>カウンター追加</span></div>
+                  </div>
+                </div>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowShortcuts((v) => !v)}
+                aria-label="キーボードショートカット"
+                className="h-9 w-9 px-0 text-muted-foreground font-bold"
+              >
+                ?
+              </Button>
               <Button
                 variant="outline"
                 size="sm"

@@ -241,7 +241,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                     onMouseEnter={(e) => (e.currentTarget.style.background = "#fafafa")}
                     onMouseLeave={(e) => (e.currentTarget.style.background = "")}
                   >
-                    <span style={{ width:32, height:32, borderRadius:10, display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:18, flexShrink:0, background:item.iconBg }}>
+                    <span aria-hidden="true" style={{ width:32, height:32, borderRadius:10, display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:18, flexShrink:0, background:item.iconBg }}>
                       {item.icon}
                     </span>
                     <span style={{ flex:1 }}>{item.label}</span>
