@@ -216,7 +216,7 @@ export default function ToolsPage() {
       <footer style={{ borderTop:"1px solid #f1ecf3", padding:"36px 0 48px" }}>
         <div style={{ maxWidth:896, margin:"0 auto", padding:"0 24px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:16, flexWrap:"wrap" }}>
           <div style={{ display:"flex", alignItems:"center", gap:10, fontSize:13, color:"#1f1d2b" }}>
-            <span style={{ fontFamily:"Quicksand, sans-serif", fontWeight:800, letterSpacing:"0.04em" }}>TADATADA</span>
+            <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900 }}>ただただ</span>
             <span style={{ color:"#9a96a8" }}>—</span>
             <span style={{ color:"#6b6779" }}>タダtools</span>
           </div>

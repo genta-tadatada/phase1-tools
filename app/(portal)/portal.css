@@ -146,6 +146,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  overflow: hidden;
 }
 .portal-page .p-header-inner.md {
   height: 64px;
