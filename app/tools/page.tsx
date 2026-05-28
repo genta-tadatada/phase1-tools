@@ -81,7 +81,9 @@ export default function ToolsPage() {
           <Link href="/" className="p-breadcrumb">
             <span className="p-brand">TADATADA<span className="p-brand-dot" /></span>
             <span className="p-sep">/</span>
-            <span className="p-page-tag">タダtools</span>
+            <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:15, letterSpacing:"0.02em", color:"#1f1d2b" }}>
+                タダ<span style={{ color:"#0ea5e9" }}>tools</span><span style={{ color:"#f9a8d4" }}>.</span>
+              </span>
           </Link>
           <GlobalMenu activeSection="tools" />
         </div>
