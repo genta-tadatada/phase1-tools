@@ -70,15 +70,19 @@ export default function PortalPage() {
               <img src="/uploads/kawaii-sparkle-accent.svg" alt="" aria-hidden="true"
                 style={{ position: "absolute", bottom: 30, left: 10, width: 24, opacity: 0.75, animation: "p-float 3.8s ease-in-out 0.4s infinite" }} />
               {/* 3D PNGs — 個別配置・それぞれ異なるアニメーション */}
+              {/* clip-path で PNG 内蔵の灰色矩形ラインを除去（scale で見た目サイズを維持） */}
               <Image src="/assets/kawaii-tools.png" alt="" width={170} height={170} priority
-                style={{ position: "absolute", top: 18, right: 50, objectFit: "contain", mixBlendMode: "multiply",
-                  clipPath: "inset(2px)", animation: "p-float 4.6s ease-in-out infinite" }} />
+                style={{ position: "absolute", top: 18, right: 50, objectFit: "contain",
+                  clipPath: "inset(3.2% round 4px)", transform: "scale(1.065)",
+                  animation: "p-float 4.6s ease-in-out infinite" }} />
               <Image src="/assets/kawaii-book.png" alt="" width={148} height={148}
-                style={{ position: "absolute", top: "42%", left: 0, transform: "translateY(-50%)", objectFit: "contain", mixBlendMode: "multiply",
-                  clipPath: "inset(2px)", animation: "p-float 5.4s ease-in-out 0.9s infinite" }} />
+                style={{ position: "absolute", top: "42%", left: 0, objectFit: "contain",
+                  clipPath: "inset(3.2% round 4px)", transform: "translateY(-50%) scale(1.065)",
+                  animation: "p-float 5.4s ease-in-out 0.9s infinite" }} />
               <Image src="/assets/kawaii-controller.png" alt="" width={158} height={158}
-                style={{ position: "absolute", bottom: 28, right: 10, objectFit: "contain", mixBlendMode: "multiply",
-                  clipPath: "inset(2px)", animation: "p-float 5.0s ease-in-out 1.7s infinite" }} />
+                style={{ position: "absolute", bottom: 28, right: 10, objectFit: "contain",
+                  clipPath: "inset(3.2% round 4px)", transform: "scale(1.065)",
+                  animation: "p-float 5.0s ease-in-out 1.7s infinite" }} />
             </div>
           </div>
         </div>
@@ -132,7 +136,9 @@ export default function PortalPage() {
           <div className="p-service-grid">
             <Link href="/tools" className="p-service-card live">
               <div className="p-service-mascot">
-                <Image src="/assets/kawaii-tools.png" alt="" width={130} height={130} style={{ objectFit: "contain", mixBlendMode: "multiply" }} />
+                <Image src="/assets/kawaii-tools.png" alt="" width={130} height={130}
+                  className="p-mascot-img"
+                  style={{ objectFit: "contain" }} />
               </div>
               <div className="p-service-name">タダ<span style={{ color:"#0ea5e9" }}>tools</span><span style={{ color:"#f9a8d4" }}>.</span></div>
               <p className="p-service-desc">便利なツールをいろいろ集めました。日常や作業に役立つ機能がいっぱい！</p>
@@ -140,7 +146,9 @@ export default function PortalPage() {
             </Link>
             <div className="p-service-card lav" aria-disabled="true" style={{ cursor: "default", pointerEvents: "none" }}>
               <div className="p-service-mascot">
-                <Image src="/assets/kawaii-book.png" alt="" width={130} height={130} style={{ objectFit: "contain", mixBlendMode: "multiply" }} />
+                <Image src="/assets/kawaii-book.png" alt="" width={130} height={130}
+                  className="p-mascot-img"
+                  style={{ objectFit: "contain" }} />
               </div>
               <div className="p-service-name">ただただ一問一答</div>
               <p className="p-service-desc">知識を楽しくインプット＆チェック！スキマ時間にサクッと学べます。</p>
@@ -148,7 +156,9 @@ export default function PortalPage() {
             </div>
             <div className="p-service-card pink" aria-disabled="true" style={{ cursor: "default", pointerEvents: "none" }}>
               <div className="p-service-mascot">
-                <Image src="/assets/kawaii-controller.png" alt="" width={130} height={130} style={{ objectFit: "contain", mixBlendMode: "multiply" }} />
+                <Image src="/assets/kawaii-controller.png" alt="" width={130} height={130}
+                  className="p-mascot-img"
+                  style={{ objectFit: "contain" }} />
               </div>
               <div className="p-service-name">ただタダgames</div>
               <p className="p-service-desc">カジュアルに遊べるゲームをお届け！ひとりでも、みんなでも楽しめます。</p>
