@@ -174,13 +174,43 @@
   }
 }
 
-/* ポータルページはダークモード時も常にライト表示 */
-.dark .portal-page[style*="colorScheme"] {
+/* ポータルページ：html に data-portal-mode="light" が付いたとき全CSS変数をライトに上書き
+   .dark より後に記述することで同一詳細度でも後勝ちになる */
+html[data-portal-mode="light"] {
+  color-scheme: light;
+  /* Tailwind semantic vars */
   --background: oklch(0.983 0.008 80);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.685 0.169 237.323);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
   --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.685 0.169 237.323);
+  /* ToolHeader / GlobalMenu カスタム vars */
+  --th-bg: rgba(255,255,255,0.88);
+  --th-border: #f1ecf3;
+  --th-text: #1f1d2b;
+  --th-text-muted: #9a96a8;
+  --ibtn-bg: #ffffff;
+  --ibtn-border: #f1ecf3;
+  --ibtn-color: #1f1d2b;
+  --ibtn-border-hover: #c4b5fd;
+  --ibtn-bg-active: #ede9fe;
+  --ibtn-border-active: #c4b5fd;
+  --drawer-bg: #ffffff;
+  --drawer-border: #f1ecf3;
+  --drawer-text: #1f1d2b;
+  --drawer-text-muted: #6b6779;
+  --drawer-text-subtle: #9a96a8;
+  --drawer-hover-bg: #fafafa;
 }
 
 /* /tools ページのヘッダーダーク対応 */
