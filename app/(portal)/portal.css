@@ -7,6 +7,7 @@
 
 .portal-page {
   min-height: 100vh;
+  color-scheme: light;
   --p-bg: #ffffff;
   --p-bg-soft: #fdf9fb;
   --p-fg: #1f1d2b;
@@ -67,36 +68,6 @@
   overflow-x: hidden;
 }
 
-/* ===== DARK MODE ===== */
-.dark .portal-page {
-  --p-bg: #1a1825;
-  --p-bg-soft: #211e30;
-  --p-fg: #f0edf5;
-  --p-fg-muted: #a89ec0;
-  --p-fg-faint: #6b6186;
-
-  --p-border: #2e2a40;
-  --p-border-soft: #252236;
-
-  --p-header-bg: rgba(16,14,28,0.92);
-  --p-bg-card: #1f1c30;
-  --p-bg-tinted: #1c1829;
-  --p-bg-tinted-pink: #1e172a;
-  --p-bg-tinted-mint: #141e1d;
-
-  --p-shadow-card: 0 4px 24px -8px rgba(0,0,0,0.4);
-  --p-shadow-card-hover: 0 12px 36px -12px rgba(0,0,0,0.6);
-  --p-shadow-cta: 0 8px 28px -8px rgba(125,211,252,0.3);
-}
-
-/* ===== DARK MODE 個別オーバーライド ===== */
-.dark .portal-page .p-service-card.live { background: #0d1f18; }
-.dark .portal-page .p-service-card.lav  { background: #1a1630; }
-.dark .portal-page .p-status-badge.live { background: #0d2a1a; color: #4ade80; }
-.dark .portal-page .p-status-badge.live::before { background: #22c55e; }
-.dark .portal-page .m-cloud { background: linear-gradient(160deg, #2a2640 0%, #322e4a 100%); }
-.dark .portal-page .p-cta-mascot.left { background: linear-gradient(160deg, #252236 0%, #2e2a44 100%); }
-.dark .portal-page .p-cta-card { background: linear-gradient(135deg, #1e1630 0%, #1a1828 50%, #131d1c 100%); }
 
 /* ===== KEYFRAMES ===== */
 @keyframes p-twinkle {

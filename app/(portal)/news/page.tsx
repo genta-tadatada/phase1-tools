@@ -4,7 +4,6 @@ import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import { NEWS_DATA } from "@/lib/news-data";
 import { NewsListClient } from "@/components/portal/NewsListClient";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
-import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
 
 export const metadata: Metadata = {
   title: "お知らせ — TADATADA",
@@ -21,10 +20,7 @@ export default function NewsPage() {
             <span className="p-sep">/</span>
             <span className="p-page-tag">お知らせ</span>
           </Link>
-          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-            <DarkModeToggle />
-            <GlobalMenu activeSection={null} />
-          </div>
+          <GlobalMenu activeSection={null} />
         </div>
       </header>
 
