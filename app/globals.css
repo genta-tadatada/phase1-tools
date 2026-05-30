@@ -50,6 +50,25 @@
 }
 
 :root {
+  /* ToolHeader */
+  --th-bg: rgba(255,255,255,0.88);
+  --th-border: #f1ecf3;
+  --th-text: #1f1d2b;
+  --th-text-muted: #9a96a8;
+  /* GlobalMenu ボタン */
+  --ibtn-bg: #ffffff;
+  --ibtn-border: #f1ecf3;
+  --ibtn-color: #1f1d2b;
+  --ibtn-border-hover: #c4b5fd;
+  --ibtn-bg-active: #ede9fe;
+  --ibtn-border-active: #c4b5fd;
+  /* GlobalMenu ドロワー */
+  --drawer-bg: #ffffff;
+  --drawer-border: #f1ecf3;
+  --drawer-text: #1f1d2b;
+  --drawer-text-muted: #6b6779;
+  --drawer-text-subtle: #9a96a8;
+  --drawer-hover-bg: #fafafa;
   --background: oklch(0.983 0.008 80);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -91,6 +110,25 @@
 }
 
 .dark {
+  /* ToolHeader */
+  --th-bg: rgba(15,16,26,0.92);
+  --th-border: #252538;
+  --th-text: #e8e6f0;
+  --th-text-muted: #6b6779;
+  /* GlobalMenu ボタン */
+  --ibtn-bg: #1a1928;
+  --ibtn-border: #2a2840;
+  --ibtn-color: #e8e6f0;
+  --ibtn-border-hover: #7c3aed;
+  --ibtn-bg-active: #2d1f5e;
+  --ibtn-border-active: #7c3aed;
+  /* GlobalMenu ドロワー */
+  --drawer-bg: #0f1019;
+  --drawer-border: #252538;
+  --drawer-text: #e8e6f0;
+  --drawer-text-muted: #9a96a8;
+  --drawer-text-subtle: #6b6779;
+  --drawer-hover-bg: #1a1928;
   --background: oklch(0.145 0.014 237);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.208 0.012 237);

@@ -6,6 +6,8 @@
    ================================================================ */
 
 .portal-page {
+  color-scheme: light;
+  background: #ffffff;
   --p-bg: #ffffff;
   --p-bg-soft: #fdf9fb;
   --p-fg: #1f1d2b;

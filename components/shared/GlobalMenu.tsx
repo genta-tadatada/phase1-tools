@@ -74,8 +74,8 @@ const NAV: NavItem[] = [
     iconCover: true, iconScale: 2.3 },
 ];
 
-const PersonSVG = ({ size = 20, color = "#1f1d2b" }: { size?: number; color?: string }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+const PersonSVG = ({ size = 20 }: { size?: number }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="var(--ibtn-color)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
     style={{ width: size, height: size }} aria-hidden="true">
     <circle cx="12" cy="8" r="4" />
     <path d="M4 21c0-4 4-6 8-6s8 2 8 6" />
@@ -84,7 +84,7 @@ const PersonSVG = ({ size = 20, color = "#1f1d2b" }: { size?: number; color?: st
 
 const iconBtnBase: React.CSSProperties = {
   width: 40, height: 40, borderRadius: 12,
-  border: "2px solid #f1ecf3", background: "#ffffff",
+  border: "2px solid var(--ibtn-border)", background: "var(--ibtn-bg)",
   cursor: "pointer", display: "inline-flex",
   alignItems: "center", justifyContent: "center",
   transition: "all 0.2s ease", padding: 0, flexShrink: 0,
@@ -136,11 +136,11 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
           aria-label="アカウント"
           style={iconBtnBase}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = "#c4b5fd";
+            e.currentTarget.style.borderColor = "var(--ibtn-border-hover)";
             e.currentTarget.style.transform = "translateY(-1px)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = "#f1ecf3";
+            e.currentTarget.style.borderColor = "var(--ibtn-border)";
             e.currentTarget.style.transform = "";
           }}
         >
@@ -149,7 +149,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
           <span style={{
             position: "absolute", top: 6, right: 6,
             width: 7, height: 7, borderRadius: "50%",
-            background: "#f9a8d4", border: "2px solid #fff",
+            background: "#f9a8d4", border: "2px solid var(--ibtn-bg)",
           }} />
         </button>
 
@@ -161,24 +161,24 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
           aria-expanded={drawerOpen}
           style={{
             ...iconBtnBase,
-            border: drawerOpen ? "2px solid #c4b5fd" : "2px solid #f1ecf3",
-            background: drawerOpen ? "#ede9fe" : "#ffffff",
+            border: drawerOpen ? "2px solid var(--ibtn-border-active)" : "2px solid var(--ibtn-border)",
+            background: drawerOpen ? "var(--ibtn-bg-active)" : "var(--ibtn-bg)",
           }}
           onMouseEnter={(e) => {
             if (!drawerOpen) {
-              e.currentTarget.style.borderColor = "#c4b5fd";
+              e.currentTarget.style.borderColor = "var(--ibtn-border-hover)";
               e.currentTarget.style.transform = "translateY(-1px)";
             }
           }}
           onMouseLeave={(e) => {
-            if (!drawerOpen) e.currentTarget.style.borderColor = "#f1ecf3";
+            if (!drawerOpen) e.currentTarget.style.borderColor = "var(--ibtn-border)";
             e.currentTarget.style.transform = "";
           }}
         >
           <svg viewBox="0 0 18 15" width="18" height="15" fill="none" aria-hidden="true">
-            <rect x="0" y="0"    width="18"   height="2.5" rx="1.25" fill="#1f1d2b" />
-            <rect x="0" y="6.5" width="12.6" height="2.5" rx="1.25" fill="#1f1d2b" />
-            <rect x="0" y="13"  width="15.3" height="2.5" rx="1.25" fill="#1f1d2b" />
+            <rect x="0" y="0"    width="18"   height="2.5" rx="1.25" fill="var(--ibtn-color)" />
+            <rect x="0" y="6.5" width="12.6" height="2.5" rx="1.25" fill="var(--ibtn-color)" />
+            <rect x="0" y="13"  width="15.3" height="2.5" rx="1.25" fill="var(--ibtn-color)" />
           </svg>
         </button>
       </div>
@@ -207,27 +207,27 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
             style={{
               position: "fixed", top: 0, right: 0,
               height: "100vh", width: 340, maxWidth: "86vw",
-              background: "#ffffff", zIndex: 1001,
+              background: "var(--drawer-bg)", zIndex: 1001,
               transform: drawerOpen ? "translateX(0)" : "translateX(100%)",
               transition: "transform 0.35s cubic-bezier(0.4,0,0.2,1)",
               boxShadow: "-16px 0 40px -16px rgba(120,80,140,0.3)",
               display: "flex", flexDirection: "column", overflow: "hidden",
             }}
           >
-            <div style={{ position:"absolute", top:-60, right:-60, width:200, height:200, background:"radial-gradient(circle, #fbcfe8, transparent 70%)", opacity:0.5, pointerEvents:"none" }} />
-            <div style={{ position:"absolute", bottom:-40, left:-40, width:160, height:160, background:"radial-gradient(circle, #a7f3d0, transparent 70%)", opacity:0.4, pointerEvents:"none" }} />
+            <div style={{ position:"absolute", top:-60, right:-60, width:200, height:200, background:"radial-gradient(circle, #fbcfe8, transparent 70%)", opacity:0.3, pointerEvents:"none" }} />
+            <div style={{ position:"absolute", bottom:-40, left:-40, width:160, height:160, background:"radial-gradient(circle, #a7f3d0, transparent 70%)", opacity:0.25, pointerEvents:"none" }} />
 
-            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"22px 24px", borderBottom:"1px dashed #f1ecf3", position:"relative", zIndex:1 }}>
-              <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:17, color:"#1f1d2b", letterSpacing:"0.04em" }}>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"22px 24px", borderBottom:"1px dashed var(--drawer-border)", position:"relative", zIndex:1 }}>
+              <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:17, color:"var(--drawer-text)", letterSpacing:"0.04em" }}>
                 ✦ メニュー
               </span>
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
                 aria-label="閉じる"
-                style={{ width:36, height:36, borderRadius:"50%", border:"2px solid #f1ecf3", background:"#fff", cursor:"pointer", fontSize:18, color:"#6b6779", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all 0.2s ease", padding:0 }}
+                style={{ width:36, height:36, borderRadius:"50%", border:"2px solid var(--drawer-border)", background:"var(--drawer-bg)", cursor:"pointer", fontSize:18, color:"var(--drawer-text-muted)", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all 0.2s ease", padding:0 }}
                 onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#f9a8d4"; e.currentTarget.style.color = "#ec4899"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#f1ecf3"; e.currentTarget.style.color = "#6b6779"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--drawer-border)"; e.currentTarget.style.color = "var(--drawer-text-muted)"; }}
               >
                 ✕
               </button>
@@ -247,12 +247,12 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                         style={{
                           display:"flex", alignItems:"center", gap:14, flex:1,
                           padding:"14px 16px", borderRadius:16,
-                          textDecoration:"none", color:"#1f1d2b",
+                          textDecoration:"none", color:"var(--drawer-text)",
                           fontFamily:"'M PLUS Rounded 1c', sans-serif",
                           fontWeight:700, fontSize:15,
                           transition:"background 0.18s ease",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = "#fafafa")}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--drawer-hover-bg)")}
                         onMouseLeave={(e) => (e.currentTarget.style.background = "")}
                       >
                         <span aria-hidden="true" style={{ width:44, height:44, borderRadius:12, display:"inline-flex", alignItems:"center", justifyContent:"center", flexShrink:0, background:item.iconBg, overflow:"hidden" }}>
@@ -272,7 +272,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                           type="button"
                           onClick={() => toggleGroup(idx)}
                           aria-expanded={isGroupOpen}
-                          style={{ width:36, borderRadius:12, border:"none", background:"transparent", cursor:"pointer", color:isGroupOpen ? "#8b5cf6" : "#9a96a8", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all 0.22s ease", flexShrink:0, padding:0 }}
+                          style={{ width:36, borderRadius:12, border:"none", background:"transparent", cursor:"pointer", color:isGroupOpen ? "#8b5cf6" : "var(--drawer-text-subtle)", display:"inline-flex", alignItems:"center", justifyContent:"center", transition:"all 0.22s ease", flexShrink:0, padding:0 }}
                         >
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"
                             style={{ width:16, height:16, transform:isGroupOpen ? "rotate(180deg)" : undefined, transition:"transform 0.28s cubic-bezier(0.4,0,0.2,1)" }}>
@@ -291,16 +291,16 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                                 key={ci}
                                 href={child.href}
                                 onClick={() => setDrawerOpen(false)}
-                                style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"7px 12px", borderRadius:10, textDecoration:"none", color:"#6b6779", fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:700, fontSize:13, transition:"all 0.18s ease" }}
-                                onMouseEnter={(e) => { e.currentTarget.style.background = "#fafafa"; e.currentTarget.style.color = "#1f1d2b"; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.background = ""; e.currentTarget.style.color = "#6b6779"; }}
+                                style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"7px 12px", borderRadius:10, textDecoration:"none", color:"var(--drawer-text-muted)", fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:700, fontSize:13, transition:"all 0.18s ease" }}
+                                onMouseEnter={(e) => { e.currentTarget.style.background = "var(--drawer-hover-bg)"; e.currentTarget.style.color = "var(--drawer-text)"; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.background = ""; e.currentTarget.style.color = "var(--drawer-text-muted)"; }}
                               >
                                 <span>
                                   <span style={{ color:"#c4b5fd", fontWeight:900, marginRight:8 }}>·</span>
                                   {child.label}
                                 </span>
                                 {child.soon && (
-                                  <span style={{ fontFamily:"Quicksand, sans-serif", fontWeight:700, fontSize:9, letterSpacing:"0.06em", padding:"2px 7px", borderRadius:999, background:"#f1ecf3", color:"#9a96a8", marginLeft:8, flexShrink:0 }}>
+                                  <span style={{ fontFamily:"Quicksand, sans-serif", fontWeight:700, fontSize:9, letterSpacing:"0.06em", padding:"2px 7px", borderRadius:999, background:"var(--drawer-border)", color:"var(--drawer-text-subtle)", marginLeft:8, flexShrink:0 }}>
                                     SOON
                                   </span>
                                 )}
@@ -315,7 +315,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
               })}
             </nav>
 
-            <div style={{ padding:"16px 24px 24px", borderTop:"1px dashed #f1ecf3", textAlign:"center", fontSize:11, color:"#9a96a8", fontFamily:"Quicksand, sans-serif", letterSpacing:"0.06em", position:"relative", zIndex:1 }}>
+            <div style={{ padding:"16px 24px 24px", borderTop:"1px dashed var(--drawer-border)", textAlign:"center", fontSize:11, color:"var(--drawer-text-subtle)", fontFamily:"Quicksand, sans-serif", letterSpacing:"0.06em", position:"relative", zIndex:1 }}>
               © 2026 ただただ <span style={{ color:"#f9a8d4" }}>♥</span>
             </div>
           </aside>
@@ -333,36 +333,36 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
               }}
             >
               <div style={{
-                background: "#fff", borderRadius: 28,
+                background: "var(--drawer-bg)", borderRadius: 28,
                 width: "100%", maxWidth: 380,
                 padding: "32px 28px 28px",
                 position: "relative",
                 boxShadow: "0 30px 80px -20px rgba(120,80,140,0.4)",
                 overflow: "hidden",
               }}>
-                <div style={{ position:"absolute", top:-50, right:-50, width:180, height:180, background:"radial-gradient(circle, #fbcfe8, transparent 70%)", opacity:0.4, pointerEvents:"none" }} />
-                <div style={{ position:"absolute", bottom:-40, left:-40, width:160, height:160, background:"radial-gradient(circle, #a7f3d0, transparent 70%)", opacity:0.35, pointerEvents:"none" }} />
+                <div style={{ position:"absolute", top:-50, right:-50, width:180, height:180, background:"radial-gradient(circle, #fbcfe8, transparent 70%)", opacity:0.3, pointerEvents:"none" }} />
+                <div style={{ position:"absolute", bottom:-40, left:-40, width:160, height:160, background:"radial-gradient(circle, #a7f3d0, transparent 70%)", opacity:0.25, pointerEvents:"none" }} />
 
                 <button
                   type="button"
                   onClick={() => setAuthOpen(false)}
                   aria-label="閉じる"
-                  style={{ position:"absolute", top:18, right:18, width:32, height:32, borderRadius:"50%", border:"2px solid #f1ecf3", background:"#fff", cursor:"pointer", color:"#6b6779", fontSize:16, display:"inline-flex", alignItems:"center", justifyContent:"center", zIndex:2, padding:0, transition:"all 0.2s ease" }}
+                  style={{ position:"absolute", top:18, right:18, width:32, height:32, borderRadius:"50%", border:"2px solid var(--drawer-border)", background:"var(--drawer-bg)", cursor:"pointer", color:"var(--drawer-text-muted)", fontSize:16, display:"inline-flex", alignItems:"center", justifyContent:"center", zIndex:2, padding:0, transition:"all 0.2s ease" }}
                   onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#f9a8d4"; e.currentTarget.style.color = "#ec4899"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#f1ecf3"; e.currentTarget.style.color = "#6b6779"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--drawer-border)"; e.currentTarget.style.color = "var(--drawer-text-muted)"; }}
                 >
                   ✕
                 </button>
 
                 <div style={{ width:68, height:68, margin:"0 auto 16px", borderRadius:"50%", background:"linear-gradient(160deg, #ddd6fe, #c4b5fd)", display:"flex", alignItems:"center", justifyContent:"center", position:"relative", zIndex:1 }}>
-                  <PersonSVG size={36} color="#fff" />
+                  <PersonSVG size={36} />
                 </div>
 
-                <h3 style={{ textAlign:"center", fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:22, color:"#1f1d2b", marginBottom:8, position:"relative", zIndex:1 }}>
+                <h3 style={{ textAlign:"center", fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:22, color:"var(--drawer-text)", marginBottom:8, position:"relative", zIndex:1 }}>
                   アカウント
                 </h3>
 
-                <p style={{ textAlign:"center", fontSize:13, color:"#6b6779", lineHeight:1.7, marginBottom:24, position:"relative", zIndex:1 }}>
+                <p style={{ textAlign:"center", fontSize:13, color:"var(--drawer-text-muted)", lineHeight:1.7, marginBottom:24, position:"relative", zIndex:1 }}>
                   ツール履歴の保存・デバイス間の同期など、<br />
                   アカウント機能を準備中です。
                 </p>
@@ -374,7 +374,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                   </p>
                 </div>
 
-                <p style={{ textAlign:"center", fontSize:11.5, color:"#9a96a8", lineHeight:1.6, position:"relative", zIndex:1 }}>
+                <p style={{ textAlign:"center", fontSize:11.5, color:"var(--drawer-text-subtle)", lineHeight:1.6, position:"relative", zIndex:1 }}>
                   <span style={{ color:"#f9a8d4" }}>♥</span> 登録なしでも全ツール使えます
                 </p>
               </div>

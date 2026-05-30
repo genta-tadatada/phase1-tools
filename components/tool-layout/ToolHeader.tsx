@@ -16,18 +16,18 @@ export function ToolHeader({ title }: ToolHeaderProps) {
       role="banner"
       style={{
         position: "sticky", top: 0, zIndex: 40,
-        background: "rgba(255,255,255,0.85)",
+        background: "var(--th-bg)",
         backdropFilter: "saturate(180%) blur(14px)",
         WebkitBackdropFilter: "saturate(180%) blur(14px)",
-        borderBottom: "1px solid #f1ecf3",
+        borderBottom: "1px solid var(--th-border)",
       }}
     >
       <div style={{ height: 80, padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", overflow: "hidden" }}>
         {/* 左：breadcrumb */}
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
           <TadatadaLogo />
-          <span style={{ color: "#9a96a8", fontSize: 12 }}>/</span>
-          <span style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 700, fontSize: 14, color: "#1f1d2b" }}>
+          <span style={{ color: "var(--th-text-muted)", fontSize: 12 }}>/</span>
+          <span style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 700, fontSize: 14, color: "var(--th-text)" }}>
             {title}
           </span>
         </Link>
