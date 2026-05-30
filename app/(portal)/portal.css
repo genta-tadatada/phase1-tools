@@ -6,8 +6,7 @@
    ================================================================ */
 
 .portal-page {
-  color-scheme: light;
-  background: #ffffff;
+  min-height: 100vh;
   --p-bg: #ffffff;
   --p-bg-soft: #fdf9fb;
   --p-fg: #1f1d2b;

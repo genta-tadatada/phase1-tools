@@ -6,6 +6,7 @@ import Image from "next/image";
 import "../(portal)/portal.css";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
 import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
+import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
 
 type Cat = "all" | "calc" | "text" | "play";
 
@@ -83,11 +84,14 @@ export default function ToolsPage() {
           <Link href="/" className="p-breadcrumb">
             <TadatadaLogo />
             <span className="p-sep">/</span>
-            <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:15, letterSpacing:"0.02em", color:"#1f1d2b" }}>
+            <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:15, letterSpacing:"0.02em", color:"var(--th-text)" }}>
               タダ<span style={{ color:"#0ea5e9" }}>tools</span><span style={{ color:"#f9a8d4" }}>.</span>
             </span>
           </Link>
-          <GlobalMenu activeSection="tools" />
+          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+            <DarkModeToggle />
+            <GlobalMenu activeSection="tools" />
+          </div>
         </div>
       </header>
 

@@ -174,6 +174,21 @@
   }
 }
 
+/* ポータルページはダークモード時も常にライト表示 */
+.dark .portal-page[style*="colorScheme"] {
+  --background: oklch(0.983 0.008 80);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --muted: oklch(0.97 0 0);
+  --border: oklch(0.922 0 0);
+}
+
+/* /tools ページのヘッダーダーク対応 */
+.dark .portal-page .p-header {
+  background: var(--th-bg) !important;
+  border-bottom-color: var(--th-border) !important;
+}
+
 @media print {
   header, footer, .ad-banner, .action-buttons { display: none !important; }
   .tournament-bracket {
