@@ -112,7 +112,7 @@ export default function ToolsPage() {
             <div style={{ display:"inline-flex", alignItems:"center", gap:8, padding:"6px 14px", background:"#ede9fe", color:"#8b5cf6", borderRadius:999, fontFamily:"Quicksand, sans-serif", fontWeight:700, fontSize:11, letterSpacing:"0.18em", marginBottom:24 }}>
               ✦ FREE TOOLS &nbsp;·&nbsp; {TOOLS.length} tools
             </div>
-            <h1 style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:"clamp(48px,8vw,80px)", lineHeight:1.1, letterSpacing:"0.02em", color:"#1f1d2b", marginBottom:24, position:"relative", display:"inline-block" }}>
+            <h1 style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:"clamp(48px,8vw,80px)", lineHeight:1.1, letterSpacing:"0.02em", color:"var(--th-text)", marginBottom:24, position:"relative", display:"inline-block" }}>
               <span style={{ position:"relative", display:"inline-block" }}>
                 タダ
                 <span style={{ position:"absolute", left:"-2%", right:"-2%", bottom:6, height:10, background:"#fbcfe8", borderRadius:6, zIndex:-1, transform:"skewX(-8deg)" }} />
@@ -120,7 +120,7 @@ export default function ToolsPage() {
               <span style={{ color:"#0ea5e9" }}>tools</span>
               <span style={{ color:"#f9a8d4" }}>.</span>
             </h1>
-            <p style={{ fontSize:16, color:"#6b6779", lineHeight:1.85, marginBottom:0 }}>
+            <p style={{ fontSize:16, color:"var(--th-text-muted)", lineHeight:1.85, marginBottom:0 }}>
               日常で使える無料Webツール集。<br />
               広告控えめ、使いたいものだけを。
             </p>
@@ -142,9 +142,9 @@ export default function ToolsPage() {
                 style={{
                   fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:700, fontSize:13,
                   padding:"8px 16px", borderRadius:999,
-                  background: activeCat === f.cat ? "#1f1d2b" : "#fff",
-                  border: activeCat === f.cat ? "2px solid #1f1d2b" : "2px solid #f1ecf3",
-                  color: activeCat === f.cat ? "#fff" : "#6b6779",
+                  background: activeCat === f.cat ? "var(--th-text)" : "var(--ibtn-bg)",
+                  border: activeCat === f.cat ? "2px solid var(--th-text)" : "2px solid var(--th-border)",
+                  color: activeCat === f.cat ? "var(--ibtn-bg)" : "var(--th-text-muted)",
                   cursor:"pointer", transition:"all 0.22s ease",
                   display:"inline-flex", alignItems:"center", gap:6,
                 }}
@@ -179,8 +179,8 @@ export default function ToolsPage() {
                 className="tool-card"
                 style={{
                   display:"block", textDecoration:"none", color:"inherit",
-                  padding:"16px 14px 38px", background:"#ffffff",
-                  border:"2px solid #f1ecf3", borderRadius:18,
+                  padding:"16px 14px 38px", background:"var(--card)",
+                  border:"2px solid var(--th-border)", borderRadius:18,
                   cursor:"pointer", overflow:"hidden", minHeight:132,
                   position:"relative",
                 }}
@@ -191,7 +191,7 @@ export default function ToolsPage() {
                   if (arrow) arrow.style.opacity = "1";
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "#f1ecf3";
+                  e.currentTarget.style.borderColor = "var(--th-border)";
                   e.currentTarget.style.boxShadow = "";
                   const arrow = e.currentTarget.querySelector<HTMLElement>(".tool-arrow");
                   if (arrow) arrow.style.opacity = "0";
@@ -201,13 +201,13 @@ export default function ToolsPage() {
                   <Image src={tool.icon} alt="" width={58} height={58} style={{ objectFit:"contain", transform:"translateY(3px)" }} />
                   <span style={{ position:"absolute", top:-3, right:-3, fontSize:10, color:"#fcd34d", opacity:0, transition:"all 0.22s ease" }} className="tool-sparkle">✦</span>
                 </div>
-                <div style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:13.5, color:"#1f1d2b", marginBottom:2, letterSpacing:"0.02em", lineHeight:1.35 }}>
+                <div style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:13.5, color:"var(--th-text)", marginBottom:2, letterSpacing:"0.02em", lineHeight:1.35 }}>
                   {tool.name}
                 </div>
-                <div style={{ fontSize:11, color:"#6b6779", lineHeight:1.5, display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden" }}>
+                <div style={{ fontSize:11, color:"var(--th-text-muted)", lineHeight:1.5, display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden" }}>
                   {tool.desc}
                 </div>
-                <span className="tool-arrow" style={{ position:"absolute", bottom:12, right:14, width:22, height:22, borderRadius:"50%", background:"#fdf9fb", display:"inline-flex", alignItems:"center", justifyContent:"center", color:"#9a96a8", opacity:0, transition:"opacity 0.22s ease", fontSize:12 }}>
+                <span className="tool-arrow" style={{ position:"absolute", bottom:12, right:14, width:22, height:22, borderRadius:"50%", background:"var(--th-bg)", display:"inline-flex", alignItems:"center", justifyContent:"center", color:"var(--th-text-muted)", opacity:0, transition:"opacity 0.22s ease", fontSize:12 }}>
                   →
                 </span>
               </Link>
@@ -217,14 +217,14 @@ export default function ToolsPage() {
       </main>
 
       {/* フッター */}
-      <footer style={{ borderTop:"1px solid #f1ecf3", padding:"36px 0 48px" }}>
+      <footer style={{ borderTop:"1px solid var(--th-border)", padding:"36px 0 48px" }}>
         <div style={{ maxWidth:896, margin:"0 auto", padding:"0 24px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:16, flexWrap:"wrap" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:10, fontSize:13, color:"#1f1d2b" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:10, fontSize:13, color:"var(--th-text)" }}>
             <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900 }}>ただただ</span>
-            <span style={{ color:"#9a96a8" }}>—</span>
-            <span style={{ color:"#6b6779" }}>タダtools</span>
+            <span style={{ color:"var(--th-text-muted)" }}>—</span>
+            <span style={{ color:"var(--th-text-muted)" }}>タダtools</span>
           </div>
-          <span style={{ fontFamily:"Quicksand, sans-serif", fontWeight:600, fontSize:11, color:"#9a96a8", letterSpacing:"0.06em" }}>
+          <span style={{ fontFamily:"Quicksand, sans-serif", fontWeight:600, fontSize:11, color:"var(--th-text-muted)", letterSpacing:"0.06em" }}>
             Made with <span style={{ color:"#f9a8d4" }}>♥</span> 2026
           </span>
         </div>
