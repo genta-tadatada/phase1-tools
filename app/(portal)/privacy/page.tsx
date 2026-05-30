@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
+import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
 
 export const metadata: Metadata = {
   title: "プライバシーポリシー | タダtools",
@@ -34,7 +35,10 @@ export default function PrivacyPage() {
             <span className="p-sep">/</span>
             <span className="p-crumb current">プライバシーポリシー</span>
           </Link>
-          <GlobalMenu activeSection={null} />
+          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+            <DarkModeToggle />
+            <GlobalMenu activeSection={null} />
+          </div>
         </div>
       </header>
 

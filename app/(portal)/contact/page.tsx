@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
+import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
 
 export const metadata: Metadata = {
   title: "お問い合わせ | タダtools",
@@ -22,7 +23,10 @@ export default function ContactPage() {
             <span className="p-sep">/</span>
             <span className="p-crumb current">お問い合わせ</span>
           </Link>
-          <GlobalMenu activeSection={null} />
+          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+            <DarkModeToggle />
+            <GlobalMenu activeSection={null} />
+          </div>
         </div>
       </header>
 

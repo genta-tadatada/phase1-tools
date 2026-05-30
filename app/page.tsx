@@ -5,6 +5,7 @@ import { NEWS_DATA } from "@/lib/news-data";
 import { NewsCarousel } from "@/components/portal/NewsCarousel";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
 import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
+import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
 import "./(portal)/portal.css";
 
 export const metadata: Metadata = {
@@ -23,7 +24,10 @@ export default function PortalPage() {
           <Link href="/" className="p-logo">
             <TadatadaLogo charSize={88} textW={186} textH={124} />
           </Link>
-          <GlobalMenu activeSection={null} />
+          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+            <DarkModeToggle />
+            <GlobalMenu activeSection={null} />
+          </div>
         </div>
       </header>
 
