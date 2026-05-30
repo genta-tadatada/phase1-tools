@@ -267,7 +267,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                         )}
                       </Link>
 
-                      {hasChildren && (
+                      {hasChildren && !item.soon && (
                         <button
                           type="button"
                           onClick={() => toggleGroup(idx)}
@@ -282,7 +282,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                       )}
                     </div>
 
-                    {hasChildren && (
+                    {hasChildren && !item.soon && (
                       <div style={{ display:"grid", gridTemplateRows:isGroupOpen ? "1fr" : "0fr", transition:"grid-template-rows 0.32s cubic-bezier(0.4,0,0.2,1)" }}>
                         <div style={{ minHeight:0, overflow:"hidden", paddingLeft:56 }}>
                           <div style={{ display:"flex", flexDirection:"column", gap:2, paddingTop:isGroupOpen ? 4 : 0, paddingBottom:isGroupOpen ? 8 : 0, transition:"padding 0.32s ease" }}>
