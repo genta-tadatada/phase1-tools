@@ -193,8 +193,8 @@ export default function ToolsPage() {
                   if (arrow) arrow.style.opacity = "0";
                 }}
               >
-                <div className="tool-icon-inner" style={{ position:"relative", width:68, height:68, borderRadius:14, display:"inline-flex", alignItems:"center", justifyContent:"flex-end", paddingBottom:4, marginBottom:12, background:catIconBg[tool.cat] }}>
-                  <Image src={tool.icon} alt="" width={58} height={58} style={{ objectFit:"contain" }} />
+                <div className="tool-icon-inner" style={{ position:"relative", width:68, height:68, borderRadius:14, display:"inline-flex", alignItems:"center", justifyContent:"center", marginBottom:12, background:catIconBg[tool.cat] }}>
+                  <Image src={tool.icon} alt="" width={58} height={58} style={{ objectFit:"contain", transform:"translateY(3px)" }} />
                   <span style={{ position:"absolute", top:-3, right:-3, fontSize:10, color:"#fcd34d", opacity:0, transition:"all 0.22s ease" }} className="tool-sparkle">✦</span>
                 </div>
                 <div style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:13.5, color:"#1f1d2b", marginBottom:2, letterSpacing:"0.02em", lineHeight:1.35 }}>
