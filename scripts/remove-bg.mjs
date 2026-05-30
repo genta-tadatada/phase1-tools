@@ -12,7 +12,7 @@ import { readdir } from "fs/promises";
 import { join, basename } from "path";
 
 const ASSETS_DIR = join(process.cwd(), "public", "assets");
-const THRESHOLD = 248; // この値以上のRGBを「白背景」とみなす（JPEG圧縮で微妙にズレた白も捕捉）
+const THRESHOLD = 200; // この値以上のRGBを「背景」とみなす（Gemini生成画像の薄グレー背景に対応）
 const TARGET_FILES = process.argv.slice(2);
 
 async function removeBg(filePath) {
