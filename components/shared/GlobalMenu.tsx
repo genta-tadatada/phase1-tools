@@ -74,8 +74,8 @@ const NAV: NavItem[] = [
     iconCover: true, iconScale: 2.3 },
 ];
 
-const PersonSVG = ({ size = 20 }: { size?: number }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="var(--ibtn-color)" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
+const PersonSVG = ({ size = 20, color }: { size?: number; color?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke={color ?? "var(--ibtn-color)"} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"
     style={{ width: size, height: size }} aria-hidden="true">
     <circle cx="12" cy="8" r="4" />
     <path d="M4 21c0-4 4-6 8-6s8 2 8 6" />
@@ -355,7 +355,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                 </button>
 
                 <div style={{ width:68, height:68, margin:"0 auto 16px", borderRadius:"50%", background:"linear-gradient(160deg, #ddd6fe, #c4b5fd)", display:"flex", alignItems:"center", justifyContent:"center", position:"relative", zIndex:1 }}>
-                  <PersonSVG size={36} />
+                  <PersonSVG size={36} color="#ffffff" />
                 </div>
 
                 <h3 style={{ textAlign:"center", fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:22, color:"var(--drawer-text)", marginBottom:8, position:"relative", zIndex:1 }}>

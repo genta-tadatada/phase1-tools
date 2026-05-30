@@ -1,30 +1,20 @@
 "use client";
 import { useLayoutEffect } from "react";
-import { useTheme } from "next-themes";
 
 /**
- * ポータルページに配置するコンポーネント。
- * マウント時に html.dark クラスを除去してライトモードを強制し、
- * アンマウント時（ツールページへの遷移時）にダークモードを復元する。
- * useLayoutEffect を使うことでフラッシュなしに同期実行される。
+ * ポータルページ専用。
+ * マウント時（描画前）に html.dark を除去し、アンマウント時に復元する。
+ * useLayoutEffect で同期実行するためフラッシュが発生しない。
+ * deps=[] でマウント/アンマウント時のみ実行（余計な再実行を防ぐ）。
  */
 export function ForceLight() {
-  const { theme } = useTheme();
-
   useLayoutEffect(() => {
     const html = document.documentElement;
     const wasDark = html.classList.contains("dark");
-
-    // ダークモードを強制的に解除
     html.classList.remove("dark");
-
     return () => {
-      // ポータルを離れたとき、元のテーマが dark なら復元
-      if (wasDark || theme === "dark") {
-        html.classList.add("dark");
-      }
+      if (wasDark) html.classList.add("dark");
     };
-  }, [theme]);
-
+  }, []);
   return null;
 }

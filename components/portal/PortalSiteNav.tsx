@@ -121,7 +121,7 @@ export function PortalSiteNav({ currentPath }: { currentPath?: string }) {
                           <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#ede9fe] text-[#8b5cf6]">SOON</span>
                         )}
                       </Link>
-                      {hasChildren && (
+                      {hasChildren && !item.soon && (
                         <button
                           type="button"
                           onClick={() => toggleGroup(idx)}
@@ -133,7 +133,7 @@ export function PortalSiteNav({ currentPath }: { currentPath?: string }) {
                       )}
                     </div>
 
-                    {hasChildren && isGroupOpen && (
+                    {hasChildren && !item.soon && isGroupOpen && (
                       <div className="ml-11 mt-1 flex flex-col gap-0.5">
                         {item.children!.map((child, ci) => (
                           <Link
