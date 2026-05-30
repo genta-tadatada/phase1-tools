@@ -1,4 +1,5 @@
 import { ToolHeader } from "./ToolHeader";
+import { ToolFooter } from "./ToolFooter";
 import { AdBanner } from "./AdBanner";
 
 interface ToolLayoutProps {
@@ -24,6 +25,7 @@ export function ToolLayout({
       <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 md:px-8">
         <div className={`${wide ? "max-w-5xl" : "max-w-2xl"} mx-auto w-full`}>{children}</div>
       </main>
+      <ToolFooter title={title} />
       <AdBanner visible={adVisible} adSlot={adSlot} adClient={adClient} />
     </div>
   );
