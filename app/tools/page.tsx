@@ -18,20 +18,20 @@ interface Tool {
 }
 
 const TOOLS: Tool[] = [
-  { href: "/counter",       icon: "🔢", name: "マルチカウンター",    desc: "複数項目を同時にカウント",      cat: "calc" },
-  { href: "/stopwatch",     icon: "⏱️", name: "多列ストップウォッチ", desc: "ラップ計測対応・1/100秒精度",   cat: "calc" },
-  { href: "/timer",         icon: "⏳", name: "タイマー",            desc: "カウントダウン・アラーム付き",  cat: "calc" },
-  { href: "/bpm",           icon: "🎵", name: "BPMメトロノーム",     desc: "40〜240 BPM・拍子設定可",      cat: "calc" },
-  { href: "/calculator",    icon: "🧮", name: "履歴付き電卓",        desc: "計算履歴表示・税込割引特化",    cat: "calc" },
-  { href: "/word-count",    icon: "📝", name: "文字数カウント",       desc: "文字・単語・行数を瞬時に集計",  cat: "text" },
-  { href: "/random-number", icon: "🎲", name: "ランダム数字",         desc: "範囲指定・重複なし対応",        cat: "play" },
-  { href: "/dice",          icon: "⚀",  name: "サイコロ",             desc: "最大10個まで同時に振れる",      cat: "play" },
-  { href: "/roulette",      icon: "🎡", name: "ルーレット",           desc: "選択肢を入れて回すだけ",        cat: "play" },
-  { href: "/janken",        icon: "✊", name: "じゃんけん",            desc: "CPU対戦・多人数モード対応",     cat: "play" },
-  { href: "/lot",           icon: "🎫", name: "くじ引き",             desc: "名前リストから公平に抽選",      cat: "play" },
-  { href: "/group",         icon: "👥", name: "グループ分け",         desc: "均等グループを自動生成",        cat: "play" },
-  { href: "/amida",         icon: "📏", name: "あみだくじ",           desc: "自動生成あみだくじ",            cat: "play" },
-  { href: "/tournament",    icon: "🏆", name: "トーナメント表",       desc: "参加者入力で自動ブラケット",    cat: "play" },
+  { href: "/counter",       icon: "/assets/icon-counter.png",       name: "マルチカウンター",    desc: "複数項目を同時にカウント",      cat: "calc" },
+  { href: "/stopwatch",     icon: "/assets/icon-stopwatch.png",     name: "多列ストップウォッチ", desc: "ラップ計測対応・1/100秒精度",   cat: "calc" },
+  { href: "/timer",         icon: "/assets/icon-timer.png",         name: "タイマー",            desc: "カウントダウン・アラーム付き",  cat: "calc" },
+  { href: "/bpm",           icon: "/assets/icon-bpm.png",           name: "BPMメトロノーム",     desc: "40〜240 BPM・拍子設定可",      cat: "calc" },
+  { href: "/calculator",    icon: "/assets/icon-calculator.png",    name: "履歴付き電卓",        desc: "計算履歴表示・税込割引特化",    cat: "calc" },
+  { href: "/word-count",    icon: "/assets/icon-word-count.png",    name: "文字数カウント",       desc: "文字・単語・行数を瞬時に集計",  cat: "text" },
+  { href: "/random-number", icon: "/assets/icon-random-number.png", name: "ランダム数字",         desc: "範囲指定・重複なし対応",        cat: "play" },
+  { href: "/dice",          icon: "/assets/icon-dice.png",          name: "サイコロ",             desc: "最大10個まで同時に振れる",      cat: "play" },
+  { href: "/roulette",      icon: "/assets/icon-roulette.png",      name: "ルーレット",           desc: "選択肢を入れて回すだけ",        cat: "play" },
+  { href: "/janken",        icon: "/assets/icon-janken.png",        name: "じゃんけん",            desc: "CPU対戦・多人数モード対応",     cat: "play" },
+  { href: "/lot",           icon: "/assets/icon-lot.png",           name: "くじ引き",             desc: "名前リストから公平に抽選",      cat: "play" },
+  { href: "/group",         icon: "/assets/icon-group.png",         name: "グループ分け",         desc: "均等グループを自動生成",        cat: "play" },
+  { href: "/amida",         icon: "/assets/icon-amida.png",         name: "あみだくじ",           desc: "自動生成あみだくじ",            cat: "play" },
+  { href: "/tournament",    icon: "/assets/icon-tournament.png",    name: "トーナメント表",       desc: "参加者入力で自動ブラケット",    cat: "play" },
 ];
 
 const catIconBg: Record<string, string> = {
@@ -193,8 +193,8 @@ export default function ToolsPage() {
                   if (arrow) arrow.style.opacity = "0";
                 }}
               >
-                <div className="tool-icon-inner" style={{ position:"relative", width:40, height:40, borderRadius:12, display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:22, marginBottom:12, background:catIconBg[tool.cat] }}>
-                  {tool.icon}
+                <div className="tool-icon-inner" style={{ position:"relative", width:48, height:48, borderRadius:12, display:"inline-flex", alignItems:"center", justifyContent:"center", marginBottom:12, background:catIconBg[tool.cat] }}>
+                  <Image src={tool.icon} alt="" width={38} height={38} style={{ objectFit:"contain" }} />
                   <span style={{ position:"absolute", top:-3, right:-3, fontSize:10, color:"#fcd34d", opacity:0, transition:"all 0.22s ease" }} className="tool-sparkle">✦</span>
                 </div>
                 <div style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:13.5, color:"#1f1d2b", marginBottom:2, letterSpacing:"0.02em", lineHeight:1.35 }}>
