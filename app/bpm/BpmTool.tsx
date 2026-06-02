@@ -420,14 +420,18 @@ export function BpmTool() {
         </div>
 
         {/* Slider */}
-        <input
-          type="range"
-          min={MIN_BPM}
-          max={MAX_BPM}
-          value={bpm}
-          onChange={(e) => setBpm(Number(e.target.value))}
-          className="w-full max-w-xs accent-[var(--accent)]"
-        />
+        <div className="flex items-center gap-2 w-full max-w-xs">
+          <span className="text-xs text-muted-foreground tabular-nums w-7 text-right">{MIN_BPM}</span>
+          <input
+            type="range"
+            min={MIN_BPM}
+            max={MAX_BPM}
+            value={bpm}
+            onChange={(e) => setBpm(Number(e.target.value))}
+            className="flex-1 accent-[var(--accent)]"
+          />
+          <span className="text-xs text-muted-foreground tabular-nums w-7">{MAX_BPM}</span>
+        </div>
 
         {/* Beat indicator + time signature */}
         <div className="flex items-center gap-4">
