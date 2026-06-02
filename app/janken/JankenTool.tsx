@@ -128,7 +128,6 @@ export function JankenTool() {
   const [countdownStep, setCountdownStep] = useState(0);
   const [stats, setStats] = useState<SessionStats>({ wins: 0, losses: 0, draws: 0 });
   const [settings, setSettings] = useState<JankenSettings>({ autoRetryOnDraw: true, countdownSpeed: "normal", lastPlayers: [] });
-  const [adVisible, setAdVisible] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [mpPlayers, setMpPlayers] = useState<string[]>(["プレイヤー1", "プレイヤー2"]);
@@ -164,7 +163,6 @@ export function JankenTool() {
   const clearTimer = () => { if (timerRef.current) clearTimeout(timerRef.current); };
 
   const startCountdown = useCallback((pendingPlayers: Player[]) => {
-    setAdVisible(false);
     setPhase("countdown");
     setCountdownStep(0);
     const stepMs = settings.countdownSpeed === "fast" ? 500 : 900;
@@ -177,7 +175,6 @@ export function JankenTool() {
       } else {
         setPhase("result");
         setPlayers(pendingPlayers);
-        setAdVisible(true);
         if (mode === "cpu") {
           const me = pendingPlayers.find((p) => p.id === "player");
           if (me?.result === "win")  setStats((s) => ({ ...s, wins: s.wins + 1 }));
@@ -240,7 +237,6 @@ export function JankenTool() {
     setPhase("setup");
     setCountdownStep(0);
     setMpCurrentIdx(0);
-    setAdVisible(true);
     if (mode === "cpu") {
       setPlayers([
         { id: "player", name: "あなた", hand: null, result: null },
@@ -273,7 +269,7 @@ export function JankenTool() {
   const playerCpu = players.find((p) => p.id === "cpu");
 
   return (
-    <ToolLayout title="じゃんけん" adVisible={adVisible}>
+    <ToolLayout title="じゃんけん" adVisible>
       {/* モードタブ */}
       <div className="flex rounded-xl border border-border bg-muted/50 p-1 mb-6 gap-1">
         {(["cpu", "multiplayer"] as Mode[]).map((m) => (

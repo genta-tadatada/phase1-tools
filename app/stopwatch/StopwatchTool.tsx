@@ -753,7 +753,7 @@ export function StopwatchTool() {
 
   return (
     <>
-      <ToolLayout title="多列ストップウォッチ" wide adVisible={!anyRunning}>
+      <ToolLayout title="多列ストップウォッチ" wide adVisible>
         <div className="space-y-4">
           {/* Global controls */}
           <div className="flex items-center justify-between gap-2">

@@ -237,7 +237,7 @@ export function RandomNumberTool() {
   const errMsg = validate();
 
   return (
-    <ToolLayout title="ランダム数字" adVisible={!rolling}>
+    <ToolLayout title="ランダム数字" adVisible>
       <div className="flex flex-col gap-6">
         {/* Settings */}
         <div className="rounded-xl border border-border bg-card shadow-sm p-5 flex flex-col gap-4">

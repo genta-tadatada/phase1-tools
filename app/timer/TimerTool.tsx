@@ -902,7 +902,7 @@ export function TimerTool() {
       )}
     </AnimatePresence>
 
-    <ToolLayout title="タイマー" adVisible={!isRunning}>
+    <ToolLayout title="タイマー" adVisible>
       {showFlash && (
         <div className="fixed inset-0 bg-accent/20 pointer-events-none z-50" aria-hidden="true" />
       )}

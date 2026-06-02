@@ -938,7 +938,7 @@ export function CounterTool() {
 
   return (
     <>
-      <ToolLayout title="マルチカウンター" wide adVisible={!focusCounter}>
+      <ToolLayout title="マルチカウンター" wide adVisible>
         <div className="space-y-4">
           {/* Counter grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">

@@ -121,7 +121,7 @@ export function RouletteTool() {
   const activeIdx = spinning ? highlightIndex : selectedIndex;
 
   return (
-    <ToolLayout title="ルーレット" adVisible={!spinning}>
+    <ToolLayout title="ルーレット" adVisible>
       <div className="flex flex-col gap-5">
 
         {/* 入力 */}

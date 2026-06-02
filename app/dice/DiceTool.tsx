@@ -181,7 +181,7 @@ export function DiceTool() {
   if (!mounted) return null;
 
   return (
-    <ToolLayout title="サイコロ" adVisible={!shaking}>
+    <ToolLayout title="サイコロ" adVisible>
       <div className="flex flex-col gap-6">
 
         {/* 面数セレクター */}

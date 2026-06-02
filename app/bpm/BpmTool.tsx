@@ -108,7 +108,6 @@ export function BpmTool() {
   const [volume, setVolume] = useState(0.7);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentBeat, setCurrentBeat] = useState(-1);
-  const [adVisible, setAdVisible] = useState(true);
   const [tapCount, setTapCount] = useState(0);
   const [tapMessage, setTapMessage] = useState("");
   const [mounted, setMounted] = useState(false);
@@ -125,7 +124,6 @@ export function BpmTool() {
   const nextBeatTimeRef = useRef(0);
   const currentBeatRef = useRef(0);
   const schedulerTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const adTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tapTimestampsRef = useRef<number[]>([]);
   const tapResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const bpmRef = useRef(bpm);
@@ -235,15 +233,12 @@ export function BpmTool() {
 
   const handlePlay = useCallback(() => {
     setIsPlaying(true);
-    setAdVisible(false);
-    if (adTimerRef.current) clearTimeout(adTimerRef.current);
     startMetronome();
   }, [startMetronome]);
 
   const handleStop = useCallback(() => {
     setIsPlaying(false);
     stopMetronome();
-    adTimerRef.current = setTimeout(() => setAdVisible(true), 3000);
   }, [stopMetronome]);
 
   const togglePlay = useCallback(() => {
@@ -255,7 +250,6 @@ export function BpmTool() {
   useEffect(() => {
     return () => {
       stopMetronome();
-      if (adTimerRef.current) clearTimeout(adTimerRef.current);
       if (tapResetTimerRef.current) clearTimeout(tapResetTimerRef.current);
     };
   }, [stopMetronome]);
@@ -382,7 +376,7 @@ export function BpmTool() {
   if (!mounted) return null;
 
   return (
-    <ToolLayout title="メトロノーム" adVisible={adVisible}>
+    <ToolLayout title="メトロノーム" adVisible>
       <div className="flex flex-col items-center gap-6 py-4">
         {/* BPM label */}
         <p className="text-sm text-muted-foreground font-medium tracking-wide">

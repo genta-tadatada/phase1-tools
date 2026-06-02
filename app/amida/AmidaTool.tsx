@@ -416,7 +416,7 @@ export function AmidaTool() {
   const canGenerate = validEntries >= MIN_PLAYERS;
 
   return (
-    <ToolLayout title="あみだくじ" adVisible={phase !== "tracing"}>
+    <ToolLayout title="あみだくじ" adVisible>
       <div className="space-y-4">
         <AnimatePresence mode="wait">
           {phase === "setup" ? (

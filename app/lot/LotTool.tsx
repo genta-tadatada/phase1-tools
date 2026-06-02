@@ -370,7 +370,7 @@ export function LotTool() {
   }, [phase, handleDraw]);
 
   return (
-    <ToolLayout title="くじ引き" adVisible={!isAnimating}>
+    <ToolLayout title="くじ引き" adVisible>
       <div className="space-y-4">
         <AnimatePresence mode="wait">
           {phase === "setup" ? (
