@@ -11,11 +11,13 @@ import { Share2, Check } from "lucide-react";
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 type TimeSignature = "4/4" | "3/4" | "2/4" | "6/8";
+type SubDiv = 1 | 2 | 3 | 4;
 
 interface BpmState {
   bpm: number;
   timeSignature: TimeSignature;
   volume: number;
+  subdivision?: SubDiv;
 }
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -77,15 +79,21 @@ function scheduleClick(
   audioCtx: AudioContext,
   time: number,
   isAccent: boolean,
-  volume: number
+  volume: number,
+  isSubdiv = false
 ): void {
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
   osc.connect(gain);
   gain.connect(audioCtx.destination);
-  osc.frequency.setValueAtTime(isAccent ? 1000 : 800, time);
   osc.type = "sine";
-  gain.gain.setValueAtTime(volume * 0.8, time);
+  if (isSubdiv) {
+    osc.frequency.setValueAtTime(600, time);
+    gain.gain.setValueAtTime(volume * 0.3, time);
+  } else {
+    osc.frequency.setValueAtTime(isAccent ? 1000 : 800, time);
+    gain.gain.setValueAtTime(volume * 0.8, time);
+  }
   gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
   osc.start(time);
   osc.stop(time + 0.06);
@@ -105,6 +113,7 @@ export function BpmTool() {
   const [tapMessage, setTapMessage] = useState("");
   const [mounted, setMounted] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [subdivision, setSubdivision] = useState<SubDiv>(1);
   const [shareSuccess, setShareSuccess] = useState(false);
   const [editingBpm, setEditingBpm] = useState(false);
   const [inputBpm, setInputBpm] = useState("120");
@@ -122,12 +131,14 @@ export function BpmTool() {
   const bpmRef = useRef(bpm);
   const volumeRef = useRef(volume);
   const timeSignatureRef = useRef(timeSignature);
+  const subdivisionRef = useRef<SubDiv>(1);
   const isPlayingRef = useRef(false);
 
   // Keep refs in sync
   useEffect(() => { bpmRef.current = bpm; }, [bpm]);
   useEffect(() => { volumeRef.current = volume; }, [volume]);
   useEffect(() => { timeSignatureRef.current = timeSignature; }, [timeSignature]);
+  useEffect(() => { subdivisionRef.current = subdivision; }, [subdivision]);
 
   // Load from URL or localStorage
   useEffect(() => {
@@ -135,11 +146,12 @@ export function BpmTool() {
     try {
       const param = new URLSearchParams(window.location.search).get("c");
       if (param) {
-        const p = decodeState<{ bpm?: number; ts?: TimeSignature; vol?: number }>(param);
+        const p = decodeState<{ bpm?: number; ts?: TimeSignature; vol?: number; sub?: SubDiv }>(param);
         if (p) {
           if (p.bpm && p.bpm >= MIN_BPM && p.bpm <= MAX_BPM) setBpm(p.bpm);
           if (p.ts && TIME_SIGNATURES.includes(p.ts)) setTimeSignature(p.ts);
           if (typeof p.vol === "number" && p.vol >= 0 && p.vol <= 1) setVolume(p.vol);
+          if (p.sub && [1, 2, 3, 4].includes(p.sub)) { setSubdivision(p.sub); subdivisionRef.current = p.sub; }
           return;
         }
       }
@@ -152,6 +164,7 @@ export function BpmTool() {
         if (TIME_SIGNATURES.includes(state.timeSignature))
           setTimeSignature(state.timeSignature);
         if (state.volume >= 0 && state.volume <= 1) setVolume(state.volume);
+        if (state.subdivision && [1, 2, 3, 4].includes(state.subdivision)) { setSubdivision(state.subdivision); subdivisionRef.current = state.subdivision; }
       }
     } catch { /* ignore */ }
   }, []);
@@ -160,7 +173,7 @@ export function BpmTool() {
   useEffect(() => {
     if (!mounted) return;
     try {
-      const state: BpmState = { bpm, timeSignature, volume };
+      const state: BpmState = { bpm, timeSignature, volume, subdivision };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       // ignore
@@ -173,27 +186,26 @@ export function BpmTool() {
     if (!audioCtx) return;
     const beats = getBeatsPerMeasure(timeSignatureRef.current);
     const secondsPerBeat = 60 / bpmRef.current;
+    const sub = subdivisionRef.current;
+    const interval = secondsPerBeat / sub;
 
-    while (
-      nextBeatTimeRef.current <
-      audioCtx.currentTime + SCHEDULE_AHEAD_S
-    ) {
-      const beat = currentBeatRef.current % beats;
-      scheduleClick(
-        audioCtx,
-        nextBeatTimeRef.current,
-        beat === 0,
-        volumeRef.current
-      );
-      // Schedule UI update
-      const delay =
-        (nextBeatTimeRef.current - audioCtx.currentTime) * 1000;
-      const capturedBeat = beat;
-      setTimeout(() => {
-        if (isPlayingRef.current) setCurrentBeat(capturedBeat);
-      }, Math.max(0, delay));
+    while (nextBeatTimeRef.current < audioCtx.currentTime + SCHEDULE_AHEAD_S) {
+      const subPos = currentBeatRef.current % sub;
+      const beatPos = Math.floor(currentBeatRef.current / sub) % beats;
+      const isMainBeat = subPos === 0;
+      const isAccent = beatPos === 0 && isMainBeat;
 
-      nextBeatTimeRef.current += secondsPerBeat;
+      scheduleClick(audioCtx, nextBeatTimeRef.current, isAccent, volumeRef.current, !isMainBeat);
+
+      if (isMainBeat) {
+        const delay = (nextBeatTimeRef.current - audioCtx.currentTime) * 1000;
+        const capturedBeat = beatPos;
+        setTimeout(() => {
+          if (isPlayingRef.current) setCurrentBeat(capturedBeat);
+        }, Math.max(0, delay));
+      }
+
+      nextBeatTimeRef.current += interval;
       currentBeatRef.current += 1;
     }
   }, []);
@@ -248,8 +260,17 @@ export function BpmTool() {
     };
   }, [stopMetronome]);
 
+  const handleSubdivisionChange = useCallback((sub: SubDiv) => {
+    subdivisionRef.current = sub;
+    setSubdivision(sub);
+    if (isPlayingRef.current) {
+      stopMetronome();
+      startMetronome();
+    }
+  }, [stopMetronome, startMetronome]);
+
   const handleShare = useCallback(() => {
-    const url = generateShareUrl({ bpm, ts: timeSignature, vol: volume });
+    const url = generateShareUrl({ bpm, ts: timeSignature, vol: volume, sub: subdivision });
     navigator.clipboard.writeText(url)
       .then(() => {
         toast("URLをコピーしました");
@@ -258,7 +279,7 @@ export function BpmTool() {
         shareTimerRef.current = setTimeout(() => setShareSuccess(false), 2000);
       })
       .catch(() => toast("コピーに失敗しました"));
-  }, [bpm, timeSignature, volume]);
+  }, [bpm, timeSignature, volume, subdivision]);
 
   const commitBpm = useCallback(() => {
     const n = parseInt(inputBpm, 10);
@@ -377,7 +398,7 @@ export function BpmTool() {
             onChange={(e) => setInputBpm(e.target.value)}
             onBlur={commitBpm}
             onKeyDown={(e) => { if (e.key === "Enter") commitBpm(); if (e.key === "Escape") setEditingBpm(false); }}
-            className="text-8xl sm:text-9xl font-bold w-48 text-center bg-transparent border-b-2 border-accent focus:outline-none tabular-nums font-[var(--font-inter)] leading-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="text-6xl sm:text-7xl font-bold w-full max-w-xs text-center bg-transparent border-b-2 border-accent focus:outline-none tabular-nums font-[var(--font-inter)] leading-tight py-1 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             aria-label="BPMを入力"
             autoFocus
           />
@@ -444,6 +465,28 @@ export function BpmTool() {
               </option>
             ))}
           </select>
+        </div>
+
+        {/* Subdivision */}
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-muted-foreground">細分割</span>
+          <div className="flex gap-1">
+            {([1, 2, 3, 4] as SubDiv[]).map((sub) => (
+              <button
+                key={sub}
+                onClick={() => handleSubdivisionChange(sub)}
+                className={`w-9 h-7 rounded text-xs font-medium transition-colors ${
+                  subdivision === sub
+                    ? "bg-accent text-accent-foreground"
+                    : "border border-border bg-card text-muted-foreground hover:bg-muted"
+                }`}
+                aria-pressed={subdivision === sub}
+                aria-label={`細分割×${sub}`}
+              >
+                ×{sub}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Play button */}
