@@ -860,8 +860,7 @@ export function StopwatchTool() {
           </div>
 
           {/* 統計セクション */}
-          {hasAnyData && (
-            <div className="rounded-lg border border-border/60 overflow-hidden">
+          <div className="rounded-lg border border-border/60 overflow-hidden">
               <button
                 onClick={() => setShowStats((v) => !v)}
                 className="w-full flex items-center justify-between px-4 py-2.5 text-xs text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors"
@@ -914,7 +913,6 @@ export function StopwatchTool() {
                 </div>
               )}
             </div>
-          )}
         </div>
 
         <Dialog open={showResetAllConfirm} onOpenChange={setShowResetAllConfirm}>

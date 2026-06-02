@@ -1070,7 +1070,7 @@ export function TimerTool() {
               {/* 通知 */}
               {typeof Notification !== "undefined" && Notification.permission !== "denied" && !prefs.notificationEnabled && (
                 <button onClick={requestNotification} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                  終了をデスクトップ通知
+                  通知でお知らせ
                 </button>
               )}
               {/* ? ショートカット */}
@@ -1255,7 +1255,7 @@ export function TimerTool() {
               </button>
               {typeof Notification !== "undefined" && Notification.permission !== "denied" && !prefs.notificationEnabled && (
                 <button onClick={requestNotification} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-                  終了をデスクトップ通知
+                  通知でお知らせ
                 </button>
               )}
               <button onClick={() => setShowShortcuts(v => !v)} className="w-7 h-7 flex items-center justify-center rounded-md border border-border bg-card text-xs font-bold text-muted-foreground hover:bg-muted transition-colors" aria-label="キーボードショートカット">?</button>
