@@ -238,20 +238,20 @@ export default function PortalPage() {
       <section className="p-bottom-cta">
         <div className="p-container">
           <div className="p-cta-card">
-            {/* 左側 装飾群 */}
-            <div className="p-cta-mascot left" style={{ flexDirection: "column", gap: 10, top: "50%", transform: "translateY(-50%)" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/uploads/kawaii-star.svg" alt="" style={{ width: 52, height: 52, objectFit: "contain", animation: "p-float 4s ease-in-out infinite" }} />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/uploads/kawaii-sparkle-accent.svg" alt="" style={{ width: 28, height: 28, objectFit: "contain", opacity: 0.75, animation: "p-float 5.2s ease-in-out 0.8s infinite" }} />
-            </div>
-            {/* 右側 装飾群 */}
-            <div className="p-cta-mascot right" style={{ flexDirection: "column", gap: 10, top: "50%", transform: "translateY(-50%)" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/uploads/kawaii-heart.svg" alt="" style={{ width: 48, height: 48, objectFit: "contain", animation: "p-float 5s ease-in-out 0.4s infinite" }} />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/uploads/kawaii-flower.svg" alt="" style={{ width: 30, height: 30, objectFit: "contain", opacity: 0.8, animation: "p-float 4.6s ease-in-out 1.2s infinite" }} />
-            </div>
+            {/* 左側 装飾 */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/uploads/kawaii-star.svg" alt="" aria-hidden="true" className="p-cta-mascot" style={{ top: "8%", left: "4%", width: 50, animation: "p-float 4s ease-in-out infinite" }} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/uploads/kawaii-rainbow.svg" alt="" aria-hidden="true" className="p-cta-mascot" style={{ top: "50%", left: "2%", width: 36, opacity: 0.6, animation: "p-float 6s ease-in-out 1.4s infinite" }} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/uploads/kawaii-sparkle-accent.svg" alt="" aria-hidden="true" className="p-cta-mascot" style={{ top: "78%", left: "8%", width: 22, opacity: 0.7, animation: "p-float 5.2s ease-in-out 0.8s infinite" }} />
+            {/* 右側 装飾 */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/uploads/kawaii-heart.svg" alt="" aria-hidden="true" className="p-cta-mascot" style={{ top: "12%", right: "4%", width: 46, animation: "p-float 5s ease-in-out 0.4s infinite" }} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/uploads/kawaii-cloud-small.svg" alt="" aria-hidden="true" className="p-cta-mascot" style={{ top: "48%", right: "2%", width: 38, opacity: 0.6, animation: "p-float 4.8s ease-in-out 1s infinite" }} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/uploads/kawaii-flower.svg" alt="" aria-hidden="true" className="p-cta-mascot" style={{ top: "76%", right: "7%", width: 28, opacity: 0.8, animation: "p-float 4.6s ease-in-out 1.6s infinite" }} />
             <div className="p-cta-title">さあ、タダで、使ってみよう。</div>
             <p className="p-cta-sub">使う・学ぶ・遊ぶ、あなたの今日にひとつだけ。</p>
             <Link href="#services" className="p-cta-primary">
