@@ -57,8 +57,16 @@ export function NewsListClient({ allNews }: { allNews: NewsItem[] }) {
           <div className="p-news-list">
             {pageItems.map((item) => (
               <Link key={item.id} href={`/news/${item.id}`} className="p-news-item">
-                <div className="p-item-banner" style={{ background: bannerGradient(item.banner.grad) }}>
-                  <span className="p-item-banner-icon">{item.banner.icon}</span>
+                <div
+                  className={`p-item-banner${item.image ? " has-image" : ""}`}
+                  style={{ background: item.image ? "#fff" : bannerGradient(item.banner.grad) }}
+                >
+                  {item.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={item.image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", zIndex: 1 }} />
+                  ) : (
+                    <span className="p-item-banner-icon">{item.banner.icon}</span>
+                  )}
                 </div>
                 <div className="p-item-body">
                   <div className="p-item-meta">

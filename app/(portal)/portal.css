@@ -906,6 +906,7 @@
   opacity: 0.5;
 }
 .portal-page .p-item-banner-icon { font-size: 56px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12)); position: relative; z-index: 1; }
+.portal-page .p-item-banner.has-image::before { display: none; }
 .portal-page .p-item-body { padding: 18px 22px 22px; }
 .portal-page .p-item-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .portal-page .p-item-date { font-family: var(--p-font-en); font-weight: 700; font-size: 12px; color: var(--p-fg-faint); letter-spacing: 0.06em; }
@@ -1003,6 +1004,7 @@
   opacity: 0.5;
 }
 .portal-page .p-detail-banner-icon { font-size: 120px; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15)); position: relative; z-index: 1; }
+.portal-page .p-detail-banner.has-image::before { display: none; }
 .portal-page .p-detail-body { font-size: 15.5px; color: var(--p-fg); line-height: 1.95; }
 .portal-page .p-detail-body p { margin-bottom: 20px; }
 .portal-page .p-detail-footer {
