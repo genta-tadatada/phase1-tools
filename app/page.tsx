@@ -203,21 +203,21 @@ export default function PortalPage() {
               <p className="p-feat-desc">難しい設定は一切なし。<br />開いてそのまま使えます。</p>
             </div>
             <div className="p-feat-card">
-              <div className="p-feat-icon i-2">
+              <div className="p-feat-icon i-2 has-img">
                 <Image src="/uploads/news-noauth.png" alt="" width={48} height={48} className="blend" />
               </div>
               <div className="p-feat-name">ログイン不要</div>
               <p className="p-feat-desc">アカウント作成なしで<br />すべての機能が使えます。</p>
             </div>
             <div className="p-feat-card">
-              <div className="p-feat-icon i-3">
+              <div className="p-feat-icon i-3 has-img">
                 <Image src="/uploads/news-free.png" alt="" width={48} height={48} className="blend" />
               </div>
               <div className="p-feat-name">すべて無料</div>
               <p className="p-feat-desc">隠れた課金は一切なし。<br />ずっとタダで使えます。</p>
             </div>
             <div className="p-feat-card">
-              <div className="p-feat-icon i-4">
+              <div className="p-feat-icon i-4 has-img">
                 <Image src="/uploads/news-megaphone.png" alt="" width={48} height={48} className="blend" />
               </div>
               <div className="p-feat-name">広告は控えめに</div>
@@ -238,13 +238,19 @@ export default function PortalPage() {
       <section className="p-bottom-cta">
         <div className="p-container">
           <div className="p-cta-card">
-            <div className="p-cta-mascot left">
+            {/* 左側 装飾群 */}
+            <div className="p-cta-mascot left" style={{ flexDirection: "column", gap: 10, top: "50%", transform: "translateY(-50%)" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/uploads/kawaii-star.svg" alt="" style={{ width: 52, height: 52, objectFit: "contain" }} />
+              <img src="/uploads/kawaii-star.svg" alt="" style={{ width: 52, height: 52, objectFit: "contain", animation: "p-float 4s ease-in-out infinite" }} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/uploads/kawaii-sparkle-accent.svg" alt="" style={{ width: 28, height: 28, objectFit: "contain", opacity: 0.75, animation: "p-float 5.2s ease-in-out 0.8s infinite" }} />
             </div>
-            <div className="p-cta-mascot right">
+            {/* 右側 装飾群 */}
+            <div className="p-cta-mascot right" style={{ flexDirection: "column", gap: 10, top: "50%", transform: "translateY(-50%)" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/uploads/kawaii-heart.svg" alt="" style={{ width: 44, height: 44, objectFit: "contain" }} />
+              <img src="/uploads/kawaii-heart.svg" alt="" style={{ width: 48, height: 48, objectFit: "contain", animation: "p-float 5s ease-in-out 0.4s infinite" }} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/uploads/kawaii-flower.svg" alt="" style={{ width: 30, height: 30, objectFit: "contain", opacity: 0.8, animation: "p-float 4.6s ease-in-out 1.2s infinite" }} />
             </div>
             <div className="p-cta-title">さあ、タダで、使ってみよう。</div>
             <p className="p-cta-sub">使う・学ぶ・遊ぶ、あなたの今日にひとつだけ。</p>
