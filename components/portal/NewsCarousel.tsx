@@ -92,9 +92,16 @@ export function NewsCarousel({ items }: { items: NewsItem[] }) {
                   display: "flex",
                   flexDirection: "column",
                 }}>
-                  <div style={{ height: 150, background: bannerGradient(item.banner.grad), position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.35) 1.5px, transparent 2px)", backgroundSize: "16px 16px", opacity: 0.5 }} />
-                    <span style={{ fontSize: 56, filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.1))", position: "relative", zIndex: 1 }}>{item.banner.icon}</span>
+                  <div style={{ height: 150, background: item.image ? "#fff" : bannerGradient(item.banner.grad), position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    {item.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={item.image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", zIndex: 1 }} />
+                    ) : (
+                      <>
+                        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.35) 1.5px, transparent 2px)", backgroundSize: "16px 16px", opacity: 0.5 }} />
+                        <span style={{ fontSize: 56, filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.1))", position: "relative", zIndex: 1 }}>{item.banner.icon}</span>
+                      </>
+                    )}
                   </div>
                   <div style={{ flex: 1, padding: "14px 18px 16px", display: "flex", flexDirection: "column" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
