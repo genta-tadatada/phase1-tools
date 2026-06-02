@@ -9,6 +9,7 @@ export type NewsItem = {
   body: string;
   banner: { grad: [string, string, string]; icon: string };
   image?: string;
+  imageContain?: boolean;
 };
 
 export const NEWS_DATA: NewsItem[] = [
@@ -31,6 +32,7 @@ export const NEWS_DATA: NewsItem[] = [
     body: "タダtools（tadatools.pages.dev）を正式公開しました。広告まみれの無料サービスに疲れていませんか？タダtoolsは「ログイン不要・広告控えめ・完全無料」をポリシーに運営します。\n\nカウンター・ストップウォッチ・タイマー・BPMメトロノーム・電卓・ランダム数字・サイコロ・ルーレット・じゃんけん・あみだくじ・くじ引き・グループ分け・文字数カウントなど、日常のちょっとした作業をサポートするツールを15種類順次追加予定です。",
     banner: { grad: ["#d1fae5", "#6ee7b7", "#a7f3d0"], icon: "🧰" },
     image: "/uploads/news-rocket.png",
+    imageContain: true,
   },
   {
     id: "008",
@@ -61,6 +63,7 @@ export const NEWS_DATA: NewsItem[] = [
     body: "「無料のくせに広告だらけ」「ちょっと使いたいだけなのにアカウント登録が必要」— そんな体験に不満を感じてTADATADAを作りました。\n\nTADATADAのすべてのサービスは、アカウント登録なし・ログインなしで使えます。広告はページ下部の細いバナーのみ。ツールの操作中・ゲームのプレイ中には表示しません。これからもずっと、タダで使えるサービスを目指します。",
     banner: { grad: ["#fce7f3", "#fbcfe8", "#c4b5fd"], icon: "🎀" },
     image: "/uploads/news-noauth.png",
+    imageContain: true,
   },
   {
     id: "005",
@@ -101,6 +104,7 @@ export const NEWS_DATA: NewsItem[] = [
     body: "TADATADA（ただただ）のサービスをスタートしました。「タダで使える・ただただシンプル・何度でもただで使える」というコンセプトで3つのサービスを展開します。\n\n① タダtools：日常ツール集（現在公開中）\n② ただただ一問一答：一問一答クイズ（開発中・夏予定）\n③ ただタダgames：ブラウザゲーム（開発中・高校サッカー育成シミュレーション）\n\nこれからよろしくお願いします！",
     banner: { grad: ["#f9a8d4", "#c4b5fd", "#6ee7b7"], icon: "🌸" },
     image: "/uploads/news-free.png",
+    imageContain: true,
   },
   {
     id: "001",

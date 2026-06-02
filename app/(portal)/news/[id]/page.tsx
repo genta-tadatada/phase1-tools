@@ -66,11 +66,11 @@ export default async function NewsDetailPage({ params }: Props) {
               <h1 className="p-detail-title">{item.title}</h1>
               <div
                 className={`p-detail-banner${item.image ? " has-image" : ""}`}
-                style={{ background: item.image ? "#fff" : bannerGradient(item.banner.grad) }}
+                style={{ background: item.image && !item.imageContain ? "#fff" : bannerGradient(item.banner.grad) }}
               >
                 {item.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 1 }} />
+                  <img src={item.image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: item.imageContain ? "contain" : "cover", zIndex: 1 }} />
                 ) : (
                   <span className="p-detail-banner-icon">{item.banner.icon}</span>
                 )}

@@ -92,10 +92,10 @@ export function NewsCarousel({ items }: { items: NewsItem[] }) {
                   display: "flex",
                   flexDirection: "column",
                 }}>
-                  <div style={{ height: 150, background: item.image ? "#fff" : bannerGradient(item.banner.grad), position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ height: 150, background: item.image && !item.imageContain ? "#fff" : bannerGradient(item.banner.grad), position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     {item.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={item.image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 1 }} />
+                      <img src={item.image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: item.imageContain ? "contain" : "cover", zIndex: 1 }} />
                     ) : (
                       <>
                         <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.35) 1.5px, transparent 2px)", backgroundSize: "16px 16px", opacity: 0.5 }} />
