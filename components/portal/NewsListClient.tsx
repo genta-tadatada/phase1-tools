@@ -63,7 +63,7 @@ export function NewsListClient({ allNews }: { allNews: NewsItem[] }) {
                 >
                   {item.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={item.image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", zIndex: 1 }} />
+                    <img src={item.image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", zIndex: 1 }} />
                   ) : (
                     <span className="p-item-banner-icon">{item.banner.icon}</span>
                   )}
