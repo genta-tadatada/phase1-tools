@@ -204,21 +204,21 @@ export default function PortalPage() {
             </div>
             <div className="p-feat-card">
               <div className="p-feat-icon i-2">
-                <Image src="/uploads/kawaii-unlock.svg" alt="" width={32} height={32} />
+                <Image src="/uploads/news-noauth.png" alt="" width={48} height={48} className="blend" />
               </div>
               <div className="p-feat-name">ログイン不要</div>
               <p className="p-feat-desc">アカウント作成なしで<br />すべての機能が使えます。</p>
             </div>
             <div className="p-feat-card">
               <div className="p-feat-icon i-3">
-                <Image src="/uploads/kawaii-price-tag-zero.svg" alt="" width={32} height={32} />
+                <Image src="/uploads/news-free.png" alt="" width={48} height={48} className="blend" />
               </div>
               <div className="p-feat-name">すべて無料</div>
               <p className="p-feat-desc">隠れた課金は一切なし。<br />ずっとタダで使えます。</p>
             </div>
             <div className="p-feat-card">
               <div className="p-feat-icon i-4">
-                <Image src="/uploads/kawaii-megaphone-mute.svg" alt="" width={32} height={32} />
+                <Image src="/uploads/news-megaphone.png" alt="" width={48} height={48} className="blend" />
               </div>
               <div className="p-feat-name">広告は控えめに</div>
               <p className="p-feat-desc">ツール使用中は広告を非表示。<br />使うことだけに集中できます。</p>
@@ -238,8 +238,14 @@ export default function PortalPage() {
       <section className="p-bottom-cta">
         <div className="p-container">
           <div className="p-cta-card">
-            <div className="p-cta-mascot left">🌟</div>
-            <div className="p-cta-mascot right">🎀</div>
+            <div className="p-cta-mascot left">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/uploads/kawaii-star.svg" alt="" style={{ width: 52, height: 52, objectFit: "contain" }} />
+            </div>
+            <div className="p-cta-mascot right">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/uploads/kawaii-heart.svg" alt="" style={{ width: 44, height: 44, objectFit: "contain" }} />
+            </div>
             <div className="p-cta-title">さあ、タダで、使ってみよう。</div>
             <p className="p-cta-sub">使う・学ぶ・遊ぶ、あなたの今日にひとつだけ。</p>
             <Link href="#services" className="p-cta-primary">
