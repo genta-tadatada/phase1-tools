@@ -83,6 +83,49 @@ function drawFromEntries(entries: LotEntry[]): { result: LotEntry; updated: LotE
   return { result: chosen, updated };
 }
 
+// ─── InstantCard ─────────────────────────────────────────────────────────────
+
+function InstantCard({ result, onDone }: { result: string; onDone: () => void }) {
+  const [displayText, setDisplayText] = useState("?");
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    const steps = 10;
+    let step = 0;
+    const decoys = ["?", "??", "?", "??", "?"];
+    const tick = () => {
+      step++;
+      if (step < steps) {
+        setDisplayText(decoys[step % decoys.length]);
+        setTimeout(tick, 30 + step * 8);
+      } else {
+        setDisplayText(result);
+        setRevealed(true);
+      }
+    };
+    setTimeout(tick, 30);
+  }, [result]);
+
+  useEffect(() => {
+    if (revealed) {
+      const t = setTimeout(onDone, 500);
+      return () => clearTimeout(t);
+    }
+  }, [revealed, onDone]);
+
+  return (
+    <div className="flex flex-col items-center justify-center py-4">
+      <motion.div
+        className="w-56 h-32 rounded-xl shadow-md border border-border bg-card flex items-center justify-center"
+        animate={revealed ? { scale: [1, 1.1, 1], borderColor: ["var(--border)", "var(--accent)", "var(--border)"] } : {}}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+      >
+        <span className="text-3xl font-bold">{displayText}</span>
+      </motion.div>
+    </div>
+  );
+}
+
 // ─── EnvelopeCard ─────────────────────────────────────────────────────────────
 
 function EnvelopeCard({ result, onDone }: { result: string; onDone: () => void }) {
@@ -186,6 +229,7 @@ export function LotTool() {
   const [currentResult, setCurrentResult] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   // Load from URL or localStorage
@@ -293,11 +337,7 @@ export function LotTool() {
     }
 
     setCurrentResult(result);
-    if (drawAnimation !== "instant") {
-      setIsAnimating(true);
-    } else {
-      setRecords((prev) => [{ id: genId(), label: result, drawnAt: Date.now() }, ...prev]);
-    }
+    setIsAnimating(true);
   }, [isAnimating, isComplete, mode, numberMax, numberDrawn, entries, drawAnimation]);
 
   const handleAnimationDone = useCallback(() => {
@@ -343,19 +383,20 @@ export function LotTool() {
               className="space-y-5"
             >
               {/* Mode tabs */}
-              <div className="flex rounded-xl bg-muted p-1 gap-1">
-                <button
-                  onClick={() => setMode("custom")}
-                  className={`flex-1 rounded-lg py-1.5 text-sm font-medium transition-colors ${mode === "custom" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                >
-                  カスタム
-                </button>
-                <button
-                  onClick={() => setMode("number")}
-                  className={`flex-1 rounded-lg py-1.5 text-sm font-medium transition-colors ${mode === "number" ? "bg-background shadow text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-                >
-                  数字くじ
-                </button>
+              <div className="flex rounded-xl border border-border bg-muted/50 p-1 gap-1">
+                {(["custom", "number"] as LotMode[]).map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setMode(m)}
+                    className={`flex-1 rounded-lg py-2 text-sm font-bold transition-all duration-200 ${
+                      mode === m
+                        ? "bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {m === "custom" ? "🎟️ カスタム" : "🔢 数字くじ"}
+                  </button>
+                ))}
               </div>
 
               {mode === "custom" ? (
@@ -418,7 +459,7 @@ export function LotTool() {
                     <button
                       key={anim}
                       onClick={() => setDrawAnimation(anim)}
-                      className={`flex-1 rounded-lg py-1.5 text-xs border transition-colors ${drawAnimation === anim ? "border-sky-500 bg-sky-50 dark:bg-sky-950/30 text-sky-600 dark:text-sky-400" : "border-border text-muted-foreground hover:border-border/80"}`}
+                      className={`flex-1 rounded-lg py-1.5 text-xs border transition-colors ${drawAnimation === anim ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]" : "border-border text-muted-foreground hover:border-border/80"}`}
                     >
                       {anim === "scratch" ? "スクラッチ" : anim === "envelope" ? "封筒" : "即表示"}
                     </button>
@@ -428,13 +469,15 @@ export function LotTool() {
 
               {/* CTA */}
               <div className="space-y-2">
-                <Button
-                  className="w-full gap-2 bg-sky-500 hover:bg-sky-600 text-white"
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  whileHover={{ scale: 1.01 }}
+                  className="w-full h-12 rounded-2xl text-sm font-bold bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-md disabled:opacity-40 flex items-center justify-center gap-2"
                   disabled={mode === "custom" ? (totalEntries === 0 || entries.some((e) => !e.label.trim())) : false}
                   onClick={handleStart}
                 >
-                  くじ引きスタート！
-                </Button>
+                  🎟️ くじ引きスタート！
+                </motion.button>
                 <Button variant="outline" size="sm" className="w-full gap-2" onClick={handleShare}>
                   <Share2 className="size-3.5" />
                   URLで共有
@@ -470,17 +513,20 @@ export function LotTool() {
                     <ScratchCard result={currentResult} onDone={handleAnimationDone} />
                   ) : drawAnimation === "envelope" ? (
                     <EnvelopeCard result={currentResult} onDone={handleAnimationDone} />
-                  ) : null
+                  ) : (
+                    <InstantCard result={currentResult} onDone={handleAnimationDone} />
+                  )
                 ) : currentResult !== null && !isAnimating ? (
                   <motion.div
                     key={`result-${records.length}`}
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                    className="flex flex-col items-center gap-3"
+                    initial={{ scale: 0.7, opacity: 0, y: 10 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    transition={{ type: "spring", stiffness: 350, damping: 18 }}
+                    className="flex flex-col items-center gap-2"
                   >
-                    <div className="w-56 h-32 rounded-xl shadow-md border border-border bg-card flex items-center justify-center">
-                      <span className="text-3xl font-bold">{currentResult}</span>
+                    <div className="w-56 h-32 rounded-2xl shadow-lg bg-gradient-to-br from-amber-400 to-orange-400 flex flex-col items-center justify-center gap-1">
+                      <span className="text-xs font-medium text-white/70">結果</span>
+                      <span className="text-3xl font-black text-white">{currentResult}</span>
                     </div>
                   </motion.div>
                 ) : (
@@ -492,13 +538,17 @@ export function LotTool() {
 
               {/* CTA */}
               {!isComplete ? (
-                <Button
-                  className="w-full gap-2 bg-sky-500 hover:bg-sky-600 text-white text-base py-5"
+                <motion.button
+                  whileTap={{ scale: 0.96 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="w-full h-14 rounded-2xl text-lg font-bold bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
                   onClick={handleDraw}
                   disabled={isAnimating}
                 >
-                  くじを引く！
-                </Button>
+                  {isAnimating ? (
+                    <motion.span animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 0.5 }}>🎟️</motion.span>
+                  ) : "🎟️ くじを引く！"}
+                </motion.button>
               ) : (
                 <div className="text-center py-4">
                   <p className="text-lg font-bold mb-3">くじ引き終了！</p>
@@ -537,7 +587,22 @@ export function LotTool() {
                   リセット
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground/50">Enter / Space: くじを引く　R: リセット</p>
+              <div className="relative flex justify-center">
+                {showShortcuts && (
+                  <div className="absolute bottom-full mb-2 w-64 rounded-lg border border-border bg-background shadow-lg p-3 z-50 text-xs text-muted-foreground text-left">
+                    <p className="font-semibold text-foreground mb-2">キーボードショートカット</p>
+                    <div className="space-y-1">
+                      <div className="flex justify-between"><span>Enter / Space</span><span>くじを引く（引き中のみ）</span></div>
+                      <div className="flex justify-between"><span>R</span><span>リセット</span></div>
+                    </div>
+                  </div>
+                )}
+                <button
+                  onClick={() => setShowShortcuts(v => !v)}
+                  className="w-7 h-7 flex items-center justify-center rounded-md border border-border bg-card text-xs font-bold text-muted-foreground hover:bg-muted transition-colors"
+                  aria-label="キーボードショートカット"
+                >?</button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

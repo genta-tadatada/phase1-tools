@@ -185,7 +185,7 @@ function AmidaSVG({ entries, rows, revealedCols, tracingCol, tracingStep, traced
             <path
               d={d}
               fill="none"
-              stroke="#0ea5e9"
+              stroke="var(--accent)"
               strokeWidth={4}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -197,7 +197,7 @@ function AmidaSVG({ entries, rows, revealedCols, tracingCol, tracingStep, traced
                 cx={colToX(visiblePath[visiblePath.length - 1].col, numPlayers)}
                 cy={rowToY(visiblePath[visiblePath.length - 1].row)}
                 r={7}
-                fill="#0ea5e9"
+                fill="var(--accent)"
               />
             )}
           </g>
@@ -217,7 +217,8 @@ function AmidaSVG({ entries, rows, revealedCols, tracingCol, tracingStep, traced
             textAnchor="middle"
             fontSize={11}
             fontFamily="inherit"
-            className={isRevealed ? "fill-sky-500 font-bold" : "fill-muted-foreground"}
+            className={isRevealed ? "font-bold" : "fill-muted-foreground"}
+            style={isRevealed ? { fill: "var(--accent)" } : undefined}
             opacity={isRevealed ? 1 : 0.4}
           >
             {resultText}
@@ -243,6 +244,7 @@ export function AmidaTool() {
   const [tracingStep, setTracingStep] = useState(0);
   const [tracedPaths, setTracedPaths] = useState<{ col: number; row: number }[][]>([]);
   const [traceSpeed, setTraceSpeed] = useState<TraceSpeed>("normal");
+  const [showShortcuts, setShowShortcuts] = useState(false);
   const [mounted, setMounted] = useState(false);
   const traceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -467,18 +469,19 @@ export function AmidaTool() {
               {/* Templates */}
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs text-muted-foreground">テンプレート:</span>
-                <button
-                  onClick={() => applyTemplate("winlose")}
-                  className="text-xs rounded-full border border-border px-3 py-1 hover:bg-muted transition-colors"
-                >
-                  当たり / はずれ
-                </button>
-                <button
-                  onClick={() => applyTemplate("number")}
-                  className="text-xs rounded-full border border-border px-3 py-1 hover:bg-muted transition-colors"
-                >
-                  1〜N番
-                </button>
+                {[
+                  { key: "winlose" as const, label: "🎯 当たり / はずれ" },
+                  { key: "number"  as const, label: "🔢 1〜N番" },
+                ].map(({ key, label }) => (
+                  <motion.button
+                    key={key}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => applyTemplate(key)}
+                    className="text-xs rounded-full border border-border bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20 border-violet-200/60 dark:border-violet-700/30 text-violet-600 dark:text-violet-400 px-3 py-1 hover:shadow-sm transition-all"
+                  >
+                    {label}
+                  </motion.button>
+                ))}
               </div>
 
               {/* Speed setting */}
@@ -488,7 +491,11 @@ export function AmidaTool() {
                   <button
                     key={s}
                     onClick={() => setTraceSpeed(s)}
-                    className={`text-xs rounded-full border px-3 py-1 transition-colors ${traceSpeed === s ? "border-sky-500 bg-sky-50 dark:bg-sky-950/30 text-sky-600 dark:text-sky-400" : "border-border hover:bg-muted"}`}
+                    className={`text-xs rounded-full border px-3 py-1 transition-all ${
+                      traceSpeed === s
+                        ? "bg-gradient-to-r from-violet-400 to-purple-400 text-white border-transparent shadow-sm"
+                        : "border-border hover:bg-muted"
+                    }`}
                   >
                     {s === "slow" ? "遅い" : s === "normal" ? "普通" : "速い"}
                   </button>
@@ -496,13 +503,15 @@ export function AmidaTool() {
               </div>
 
               {/* CTA */}
-              <Button
-                className="w-full gap-2 bg-sky-500 hover:bg-sky-600 text-white"
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.01 }}
                 disabled={!canGenerate}
                 onClick={handleGenerate}
+                className="w-full h-12 rounded-2xl text-sm font-bold bg-gradient-to-r from-violet-400 to-purple-400 text-white shadow-md disabled:opacity-40 flex items-center justify-center gap-2"
               >
-                あみだくじを作る！
-              </Button>
+                🎋 あみだくじを作る！
+              </motion.button>
               {!canGenerate && (
                 <p className="text-xs text-center text-muted-foreground">参加者名を{MIN_PLAYERS}人以上入力してください</p>
               )}
@@ -544,30 +553,45 @@ export function AmidaTool() {
               {/* Individual trace buttons */}
               {tracingCol === null && (
                 <div className="flex flex-wrap gap-2 justify-center">
-                  {entries.map((entry, i) => (
-                    <button
-                      key={entry.id}
-                      onClick={() => startTrace(i)}
-                      disabled={revealedCols.has(i) || tracingCol !== null}
-                      className={`text-xs rounded-full border px-3 py-1 transition-colors ${revealedCols.has(i) ? "opacity-40 cursor-not-allowed border-border" : "border-sky-500 text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-950/30"}`}
-                    >
-                      {i + 1}. {entry.name || `${i + 1}`}
-                    </button>
-                  ))}
+                  {entries.map((entry, i) => {
+                    const colors = [
+                      "from-rose-400 to-pink-400", "from-violet-400 to-purple-400",
+                      "from-sky-400 to-blue-400",  "from-emerald-400 to-teal-400",
+                      "from-orange-400 to-amber-400","from-fuchsia-400 to-pink-400",
+                      "from-amber-400 to-yellow-400","from-teal-400 to-cyan-400",
+                    ];
+                    const done = revealedCols.has(i);
+                    return (
+                      <motion.button
+                        key={entry.id}
+                        whileTap={{ scale: 0.93 }}
+                        onClick={() => startTrace(i)}
+                        disabled={done || tracingCol !== null}
+                        className={`text-xs rounded-full px-3 py-1 font-medium transition-all ${
+                          done
+                            ? "opacity-40 cursor-not-allowed bg-muted border border-border"
+                            : `bg-gradient-to-r ${colors[i % colors.length]} text-white shadow-sm hover:shadow`
+                        }`}
+                      >
+                        {i + 1}. {entry.name || `${i + 1}`}
+                      </motion.button>
+                    );
+                  })}
                 </div>
               )}
 
               {/* Main actions */}
               <div className="flex flex-wrap gap-2">
                 {revealedCols.size < entries.length && (
-                  <Button
-                    className="gap-2 bg-sky-500 hover:bg-sky-600 text-white"
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    className="h-9 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-violet-400 to-purple-400 text-white shadow-sm flex items-center gap-2 disabled:opacity-50"
                     onClick={handleRevealAll}
                     disabled={tracingCol !== null}
                   >
                     <Eye className="size-4" />
                     全員分を見る
-                  </Button>
+                  </motion.button>
                 )}
                 <Button
                   variant="outline"
@@ -595,9 +619,24 @@ export function AmidaTool() {
               </Button>
 
               {/* Keyboard hints */}
-              <p className="text-xs text-muted-foreground/50">
-                1〜{entries.length}: 対応する線を辿る　Space: 全員分を見る　R: やり直し
-              </p>
+              <div className="relative flex">
+                {showShortcuts && (
+                  <div className="absolute bottom-full mb-2 w-64 rounded-lg border border-border bg-background shadow-lg p-3 z-50 text-xs text-muted-foreground text-left">
+                    <p className="font-semibold text-foreground mb-2">キーボードショートカット</p>
+                    <div className="space-y-1">
+                      <div className="flex justify-between"><span>Enter</span><span>あみだ生成（設定画面）</span></div>
+                      <div className="flex justify-between"><span>Space</span><span>全員分を見る</span></div>
+                      <div className="flex justify-between"><span>R</span><span>やり直し</span></div>
+                      <div className="flex justify-between"><span>1〜{entries.length}</span><span>対応する線を辿る</span></div>
+                    </div>
+                  </div>
+                )}
+                <button
+                  onClick={() => setShowShortcuts(v => !v)}
+                  className="w-7 h-7 flex items-center justify-center rounded-md border border-border bg-card text-xs font-bold text-muted-foreground hover:bg-muted transition-colors"
+                  aria-label="キーボードショートカット"
+                >?</button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

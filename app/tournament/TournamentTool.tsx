@@ -216,7 +216,7 @@ function MatchCard({
         aria-label={`${label}: ${player.name}`}
         className={`w-full px-3 py-2 text-left text-sm font-medium transition-colors min-w-0 ${
           isWinner
-            ? "bg-[#0ea5e9] text-white"
+            ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
             : isLoser
             ? "text-muted-foreground opacity-50"
             : canClick
@@ -234,7 +234,7 @@ function MatchCard({
   return (
     <div
       className={`rounded-xl border overflow-hidden shadow-sm ${
-        isFinal ? "border-[#0ea5e9]/50" : "border-border"
+        isFinal ? "border-[var(--accent)]/50" : "border-border"
       } bg-card`}
       style={{ minWidth: 88 }}
     >
@@ -277,7 +277,7 @@ function SetupScreen({ onStart }: { onStart: (names: string[], randomSeed: boole
           参加者名を入力（改行区切り）
         </label>
         <textarea
-          className="w-full min-h-[240px] rounded-xl border border-border bg-card p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]/50 placeholder:text-muted-foreground resize-y"
+          className="w-full min-h-[240px] rounded-xl border border-border bg-card p-4 text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 placeholder:text-muted-foreground resize-y"
           placeholder={"1\n2\n3\n4"}
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -305,7 +305,7 @@ function SetupScreen({ onStart }: { onStart: (names: string[], randomSeed: boole
         <label className="flex items-center gap-2 cursor-pointer text-sm">
           <input
             type="radio"
-            className="accent-[#0ea5e9]"
+            className="accent-[var(--accent)]"
             checked={randomSeed}
             onChange={() => setRandomSeed(true)}
           />
@@ -314,7 +314,7 @@ function SetupScreen({ onStart }: { onStart: (names: string[], randomSeed: boole
         <label className="flex items-center gap-2 cursor-pointer text-sm">
           <input
             type="radio"
-            className="accent-[#0ea5e9]"
+            className="accent-[var(--accent)]"
             checked={!randomSeed}
             onChange={() => setRandomSeed(false)}
           />
@@ -325,7 +325,8 @@ function SetupScreen({ onStart }: { onStart: (names: string[], randomSeed: boole
       <Button
         onClick={() => onStart(names, randomSeed)}
         disabled={!canStart}
-        className="bg-[#0ea5e9] hover:bg-[#0ea5e9]/90 text-white h-12 text-base"
+        className="h-12 text-base hover:opacity-90"
+        style={{ backgroundColor: "var(--accent)", color: "var(--accent-foreground)" }}
       >
         トーナメント表を作る
       </Button>
@@ -345,6 +346,7 @@ function TournamentView({
   onReset: () => void;
   onBack: () => void;
 }) {
+  const [showShortcuts, setShowShortcuts] = useState(false);
   const winner = tournament.participants.find((p) => p.id === tournament.winnerId);
 
   const handleShare = async () => {
@@ -367,9 +369,9 @@ function TournamentView({
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 12 }}
-            className="flex items-center gap-3 px-5 py-4 rounded-2xl bg-[#0ea5e9]/10 border border-[#0ea5e9]/30"
+            className="flex items-center gap-3 px-5 py-4 rounded-2xl bg-[var(--accent)]/10 border border-[var(--accent)]/30"
           >
-            <Trophy className="size-7 text-[#0ea5e9] flex-shrink-0" />
+            <Trophy className="size-7 text-[var(--accent)] flex-shrink-0" />
             <div>
               <div className="text-xs text-muted-foreground">優勝</div>
               <div className="text-xl font-bold">{winner.name}</div>
@@ -438,6 +440,25 @@ function TournamentView({
           印刷
         </Button>
       </div>
+
+      {/* キーボードショートカット */}
+      <div className="relative flex">
+        {showShortcuts && (
+          <div className="absolute bottom-full mb-2 w-64 rounded-lg border border-border bg-background shadow-lg p-3 z-50 text-xs text-muted-foreground text-left">
+            <p className="font-semibold text-foreground mb-2">キーボードショートカット</p>
+            <div className="space-y-1">
+              <div className="flex justify-between"><span>Esc</span><span>リセット（設定に戻る）</span></div>
+              <div className="flex justify-between"><span>P</span><span>印刷</span></div>
+              <div className="flex justify-between"><span>R</span><span>再抽選</span></div>
+            </div>
+          </div>
+        )}
+        <button
+          onClick={() => setShowShortcuts(v => !v)}
+          className="w-7 h-7 flex items-center justify-center rounded-md border border-border bg-card text-xs font-bold text-muted-foreground hover:bg-muted transition-colors"
+          aria-label="キーボードショートカット"
+        >?</button>
+      </div>
     </div>
   );
 }
@@ -463,6 +484,8 @@ export function TournamentTool() {
 
     // キーボードショートカット
     const handleKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement).tagName;
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) return;
       if (e.key === "Escape") setTournament(null);
       if (e.key === "p" || e.key === "P") window.print();
       if (e.key === "r" || e.key === "R") {

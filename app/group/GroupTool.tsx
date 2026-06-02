@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shuffle, RotateCcw, Copy, Share2, ChevronLeft, Check } from "lucide-react";
+import { Shuffle, RotateCcw, Copy, Share2, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ToolLayout } from "@/components/tool-layout/ToolLayout";
 import { toast } from "sonner";
-import { encodeState, decodeState, generateShareUrl } from "@/lib/share";
+import { decodeState, generateShareUrl } from "@/lib/share";
 import {
   Dialog,
   DialogContent,
@@ -46,15 +46,15 @@ interface SharePayload {
 
 const STORAGE_KEY = "phase1-group-settings";
 
-const GROUP_COLORS = [
-  "text-sky-500",
-  "text-violet-500",
-  "text-rose-500",
-  "text-emerald-500",
-  "text-orange-500",
-  "text-yellow-600",
-  "text-fuchsia-500",
-  "text-teal-500",
+const GROUP_PALETTE = [
+  { text: "text-sky-600 dark:text-sky-400",     bg: "from-sky-50 to-blue-50 dark:from-sky-950/30 dark:to-blue-950/20",             border: "border-sky-200/80 dark:border-sky-700/30",       grad: "from-sky-400 to-blue-400"       },
+  { text: "text-violet-600 dark:text-violet-400",bg: "from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/20",   border: "border-violet-200/80 dark:border-violet-700/30", grad: "from-violet-400 to-purple-400"  },
+  { text: "text-rose-600 dark:text-rose-400",    bg: "from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/20",           border: "border-rose-200/80 dark:border-rose-700/30",     grad: "from-rose-400 to-pink-400"      },
+  { text: "text-emerald-600 dark:text-emerald-400",bg: "from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/20",  border: "border-emerald-200/80 dark:border-emerald-700/30",grad: "from-emerald-400 to-teal-400"  },
+  { text: "text-orange-600 dark:text-orange-400",bg: "from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/20",     border: "border-orange-200/80 dark:border-orange-700/30", grad: "from-orange-400 to-amber-400"   },
+  { text: "text-amber-600 dark:text-amber-500",  bg: "from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/20",     border: "border-amber-200/80 dark:border-amber-700/30",   grad: "from-amber-400 to-yellow-400"   },
+  { text: "text-fuchsia-600 dark:text-fuchsia-400",bg: "from-fuchsia-50 to-pink-50 dark:from-fuchsia-950/30 dark:to-pink-950/20",  border: "border-fuchsia-200/80 dark:border-fuchsia-700/30",grad: "from-fuchsia-400 to-pink-400"  },
+  { text: "text-teal-600 dark:text-teal-400",    bg: "from-teal-50 to-cyan-50 dark:from-teal-950/30 dark:to-cyan-950/20",           border: "border-teal-200/80 dark:border-teal-700/30",     grad: "from-teal-400 to-cyan-400"      },
 ];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -113,9 +113,10 @@ export function GroupTool() {
   const [phase, setPhase] = useState<GroupState["phase"]>("setup");
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [isShuffling, setIsShuffling] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  const members = parseMembers(memberText);
+  const members = useMemo(() => parseMembers(memberText), [memberText]);
   const computedGroupCount = calcGroupCount(members.length, splitMode, splitMode === "byGroupCount" ? groupCount : memberCount);
 
   // Load from URL or localStorage
@@ -266,7 +267,7 @@ export function GroupTool() {
                       type="radio"
                       checked={splitMode === "byGroupCount"}
                       onChange={() => setSplitMode("byGroupCount")}
-                      className="accent-sky-500"
+                      className="accent-[var(--accent)]"
                     />
                     <span className="text-sm">グループ数で分ける</span>
                   </label>
@@ -289,7 +290,7 @@ export function GroupTool() {
                       type="radio"
                       checked={splitMode === "byMemberCount"}
                       onChange={() => setSplitMode("byMemberCount")}
-                      className="accent-sky-500"
+                      className="accent-[var(--accent)]"
                     />
                     <span className="text-sm">人数で分ける</span>
                   </label>
@@ -319,16 +320,16 @@ export function GroupTool() {
               </div>
 
               {/* CTA */}
-              <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}>
-                <Button
-                  className="w-full gap-2 bg-sky-500 hover:bg-sky-600 text-white"
-                  disabled={members.length < 2}
-                  onClick={handleSplit}
-                >
-                  <Shuffle className="size-4" />
-                  グループを分ける
-                </Button>
-              </motion.div>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                disabled={members.length < 2}
+                onClick={handleSplit}
+                className="w-full h-12 rounded-2xl text-sm font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-white shadow-md disabled:opacity-40 flex items-center justify-center gap-2"
+              >
+                <Shuffle className="size-4" />
+                グループを分ける
+              </motion.button>
 
               {members.length < 2 && (
                 <p className="text-xs text-center text-muted-foreground">2人以上入力してください</p>
@@ -356,33 +357,43 @@ export function GroupTool() {
                     key="cards"
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
                   >
-                    {groups.map((group, i) => (
-                      <motion.div
-                        key={group.id}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.2, delay: i * 0.08 }}
-                        className="rounded-xl shadow-sm border border-border bg-card p-4"
-                      >
-                        <p className={`text-base font-bold mb-2 ${GROUP_COLORS[i % GROUP_COLORS.length]}`}>
-                          {group.name}
-                        </p>
-                        <div className="h-px bg-border/60 mb-2" />
-                        {group.members.map((member, j) => (
-                          <p key={j} className="text-sm py-0.5">{member}</p>
-                        ))}
-                      </motion.div>
-                    ))}
+                    {groups.map((group, i) => {
+                      const c = GROUP_PALETTE[i % GROUP_PALETTE.length];
+                      return (
+                        <motion.div
+                          key={group.id}
+                          initial={{ opacity: 0, y: 12, scale: 0.96 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          transition={{ type: "spring", stiffness: 300, damping: 22, delay: i * 0.07 }}
+                          className={`rounded-2xl shadow-sm border ${c.border} bg-gradient-to-br ${c.bg} overflow-hidden`}
+                        >
+                          <div className={`px-4 py-2.5 bg-gradient-to-r ${c.grad}`}>
+                            <p className="text-sm font-bold text-white">{group.name}</p>
+                            <p className="text-xs text-white/70">{group.members.length}人</p>
+                          </div>
+                          <div className="px-4 py-3 space-y-1">
+                            {group.members.map((member, j) => (
+                              <p key={j} className="text-sm py-0.5">{member}</p>
+                            ))}
+                          </div>
+                        </motion.div>
+                      );
+                    })}
                   </motion.div>
                 )}
               </AnimatePresence>
 
               {/* Actions */}
               <div className="flex flex-wrap gap-2">
-                <Button onClick={handleReshuffle} disabled={isShuffling} className="gap-2 bg-sky-500 hover:bg-sky-600 text-white">
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  onClick={handleReshuffle}
+                  disabled={isShuffling}
+                  className="h-10 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 text-white shadow-sm flex items-center gap-2 disabled:opacity-50"
+                >
                   <Shuffle className="size-4" />
                   もう一度シャッフル
-                </Button>
+                </motion.button>
                 <Button variant="outline" onClick={() => setPhase("setup")} className="gap-2">
                   <ChevronLeft className="size-4" />
                   設定に戻る
@@ -400,7 +411,22 @@ export function GroupTool() {
               </div>
 
               {/* Keyboard hints */}
-              <p className="text-xs text-muted-foreground/50">R: 再シャッフル　Esc: 設定に戻る</p>
+              <div className="relative flex">
+                {showShortcuts && (
+                  <div className="absolute bottom-full mb-2 w-64 rounded-lg border border-border bg-background shadow-lg p-3 z-50 text-xs text-muted-foreground text-left">
+                    <p className="font-semibold text-foreground mb-2">キーボードショートカット</p>
+                    <div className="space-y-1">
+                      <div className="flex justify-between"><span>R</span><span>再シャッフル（結果画面）</span></div>
+                      <div className="flex justify-between"><span>Esc</span><span>設定に戻る</span></div>
+                    </div>
+                  </div>
+                )}
+                <button
+                  onClick={() => setShowShortcuts(v => !v)}
+                  className="w-7 h-7 flex items-center justify-center rounded-md border border-border bg-card text-xs font-bold text-muted-foreground hover:bg-muted transition-colors"
+                  aria-label="キーボードショートカット"
+                >?</button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

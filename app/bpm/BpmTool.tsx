@@ -4,6 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ToolLayout } from "@/components/tool-layout/ToolLayout";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { decodeState, generateShareUrl } from "@/lib/share";
+import { Share2, Check } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -101,6 +104,12 @@ export function BpmTool() {
   const [tapCount, setTapCount] = useState(0);
   const [tapMessage, setTapMessage] = useState("");
   const [mounted, setMounted] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [shareSuccess, setShareSuccess] = useState(false);
+  const [editingBpm, setEditingBpm] = useState(false);
+  const [inputBpm, setInputBpm] = useState("120");
+  const shareTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bpmInputRef = useRef<HTMLInputElement>(null);
 
   // Refs
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -120,9 +129,21 @@ export function BpmTool() {
   useEffect(() => { volumeRef.current = volume; }, [volume]);
   useEffect(() => { timeSignatureRef.current = timeSignature; }, [timeSignature]);
 
-  // Load from localStorage
+  // Load from URL or localStorage
   useEffect(() => {
     setMounted(true);
+    try {
+      const param = new URLSearchParams(window.location.search).get("c");
+      if (param) {
+        const p = decodeState<{ bpm?: number; ts?: TimeSignature; vol?: number }>(param);
+        if (p) {
+          if (p.bpm && p.bpm >= MIN_BPM && p.bpm <= MAX_BPM) setBpm(p.bpm);
+          if (p.ts && TIME_SIGNATURES.includes(p.ts)) setTimeSignature(p.ts);
+          if (typeof p.vol === "number" && p.vol >= 0 && p.vol <= 1) setVolume(p.vol);
+          return;
+        }
+      }
+    } catch { /* ignore */ }
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -132,9 +153,7 @@ export function BpmTool() {
           setTimeSignature(state.timeSignature);
         if (state.volume >= 0 && state.volume <= 1) setVolume(state.volume);
       }
-    } catch {
-      // ignore
-    }
+    } catch { /* ignore */ }
   }, []);
 
   // Save to localStorage
@@ -229,6 +248,24 @@ export function BpmTool() {
     };
   }, [stopMetronome]);
 
+  const handleShare = useCallback(() => {
+    const url = generateShareUrl({ bpm, ts: timeSignature, vol: volume });
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        toast("URLをコピーしました");
+        setShareSuccess(true);
+        if (shareTimerRef.current) clearTimeout(shareTimerRef.current);
+        shareTimerRef.current = setTimeout(() => setShareSuccess(false), 2000);
+      })
+      .catch(() => toast("コピーに失敗しました"));
+  }, [bpm, timeSignature, volume]);
+
+  const commitBpm = useCallback(() => {
+    const n = parseInt(inputBpm, 10);
+    if (!isNaN(n)) setBpm(Math.min(MAX_BPM, Math.max(MIN_BPM, n)));
+    setEditingBpm(false);
+  }, [inputBpm]);
+
   // BPM change helpers
   const clampBpm = (v: number) => Math.min(MAX_BPM, Math.max(MIN_BPM, v));
 
@@ -294,6 +331,7 @@ export function BpmTool() {
           changeBpm(-5);
           break;
         case "KeyT":
+          e.preventDefault();
           handleTap();
           break;
       }
@@ -330,10 +368,28 @@ export function BpmTool() {
           {getBpmLabel(bpm)}
         </p>
 
-        {/* BPM number */}
-        <div className="text-8xl sm:text-9xl font-bold tabular-nums font-[var(--font-inter)] leading-none select-none">
-          {bpm}
-        </div>
+        {/* BPM number — タップで直接入力 */}
+        {editingBpm ? (
+          <input
+            ref={bpmInputRef}
+            type="number"
+            value={inputBpm}
+            onChange={(e) => setInputBpm(e.target.value)}
+            onBlur={commitBpm}
+            onKeyDown={(e) => { if (e.key === "Enter") commitBpm(); if (e.key === "Escape") setEditingBpm(false); }}
+            className="text-8xl sm:text-9xl font-bold w-48 text-center bg-transparent border-b-2 border-accent focus:outline-none tabular-nums font-[var(--font-inter)] leading-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            aria-label="BPMを入力"
+            autoFocus
+          />
+        ) : (
+          <button
+            onClick={() => { setInputBpm(String(bpm)); setEditingBpm(true); }}
+            className="text-8xl sm:text-9xl font-bold tabular-nums font-[var(--font-inter)] leading-none hover:text-accent/80 transition-colors cursor-text"
+            aria-label={`BPM ${bpm}、タップして入力`}
+          >
+            {bpm}
+          </button>
+        )}
 
         {/* Adjust buttons */}
         <div className="flex gap-2">
@@ -456,10 +512,24 @@ export function BpmTool() {
           </span>
         </div>
 
-        {/* Keyboard hint */}
-        <p className="text-xs text-muted-foreground text-center">
-          Space: 再生/停止 ・ ↑↓: BPM±1 ・ ←→: BPM±5 ・ T: タップ
-        </p>
+        {/* 共有 + ? */}
+        <div className="flex items-center gap-2 justify-center relative">
+          <button onClick={handleShare} className="text-muted-foreground hover:text-foreground transition-colors" aria-label="URLで共有">
+            {shareSuccess ? <Check className="size-4 text-emerald-500" /> : <Share2 className="size-4" />}
+          </button>
+          {showShortcuts && (
+            <div className="absolute bottom-full right-0 mb-2 w-64 rounded-lg border border-border bg-background shadow-lg p-3 z-50 text-xs text-muted-foreground">
+              <p className="font-semibold text-foreground mb-2">キーボードショートカット</p>
+              <div className="space-y-1">
+                <div className="flex justify-between"><span>Space</span><span>再生 / 停止</span></div>
+                <div className="flex justify-between"><span>↑ / ↓</span><span>BPM ±1</span></div>
+                <div className="flex justify-between"><span>← / →</span><span>BPM ±5</span></div>
+                <div className="flex justify-between"><span>T</span><span>タップテンポ</span></div>
+              </div>
+            </div>
+          )}
+          <button onClick={() => setShowShortcuts(v => !v)} className="w-7 h-7 flex items-center justify-center rounded-md border border-border bg-card text-xs font-bold text-muted-foreground hover:bg-muted transition-colors" aria-label="キーボードショートカット">?</button>
+        </div>
       </div>
     </ToolLayout>
   );

@@ -12,13 +12,12 @@ interface SnsPreset {
   id: string;
   name: string;
   limit: number | null;
-  description?: string;
 }
 
 const SNS_PRESETS: SnsPreset[] = [
   { id: "none", name: "制限なし", limit: null },
-  { id: "x-140", name: "X（140文字）", limit: 140, description: "日本語は2文字換算" },
-  { id: "x-280", name: "X（280文字）", limit: 280 },
+  { id: "x-140", name: "X（日本語 〜140字）", limit: 140 },
+  { id: "x-280", name: "X（英語 〜280字）", limit: 280 },
   { id: "instagram", name: "Instagram", limit: 2200 },
   { id: "youtube", name: "YouTube概要欄", limit: 5000 },
   { id: "custom", name: "カスタム", limit: null },
@@ -54,7 +53,7 @@ function calcCount(text: string): CountResult {
 function getBarColor(pct: number): string {
   if (pct > 100) return "bg-red-500";
   if (pct > 80) return "bg-amber-400";
-  return "bg-[#0ea5e9]";
+  return "bg-[var(--accent)]";
 }
 
 // ---- メインコンポーネント ----
@@ -168,7 +167,7 @@ export function WordCountTool() {
         <div className="flex flex-col gap-3">
           <textarea
             aria-label="テキスト入力エリア"
-            className="w-full min-h-[40vh] md:min-h-[50vh] resize-y rounded-xl border border-border bg-card p-4 text-base font-sans focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]/50 placeholder:text-muted-foreground"
+            className="w-full min-h-[40vh] md:min-h-[50vh] resize-y rounded-xl border border-border bg-card p-4 text-base font-sans focus:outline-none focus:ring-2 focus:ring-accent/50 placeholder:text-muted-foreground"
             style={{ fontSize: "16px" }}
             placeholder="ここにテキストを貼り付けてください..."
             value={text}
@@ -198,7 +197,7 @@ export function WordCountTool() {
             <div className="flex flex-col gap-1.5">
               <label className="text-sm text-muted-foreground">SNS文字数制限</label>
               <select
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]/50"
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/50"
                 value={selectedPresetId}
                 onChange={(e) => setSelectedPresetId(e.target.value)}
               >
@@ -212,7 +211,7 @@ export function WordCountTool() {
                 <input
                   type="number"
                   min={1}
-                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]/50"
+                  className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent/50"
                   placeholder="文字数を入力"
                   value={customLimit ?? ""}
                   onChange={(e) =>

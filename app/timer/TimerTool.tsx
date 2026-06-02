@@ -4,14 +4,18 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Play, Pause, RotateCcw, SkipForward,
-  Volume2, VolumeX, Settings, RefreshCw,
+  Volume2, VolumeX, Volume1, Maximize2, X, RefreshCw, Share2, Check,
 } from "lucide-react";
 import { ToolLayout } from "@/components/tool-layout/ToolLayout";
+import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
+import { useLongPress } from "@/hooks/useLongPress";
+import { toast } from "sonner";
+import { decodeState, generateShareUrl } from "@/lib/share";
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
-const PRESETS_SECS = [60, 180, 300, 600, 1500, 3600];
-const PRESET_LABELS = ["1分", "3分", "5分", "10分", "25分", "60分"];
+const PRESETS_SECS = [60, 300, 600, 900, 1800, 3600];
+const PRESET_LABELS = ["1分", "5分", "10分", "15分", "30分", "60分"];
 
 const PREFS_KEY = "phase1-timer-preferences";
 const POM_SETTINGS_KEY = "phase1-pomodoro-settings";
@@ -35,6 +39,7 @@ interface PomSettings {
 interface Prefs {
   soundEnabled: boolean;
   notificationEnabled: boolean;
+  volume: number;
 }
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
@@ -63,7 +68,7 @@ function getPhaseSecs(p: PomPhase, s: PomSettings) {
   return s.longBreakMinutes * 60;
 }
 
-function playFinish(ctx: AudioContext) {
+function playFinish(ctx: AudioContext, vol: number) {
   const schedule: [number, number][] = [[880, 0], [1100, 0.25], [1320, 0.5]];
   schedule.forEach(([freq, delay]) => {
     const osc = ctx.createOscillator();
@@ -73,7 +78,7 @@ function playFinish(ctx: AudioContext) {
     osc.frequency.value = freq;
     osc.type = "sine";
     const t = ctx.currentTime + delay;
-    gain.gain.setValueAtTime(0.3, t);
+    gain.gain.setValueAtTime(vol * 0.8, t);
     gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
     osc.start(t);
     osc.stop(t + 0.3);
@@ -93,7 +98,168 @@ const DEFAULT_POM: PomSettings = {
 const DEFAULT_PREFS: Prefs = {
   soundEnabled: true,
   notificationEnabled: false,
+  volume: 0.7,
 };
+
+// ─── SpinnerField ────────────────────────────────────────────────────────────
+
+function SpinnerField({ label, value, max, onChange }: { label: string; value: number; max: number; onChange: (v: number) => void }) {
+  const valueRef = useRef(value);
+  useEffect(() => { valueRef.current = value; }, [value]);
+  const { suppressClick: upSuppress, ...upEvents } = useLongPress(() => onChange(Math.min(max, valueRef.current + 1)));
+  const { suppressClick: dnSuppress, ...dnEvents } = useLongPress(() => onChange(Math.max(0, valueRef.current - 1)));
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <div className="flex flex-col">
+        <button
+          onClick={() => { if (!upSuppress()) onChange(Math.min(max, value + 1)); }}
+          {...upEvents}
+          className="w-10 h-7 flex items-center justify-center rounded-t-lg border border-border bg-background hover:bg-muted transition-colors text-muted-foreground text-sm touch-manipulation"
+          aria-label={`${label}を増やす`}
+        >▴</button>
+        <input
+          type="number"
+          inputMode="numeric"
+          min={0}
+          max={max}
+          value={String(value).padStart(2, "0")}
+          onChange={(e) => onChange(Math.max(0, Math.min(max, parseInt(e.target.value) || 0)))}
+          className="w-10 h-12 text-center text-xl font-bold tabular-nums border-x border-border bg-background focus:outline-none focus:ring-2 focus:ring-accent/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          aria-label={`${label}の入力`}
+        />
+        <button
+          onClick={() => { if (!dnSuppress()) onChange(Math.max(0, value - 1)); }}
+          {...dnEvents}
+          className="w-10 h-7 flex items-center justify-center rounded-b-lg border border-border bg-background hover:bg-muted transition-colors text-muted-foreground text-sm touch-manipulation"
+          aria-label={`${label}を減らす`}
+        >▾</button>
+      </div>
+    </div>
+  );
+}
+
+// ─── TimerFocusMode ──────────────────────────────────────────────────────────
+
+interface TimerFocusModeProps {
+  timeStr: string;
+  progress: number;
+  isRunning: boolean;
+  isFinished: boolean;
+  phaseLabel?: string;
+  phaseDots?: { total: number; filled: number };
+  onToggle: () => void;
+  onReset: () => void;
+  onExit: () => void;
+}
+
+function TimerFocusMode({ timeStr, progress, isRunning, isFinished, phaseLabel, phaseDots, onToggle, onReset, onExit }: TimerFocusModeProps) {
+  const startRef = useRef({ x: 0, y: 0 });
+  const isExcludedRef = useRef(false);
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!e.isPrimary) return;
+    isExcludedRef.current = !!(e.target as HTMLElement).closest("[data-timer-btn]");
+    startRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!e.isPrimary || isExcludedRef.current) return;
+    const dx = Math.abs(e.clientX - startRef.current.x);
+    const dy = Math.abs(e.clientY - startRef.current.y);
+    if (dx <= 12 && dy <= 12) onToggle();
+  };
+
+  return (
+    <div
+      className="fixed inset-0 bg-background dark:bg-zinc-950 z-50 flex flex-col select-none touch-none"
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+    >
+      {/* 終了ボタン */}
+      <div className="absolute top-4 left-4" data-timer-btn>
+        <button data-timer-btn onClick={onExit}
+          className="w-10 h-10 flex items-center justify-center rounded-full bg-foreground/10 hover:bg-foreground/20 transition-colors touch-manipulation pointer-events-auto"
+          aria-label="フルスクリーンを終了"
+        >
+          <X className="size-5" />
+        </button>
+      </div>
+
+      {/* フェーズバッジ */}
+      {phaseLabel && (
+        <div className="absolute top-4 right-4 pointer-events-none">
+          <span className="text-xs font-medium px-3 py-1 rounded-full bg-accent/20 text-accent">{phaseLabel}</span>
+        </div>
+      )}
+
+      {/* メイン表示 */}
+      <div className="flex-1 flex flex-col items-center justify-center gap-6 pointer-events-none">
+        {phaseDots && (
+          <div className="flex gap-2">
+            {Array.from({ length: phaseDots.total }).map((_, i) => (
+              <div key={i} className={`w-2.5 h-2.5 rounded-full transition-colors ${i < phaseDots.filled ? "bg-accent" : "bg-border"}`} />
+            ))}
+          </div>
+        )}
+
+        {/* 角丸四角カード（枠が消えていくプログレス） */}
+        {(() => {
+          const W = 320, H = 192, R = 24, stroke = 6;
+          const perimeter = 2 * (W - 2*R) + 2 * (H - 2*R) + 2 * Math.PI * R;
+          const p = Math.max(0, Math.min(1, progress));
+          return (
+            <div className="relative" style={{ width: W, height: H, maxWidth: "90vw" }}>
+              {/* SVG枠 */}
+              <svg className="absolute inset-0 w-full h-full" viewBox={`0 0 ${W} ${H}`}>
+                {/* 背景トラック */}
+                <rect x={stroke/2} y={stroke/2} width={W-stroke} height={H-stroke} rx={R} ry={R}
+                  fill="none" stroke="var(--border)" strokeWidth={stroke} />
+                {/* プログレス枠（消えていく） */}
+                <rect x={stroke/2} y={stroke/2} width={W-stroke} height={H-stroke} rx={R} ry={R}
+                  fill="none" stroke="var(--accent)" strokeWidth={stroke}
+                  strokeDasharray={perimeter}
+                  strokeDashoffset={perimeter * (1 - p)}
+                  strokeLinecap="round"
+                  style={{ transition: "stroke-dashoffset 1s linear", transformOrigin: "center" }}
+                />
+              </svg>
+              {/* 時間テキスト */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 pointer-events-none">
+                {phaseLabel && (
+                  <span className="text-xs font-medium text-muted-foreground/60 tracking-widest uppercase">{phaseLabel}</span>
+                )}
+                <span className={`text-7xl sm:text-8xl font-black tabular-nums leading-none ${isFinished ? "text-accent" : ""}`}>
+                  {timeStr}
+                </span>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* タップヒント */}
+        <span className="text-sm text-foreground/50 font-medium">
+          {isFinished ? "終了しました" : isRunning ? "タップで一時停止" : "タップで再開"}
+        </span>
+      </div>
+
+      {/* リセットボタン */}
+      <div className="pb-10 flex justify-center" data-timer-btn>
+        <button data-timer-btn onClick={onReset}
+          className="w-10 h-10 rounded-full flex items-center justify-center bg-foreground/5 hover:bg-foreground/10 text-muted-foreground/50 hover:text-muted-foreground transition-all touch-manipulation pointer-events-auto"
+          aria-label="リセット"
+        >
+          <RotateCcw className="size-4" />
+        </button>
+      </div>
+
+      {/* ダークモード */}
+      <div className="absolute bottom-4 right-4 opacity-40 hover:opacity-90 transition-opacity pointer-events-auto" data-timer-btn>
+        <DarkModeToggle />
+      </div>
+    </div>
+  );
+}
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -107,18 +273,18 @@ export function TimerTool() {
 
   // ── Countdown ────────────────────────────────────────────────────────────
   const [cdH, setCdH] = useState(0);
-  const [cdM, setCdM] = useState(25);
+  const [cdM, setCdM] = useState(3);
   const [cdS, setCdS] = useState(0);
-  const [cdTotalSecs, setCdTotalSecs] = useState(1500);
-  const [cdRemaining, setCdRemaining] = useState(1500);
+  const [cdTotalSecs, setCdTotalSecs] = useState(180);
+  const [cdRemaining, setCdRemaining] = useState(180);
   const [cdStatus, setCdStatus] = useState<TimerStatus>("idle");
   const [cdLoop, setCdLoop] = useState(false);
-  const [cdActivePreset, setCdActivePreset] = useState(4);
+  const [cdActivePreset, setCdActivePreset] = useState(-1);
   const cdEndRef = useRef<number | null>(null);
   const cdIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [cdFinishTick, setCdFinishTick] = useState(0);
   // ref copy of cdTotalSecs for use inside finish effect
-  const cdTotalSecsRef = useRef(1500);
+  const cdTotalSecsRef = useRef(180);
   const cdLoopRef = useRef(false);
   useEffect(() => { cdTotalSecsRef.current = cdTotalSecs; }, [cdTotalSecs]);
   useEffect(() => { cdLoopRef.current = cdLoop; }, [cdLoop]);
@@ -129,7 +295,12 @@ export function TimerTool() {
   const [pomCycleCount, setPomCycleCount] = useState(0);
   const [pomRemaining, setPomRemaining] = useState(DEFAULT_POM.focusMinutes * 60);
   const [pomStatus, setPomStatus] = useState<TimerStatus>("idle");
-  const [pomSettingsOpen, setPomSettingsOpen] = useState(false);
+  const [isFocusMode, setIsFocusMode] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [shareSuccess, setShareSuccess] = useState(false);
+  const shareTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [pomShareSuccess, setPomShareSuccess] = useState(false);
+  const pomShareTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [dailyFocusSecs, setDailyFocusSecs] = useState(0);
   const pomEndRef = useRef<number | null>(null);
   const pomIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -187,10 +358,29 @@ export function TimerTool() {
       }
     } catch { /* ignore */ }
 
-    // Load prefs
+    // Load from URL params
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const param = params.get("c");
+      if (param) {
+        const p = decodeState<{ mode?: string; secs?: number }>(param);
+        if (p?.mode === "cd" && typeof p.secs === "number") {
+          const secs = Math.max(1, Math.min(86399, p.secs));
+          setCdH(Math.floor(secs / 3600));
+          setCdM(Math.floor((secs % 3600) / 60));
+          setCdS(secs % 60);
+          setCdTotalSecs(secs);
+          setCdRemaining(secs);
+          cdTotalSecsRef.current = secs;
+        }
+      }
+      if (params.get("tab") === "pom") setMainMode("pomodoro");
+    } catch { /* ignore */ }
+
+    // Load prefs (merge with defaults to handle missing fields from old saves)
     try {
       const raw = localStorage.getItem(PREFS_KEY);
-      if (raw) setPrefs(JSON.parse(raw));
+      if (raw) setPrefs({ ...DEFAULT_PREFS, ...JSON.parse(raw) });
     } catch { /* ignore */ }
 
     // Load pomodoro settings
@@ -251,9 +441,10 @@ export function TimerTool() {
   useEffect(() => { prefsRef.current = prefs; }, [prefs]);
 
   const fireSound = useCallback(() => {
-    if (!prefsRef.current.soundEnabled) return;
+    const vol = prefsRef.current.volume ?? DEFAULT_PREFS.volume;
+    if (vol <= 0) return;
     const ctx = ensureAudioCtx();
-    if (ctx) playFinish(ctx);
+    if (ctx) playFinish(ctx, vol);
   }, [ensureAudioCtx]);
 
   const fireNotification = useCallback((title: string, body: string) => {
@@ -327,13 +518,53 @@ export function TimerTool() {
   }, []);
 
   const cdReset = useCallback(() => {
+    const prevRemaining = cdRemaining;
+    const prevStatus = cdStatus;
+    const prevTotal = cdTotalSecs;
     if (cdIntervalRef.current) clearInterval(cdIntervalRef.current);
     cdEndRef.current = null;
     setCdStatus("idle");
     const total = cdH * 3600 + cdM * 60 + cdS;
     setCdTotalSecs(total);
     setCdRemaining(total);
-  }, [cdH, cdM, cdS]);
+    if (prevStatus !== "idle" && prevRemaining > 0) {
+      toast("タイマーをリセットしました", {
+        duration: 3000,
+        action: {
+          label: "元に戻す",
+          onClick: () => {
+            setCdRemaining(prevRemaining);
+            setCdTotalSecs(prevTotal);
+            if (prevStatus === "running") {
+              cdEndRef.current = Date.now() + prevRemaining * 1000;
+              setCdStatus("running");
+            } else {
+              setCdStatus(prevStatus);
+            }
+          },
+        },
+      });
+    }
+  }, [cdH, cdM, cdS, cdRemaining, cdStatus, cdTotalSecs]);
+
+  const cdSkip = useCallback((deltaSecs: number) => {
+    if (cdStatus === "idle") return;
+    setCdRemaining((prev) => {
+      const next = Math.max(0, Math.min(cdTotalSecs, prev + deltaSecs));
+      if (cdEndRef.current !== null) cdEndRef.current = Date.now() + next * 1000;
+      return next;
+    });
+  }, [cdStatus, cdTotalSecs]);
+
+  const pomSkipSecs = useCallback((deltaSecs: number) => {
+    if (pomStatus === "idle") return;
+    setPomRemaining((prev) => {
+      const total = getPhaseSecs(pomPhaseRef.current, pomSettingsRef.current);
+      const next = Math.max(0, Math.min(total, prev + deltaSecs));
+      if (pomEndRef.current !== null) pomEndRef.current = Date.now() + next * 1000;
+      return next;
+    });
+  }, [pomStatus]);
 
   const cdSelectPreset = useCallback((idx: number) => {
     const secs = PRESETS_SECS[idx];
@@ -581,6 +812,34 @@ export function TimerTool() {
 
   // ─── Notification request ─────────────────────────────────────────────────
 
+  const handleShare = useCallback(() => {
+    const payload = { mode: "cd", secs: cdTotalSecs };
+    const url = generateShareUrl(payload);
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        toast("URLをコピーしました");
+        setShareSuccess(true);
+        if (shareTimerRef.current) clearTimeout(shareTimerRef.current);
+        shareTimerRef.current = setTimeout(() => setShareSuccess(false), 2000);
+      })
+      .catch(() => toast("コピーに失敗しました"));
+  }, [cdTotalSecs]);
+
+  const handlePomShare = useCallback(() => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.searchParams.set("tab", "pom");
+    navigator.clipboard.writeText(url.toString())
+      .then(() => {
+        toast("URLをコピーしました");
+        setPomShareSuccess(true);
+        if (pomShareTimerRef.current) clearTimeout(pomShareTimerRef.current);
+        pomShareTimerRef.current = setTimeout(() => setPomShareSuccess(false), 2000);
+      })
+      .catch(() => toast("コピーに失敗しました"));
+  }, []);
+
   const requestNotification = useCallback(async () => {
     if (typeof Notification === "undefined") return;
     const perm = await Notification.requestPermission();
@@ -613,6 +872,36 @@ export function TimerTool() {
   // ─── Render ───────────────────────────────────────────────────────────────
 
   return (
+    <>
+    {/* フルスクリーンオーバーレイ */}
+    <AnimatePresence>
+      {isFocusMode && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }} className="fixed inset-0 z-50">
+          <TimerFocusMode
+            timeStr={fmtTime(mainMode === "countdown" ? cdRemaining : pomRemaining)}
+            progress={mainMode === "countdown" ? cdProgress : pomProgress}
+            isRunning={mainMode === "countdown" ? cdStatus === "running" : pomStatus === "running"}
+            isFinished={mainMode === "countdown" ? cdStatus === "finished" : pomStatus === "finished"}
+            phaseLabel={mainMode === "pomodoro" ? pomPhaseLabel(pomPhase) : undefined}
+            phaseDots={mainMode === "pomodoro" ? { total: pomSettings.longBreakInterval, filled: pomCycleCount } : undefined}
+            onToggle={() => {
+              if (mainMode === "countdown") {
+                if (cdStatus === "running") cdPause();
+                else if (cdStatus === "paused") cdResume();
+                else cdStart();
+              } else {
+                if (pomStatus === "running") pomPause();
+                else if (pomStatus === "paused") pomResume();
+                else pomStart();
+              }
+            }}
+            onReset={() => { if (mainMode === "countdown") cdReset(); else pomReset(); }}
+            onExit={() => setIsFocusMode(false)}
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
+
     <ToolLayout title="タイマー" adVisible={!isRunning}>
       {showFlash && (
         <div className="fixed inset-0 bg-accent/20 pointer-events-none z-50" aria-hidden="true" />
@@ -642,7 +931,8 @@ export function TimerTool() {
         {mainMode === "countdown" ? (
           /* ─────────── Countdown Panel ─────────── */
           <>
-            {/* Presets */}
+            {/* プリセット・スピナー — idle時のみ表示 */}
+            {cdStatus === "idle" && (
             <div role="group" aria-label="時間プリセット" className="flex gap-2 flex-wrap justify-center">
               {PRESET_LABELS.map((label, i) => (
                 <motion.button
@@ -659,6 +949,7 @@ export function TimerTool() {
                 </motion.button>
               ))}
             </div>
+            )}
 
             {/* Time display */}
             <motion.div
@@ -695,31 +986,7 @@ export function TimerTool() {
                     { label: "秒", value: cdS, max: 59, setter: setCdS },
                   ] as const
                 ).map(({ label, value, max, setter }) => (
-                  <div key={label} className="flex flex-col items-center gap-1">
-                    <span className="text-xs text-muted-foreground">{label}</span>
-                    <div className="flex flex-col">
-                      <button
-                        onClick={() => setter(Math.min(max, value + 1))}
-                        className="w-10 h-7 flex items-center justify-center rounded-t-lg border border-border bg-background hover:bg-muted transition-colors text-muted-foreground text-sm"
-                        aria-label={`${label}を増やす`}
-                      >▴</button>
-                      <input
-                        type="number"
-                        inputMode="numeric"
-                        min={0}
-                        max={max}
-                        value={String(value).padStart(2, "0")}
-                        onChange={(e) => setter(Math.max(0, Math.min(max, parseInt(e.target.value) || 0)))}
-                        className="w-10 h-12 text-center text-xl font-bold tabular-nums border-x border-border bg-background focus:outline-none focus:ring-2 focus:ring-accent/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        aria-label={`${label}の入力`}
-                      />
-                      <button
-                        onClick={() => setter(Math.max(0, value - 1))}
-                        className="w-10 h-7 flex items-center justify-center rounded-b-lg border border-border bg-background hover:bg-muted transition-colors text-muted-foreground text-sm"
-                        aria-label={`${label}を減らす`}
-                      >▾</button>
-                    </div>
-                  </div>
+                  <SpinnerField key={label} label={label} value={value} max={max} onChange={setter} />
                 ))}
               </div>
             )}
@@ -756,24 +1023,73 @@ export function TimerTool() {
               </motion.button>
             </div>
 
-            {/* Loop + Mute */}
-            <div className="flex items-center gap-5">
+            {/* スキップボタン（動作中 or 一時停止中のみ） */}
+            {cdStatus !== "idle" && (
+              <div className="flex items-center gap-1.5">
+                {[[-60, "-1分"], [-30, "-30秒"], [-10, "-10秒"], [10, "+10秒"], [30, "+30秒"], [60, "+1分"]].map(([secs, label]) => (
+                  <button
+                    key={secs}
+                    onClick={() => cdSkip(secs as number)}
+                    className="h-7 px-2 rounded-lg text-xs border border-border bg-card hover:bg-muted transition-colors tabular-nums"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* ループ・音量・共有・?・フルスクリーン */}
+            <div className="flex items-center gap-3 flex-wrap justify-center relative">
               <button
                 onClick={() => setCdLoop((l) => !l)}
-                className={`flex items-center gap-1.5 text-sm transition-colors ${
-                  cdLoop ? "text-accent" : "text-muted-foreground hover:text-foreground"
-                }`}
+                className={`flex items-center gap-1.5 text-sm transition-colors ${cdLoop ? "text-accent" : "text-muted-foreground hover:text-foreground"}`}
                 aria-pressed={cdLoop}
               >
                 <RefreshCw className="size-4" />
                 ループ
               </button>
-              <button
-                onClick={() => savePrefs({ ...prefs, soundEnabled: !prefs.soundEnabled })}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label={prefs.soundEnabled ? "音をオフにする" : "音をオンにする"}
-              >
-                {prefs.soundEnabled ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
+              {/* 音量 */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => savePrefs({ ...prefs, volume: prefs.volume > 0 ? 0 : 0.7 })}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={prefs.volume === 0 ? "音をオンにする" : "音をオフにする"}
+                >
+                  {prefs.volume === 0 ? <VolumeX className="size-4" /> : prefs.volume < 0.4 ? <Volume1 className="size-4" /> : <Volume2 className="size-4" />}
+                </button>
+                <input type="range" min="0" max="1" step="0.05" value={prefs.volume}
+                  onChange={(e) => savePrefs({ ...prefs, volume: parseFloat(e.target.value) })}
+                  className="w-20 accent-[var(--accent)]"
+                  aria-label="音量"
+                />
+              </div>
+              {/* 共有 */}
+              <button onClick={handleShare} className="text-muted-foreground hover:text-foreground transition-colors" aria-label="URLで共有">
+                {shareSuccess ? <Check className="size-4 text-emerald-500" /> : <Share2 className="size-4" />}
+              </button>
+              {/* 通知 */}
+              {typeof Notification !== "undefined" && Notification.permission !== "denied" && !prefs.notificationEnabled && (
+                <button onClick={requestNotification} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                  終了をデスクトップ通知
+                </button>
+              )}
+              {/* ? ショートカット */}
+              {showShortcuts && (
+                <div className="absolute bottom-full right-0 mb-2 w-64 rounded-lg border border-border bg-background shadow-lg p-3 z-50 text-xs text-muted-foreground">
+                  <p className="font-semibold text-foreground mb-2">キーボードショートカット</p>
+                  <div className="space-y-1">
+                    <div className="flex justify-between"><span>Space</span><span>スタート / 一時停止 / 再開</span></div>
+                    <div className="flex justify-between"><span>R / Esc</span><span>リセット</span></div>
+                    <div className="flex justify-between"><span>M</span><span>音量オン/オフ</span></div>
+                    <div className="flex justify-between"><span>T</span><span>モード切替</span></div>
+                    <div className="flex justify-between"><span>1〜6</span><span>プリセット選択</span></div>
+                  </div>
+                </div>
+              )}
+              <button onClick={() => setShowShortcuts(v => !v)} className="w-7 h-7 flex items-center justify-center rounded-md border border-border bg-card text-xs font-bold text-muted-foreground hover:bg-muted transition-colors" aria-label="キーボードショートカット">?</button>
+              {/* フルスクリーン */}
+              <button onClick={() => setIsFocusMode(true)} className="text-muted-foreground hover:text-foreground transition-colors" aria-label="フルスクリーン">
+                <Maximize2 className="size-4" />
               </button>
             </div>
           </>
@@ -862,85 +1178,91 @@ export function TimerTool() {
               </motion.button>
             </div>
 
-            {/* Sound + Settings + Notification */}
-            <div className="flex items-center gap-5">
-              <button
-                onClick={() => savePrefs({ ...prefs, soundEnabled: !prefs.soundEnabled })}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-                aria-label={prefs.soundEnabled ? "音をオフにする" : "音をオンにする"}
-              >
-                {prefs.soundEnabled ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
-              </button>
-              <button
-                onClick={() => setPomSettingsOpen((o) => !o)}
-                className={`flex items-center gap-1.5 text-sm transition-colors ${pomSettingsOpen ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-              >
-                <Settings className="size-4" />
-                設定
-              </button>
-              {typeof Notification !== "undefined" &&
-                Notification.permission !== "denied" &&
-                !prefs.notificationEnabled && (
+            {/* スキップボタン（動作中 or 一時停止中） */}
+            {pomStatus !== "idle" && (
+              <div className="flex items-center gap-1.5 flex-wrap justify-center">
+                {[[-60, "-1分"], [-30, "-30秒"], [-10, "-10秒"], [10, "+10秒"], [30, "+30秒"], [60, "+1分"]].map(([secs, label]) => (
                   <button
-                    onClick={requestNotification}
-                    className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                    key={secs}
+                    onClick={() => pomSkipSecs(secs as number)}
+                    className="h-7 px-2 rounded-lg text-xs border border-border bg-card hover:bg-muted transition-colors tabular-nums"
                   >
-                    通知を許可
+                    {label}
                   </button>
-                )}
-            </div>
+                ))}
+              </div>
+            )}
 
-            {/* Settings panel */}
-            <AnimatePresence>
-              {pomSettingsOpen && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="w-full overflow-hidden"
-                >
-                  <div className="rounded-xl border border-border bg-card p-4 flex flex-col gap-3 text-sm">
-                    {(
-                      [
-                        { key: "focusMinutes" as const, label: "集中時間（分）", min: 1, max: 60 },
-                        { key: "shortBreakMinutes" as const, label: "短休憩（分）", min: 1, max: 30 },
-                        { key: "longBreakMinutes" as const, label: "長休憩（分）", min: 1, max: 60 },
-                        { key: "longBreakInterval" as const, label: "長休憩まで（回）", min: 1, max: 8 },
-                      ] as const
-                    ).map(({ key, label, min, max }) => (
-                      <div key={key} className="flex items-center justify-between gap-4">
-                        <span className="text-muted-foreground">{label}</span>
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => savePomSettings({ ...pomSettings, [key]: Math.max(min, pomSettings[key] - 1) })}
-                            className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-muted transition-colors"
-                            aria-label={`${label}を減らす`}
-                          >−</button>
-                          <span className="w-8 text-center tabular-nums font-medium">{pomSettings[key]}</span>
-                          <button
-                            onClick={() => savePomSettings({ ...pomSettings, [key]: Math.min(max, pomSettings[key] + 1) })}
-                            className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-muted transition-colors"
-                            aria-label={`${label}を増やす`}
-                          >＋</button>
-                        </div>
-                      </div>
-                    ))}
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">自動進行</span>
+            {/* 設定パネル — 停止中・一時停止中のみ表示 */}
+            {pomStatus !== "running" && <div className="w-full rounded-xl border border-border/60 bg-card/50 p-4 flex flex-col gap-3 text-sm">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">タイマー設定</p>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-2.5">
+                {(
+                  [
+                    { key: "focusMinutes" as const, label: "集中", min: 1, max: 60, unit: "分" },
+                    { key: "shortBreakMinutes" as const, label: "短休憩", min: 1, max: 30, unit: "分" },
+                    { key: "longBreakMinutes" as const, label: "長休憩", min: 1, max: 60, unit: "分" },
+                    { key: "longBreakInterval" as const, label: "長休憩まで", min: 1, max: 8, unit: "回" },
+                  ] as const
+                ).map(({ key, label, min, max, unit }) => (
+                  <div key={key} className="flex items-center justify-between gap-2">
+                    <span className="text-muted-foreground text-xs whitespace-nowrap">{label}</span>
+                    <div className="flex items-center gap-1">
                       <button
-                        onClick={() => savePomSettings({ ...pomSettings, autoAdvance: !pomSettings.autoAdvance })}
-                        className={`relative w-11 h-6 rounded-full transition-colors ${pomSettings.autoAdvance ? "bg-accent" : "bg-muted"}`}
-                        role="switch"
-                        aria-checked={pomSettings.autoAdvance}
-                        aria-label="自動進行"
-                      >
-                        <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${pomSettings.autoAdvance ? "translate-x-5" : "translate-x-0.5"}`} />
-                      </button>
+                        onClick={() => savePomSettings({ ...pomSettings, [key]: Math.max(min, pomSettings[key] - 1) })}
+                        className="w-7 h-7 rounded-md border border-border flex items-center justify-center hover:bg-muted transition-colors text-sm"
+                      >−</button>
+                      <span className="w-10 text-center tabular-nums font-semibold text-sm">{pomSettings[key]}{unit}</span>
+                      <button
+                        onClick={() => savePomSettings({ ...pomSettings, [key]: Math.min(max, pomSettings[key] + 1) })}
+                        className="w-7 h-7 rounded-md border border-border flex items-center justify-center hover:bg-muted transition-colors text-sm"
+                      >＋</button>
                     </div>
                   </div>
-                </motion.div>
+                ))}
+              </div>
+              <div className="flex items-center justify-between pt-1 border-t border-border/40">
+                <span className="text-xs text-muted-foreground">自動進行</span>
+                <button
+                  onClick={() => savePomSettings({ ...pomSettings, autoAdvance: !pomSettings.autoAdvance })}
+                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${pomSettings.autoAdvance ? "bg-accent" : "bg-zinc-300 dark:bg-zinc-600"}`}
+                  role="switch" aria-checked={pomSettings.autoAdvance}
+                >
+                  <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${pomSettings.autoAdvance ? "translate-x-5" : "translate-x-0"}`} />
+                </button>
+              </div>
+            </div>}
+
+            {/* 音量・通知・フルスクリーン */}
+            <div className="flex items-center gap-4 flex-wrap justify-center">
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => savePrefs({ ...prefs, volume: prefs.volume > 0 ? 0 : 0.7 })}
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={prefs.volume === 0 ? "音をオンにする" : "音をオフにする"}
+                >
+                  {prefs.volume === 0 ? <VolumeX className="size-4" /> : prefs.volume < 0.4 ? <Volume1 className="size-4" /> : <Volume2 className="size-4" />}
+                </button>
+                <input type="range" min="0" max="1" step="0.05" value={prefs.volume}
+                  onChange={(e) => savePrefs({ ...prefs, volume: parseFloat(e.target.value) })}
+                  className="w-20 accent-[var(--accent)]"
+                  aria-label="音量"
+                />
+              </div>
+              {/* 共有 */}
+              <button onClick={handlePomShare} className="text-muted-foreground hover:text-foreground transition-colors" aria-label="URLで共有">
+                {pomShareSuccess ? <Check className="size-4 text-emerald-500" /> : <Share2 className="size-4" />}
+              </button>
+              {typeof Notification !== "undefined" && Notification.permission !== "denied" && !prefs.notificationEnabled && (
+                <button onClick={requestNotification} className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+                  終了をデスクトップ通知
+                </button>
               )}
-            </AnimatePresence>
+              <button onClick={() => setShowShortcuts(v => !v)} className="w-7 h-7 flex items-center justify-center rounded-md border border-border bg-card text-xs font-bold text-muted-foreground hover:bg-muted transition-colors" aria-label="キーボードショートカット">?</button>
+              <button onClick={() => setIsFocusMode(true)} className="text-muted-foreground hover:text-foreground transition-colors" aria-label="フルスクリーン">
+                <Maximize2 className="size-4" />
+              </button>
+            </div>
 
             {/* Daily focus */}
             {dailyFocusSecs > 0 && (
@@ -952,5 +1274,6 @@ export function TimerTool() {
         )}
       </div>
     </ToolLayout>
+    </>
   );
 }

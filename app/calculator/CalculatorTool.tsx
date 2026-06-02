@@ -220,6 +220,7 @@ export function CalculatorTool() {
   const [shakeKey, setShakeKey] = useState(0);
   const [resultKey, setResultKey] = useState(0);
   const [showClearHistoryDialog, setShowClearHistoryDialog] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
   const prevExprRef = useRef<string>("");
 
@@ -424,7 +425,7 @@ export function CalculatorTool() {
                 whileTap={{ scale: 0.96 }}
                 transition={{ duration: 0.08 }}
                 onClick={() => applyPreset(mult)}
-                className="flex-shrink-0 px-3 h-9 rounded-xl border border-[#0ea5e9]/40 text-[#0ea5e9] text-sm font-medium hover:bg-[#0ea5e9]/10 transition-colors"
+                className="flex-shrink-0 px-3 h-9 rounded-xl border border-[var(--accent)]/40 text-[var(--accent)] text-sm font-medium hover:bg-[var(--accent)]/10 transition-colors"
                 style={{ WebkitTapHighlightColor: "transparent" }}
               >
                 {label}
@@ -457,7 +458,7 @@ export function CalculatorTool() {
               ariaLabel="割る"
               onClick={() => dispatch({ type: "INPUT_OPERATOR", op: "÷" })}
               className={`border border-border bg-background hover:bg-muted font-medium ${
-                state.operator === "÷" ? "text-[#0ea5e9] border-[#0ea5e9]" : "text-[#0ea5e9]"
+                state.operator === "÷" ? "text-[var(--accent)] border-[var(--accent)]" : "text-[var(--accent)]"
               }`}
             />
 
@@ -475,7 +476,7 @@ export function CalculatorTool() {
               ariaLabel="掛ける"
               onClick={() => dispatch({ type: "INPUT_OPERATOR", op: "×" })}
               className={`border border-border bg-background hover:bg-muted font-medium ${
-                state.operator === "×" ? "text-[#0ea5e9] border-[#0ea5e9]" : "text-[#0ea5e9]"
+                state.operator === "×" ? "text-[var(--accent)] border-[var(--accent)]" : "text-[var(--accent)]"
               }`}
             />
 
@@ -493,7 +494,7 @@ export function CalculatorTool() {
               ariaLabel="引く"
               onClick={() => dispatch({ type: "INPUT_OPERATOR", op: "-" })}
               className={`border border-border bg-background hover:bg-muted font-medium ${
-                state.operator === "-" ? "text-[#0ea5e9] border-[#0ea5e9]" : "text-[#0ea5e9]"
+                state.operator === "-" ? "text-[var(--accent)] border-[var(--accent)]" : "text-[var(--accent)]"
               }`}
             />
 
@@ -511,7 +512,7 @@ export function CalculatorTool() {
               ariaLabel="足す"
               onClick={() => dispatch({ type: "INPUT_OPERATOR", op: "+" })}
               className={`border border-border bg-background hover:bg-muted font-medium ${
-                state.operator === "+" ? "text-[#0ea5e9] border-[#0ea5e9]" : "text-[#0ea5e9]"
+                state.operator === "+" ? "text-[var(--accent)] border-[var(--accent)]" : "text-[var(--accent)]"
               }`}
             />
 
@@ -541,8 +542,8 @@ export function CalculatorTool() {
               transition={{ duration: 0.08 }}
               onClick={() => dispatch({ type: "CALCULATE" })}
               aria-label="イコール"
-              className="col-span-4 h-14 rounded-xl bg-[#0ea5e9] text-white text-base font-medium hover:bg-[#0ea5e9]/90 transition-colors"
-              style={{ WebkitTapHighlightColor: "transparent" }}
+              className="col-span-4 h-14 rounded-xl text-base font-medium transition-opacity hover:opacity-90"
+              style={{ backgroundColor: "var(--accent)", color: "var(--accent-foreground)", WebkitTapHighlightColor: "transparent" }}
             >
               =
             </motion.button>
@@ -599,6 +600,28 @@ export function CalculatorTool() {
           <p className="text-xs text-muted-foreground">
             履歴をタップすると結果を電卓に読み込みます
           </p>
+
+          {/* キーボードショートカット */}
+          <div className="relative flex justify-center">
+            {showShortcuts && (
+              <div className="absolute bottom-full mb-2 w-64 rounded-lg border border-border bg-background shadow-lg p-3 z-50 text-xs text-muted-foreground">
+                <p className="font-semibold text-foreground mb-2">キーボードショートカット</p>
+                <div className="space-y-1">
+                  <div className="flex justify-between"><span>0〜9</span><span>数字入力</span></div>
+                  <div className="flex justify-between"><span>+ - * /</span><span>演算子</span></div>
+                  <div className="flex justify-between"><span>Enter / =</span><span>計算実行</span></div>
+                  <div className="flex justify-between"><span>Backspace</span><span>1文字削除</span></div>
+                  <div className="flex justify-between"><span>Esc / Delete</span><span>クリア</span></div>
+                  <div className="flex justify-between"><span>%</span><span>パーセント</span></div>
+                </div>
+              </div>
+            )}
+            <button
+              onClick={() => setShowShortcuts(v => !v)}
+              className="w-7 h-7 flex items-center justify-center rounded-md border border-border bg-card text-xs font-bold text-muted-foreground hover:bg-muted transition-colors"
+              aria-label="キーボードショートカット"
+            >?</button>
+          </div>
         </div>
       </div>
 

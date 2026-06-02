@@ -1,11 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Share2, Check } from "lucide-react";
 import { ToolLayout } from "@/components/tool-layout/ToolLayout";
 import { Button } from "@/components/ui/button";
+import { decodeState, generateShareUrl } from "@/lib/share";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
+
+interface SharePayload {
+  min: number;
+  max: number;
+  count: number;
+  dups: boolean;
+}
 
 interface HistoryEntry {
   values: number[];
@@ -69,14 +78,29 @@ export function RandomNumberTool() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [shared, setShared] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [resultKey, setResultKey] = useState(0);
+  const [sortOrder, setSortOrder] = useState<"none" | "asc" | "desc">("none");
 
   const rollingRef = useRef(false);
 
-  // Load from localStorage
+  // Load from URL or localStorage
   useEffect(() => {
     setMounted(true);
+    // Try URL params first
+    const param = new URLSearchParams(window.location.search).get("c");
+    if (param) {
+      const payload = decodeState<SharePayload>(param);
+      if (payload) {
+        setMin(payload.min ?? 1);
+        setMax(payload.max ?? 100);
+        setCount(Math.min(10, Math.max(1, payload.count ?? 1)));
+        setAllowDuplicates(payload.dups ?? true);
+        return;
+      }
+    }
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -153,6 +177,7 @@ export function RandomNumberTool() {
         setRolling(false);
         rollingRef.current = false;
         setResultKey((k) => k + 1);
+        setSortOrder("none");
         setHistory((prev) => [
           { values: finalValues, timestamp: Date.now() },
           ...prev.slice(0, MAX_HISTORY - 1),
@@ -179,6 +204,14 @@ export function RandomNumberTool() {
     };
   }, [generate]);
 
+  const handleShare = async () => {
+    const payload: SharePayload = { min, max, count, dups: allowDuplicates };
+    const url = generateShareUrl(payload);
+    await navigator.clipboard.writeText(url);
+    setShared(true);
+    setTimeout(() => setShared(false), 1500);
+  };
+
   const handleCopy = async () => {
     if (results.length === 0) return;
     await navigator.clipboard.writeText(results.join(", "));
@@ -192,12 +225,19 @@ export function RandomNumberTool() {
     setCount(1);
   };
 
+  const sortedResults = useMemo(() => {
+    if (rolling || results.length === 0) return displayResults;
+    if (sortOrder === "asc") return [...results].sort((a, b) => a - b);
+    if (sortOrder === "desc") return [...results].sort((a, b) => b - a);
+    return results;
+  }, [rolling, results, displayResults, sortOrder]);
+
   if (!mounted) return null;
 
   const errMsg = validate();
 
   return (
-    <ToolLayout title="ランダム数字">
+    <ToolLayout title="ランダム数字" adVisible={!rolling}>
       <div className="flex flex-col gap-6">
         {/* Settings */}
         <div className="rounded-xl border border-border bg-card shadow-sm p-5 flex flex-col gap-4">
@@ -291,17 +331,26 @@ export function RandomNumberTool() {
         </div>
 
         {/* Generate button */}
-        <button
-          onClick={generate}
-          disabled={!!errMsg || rolling}
-          className="w-full h-14 rounded-xl text-xl font-bold transition-colors disabled:opacity-50"
-          style={{
-            backgroundColor: "var(--accent)",
-            color: "var(--accent-foreground)",
-          }}
-        >
-          {rolling ? "生成中..." : "生成する"}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={generate}
+            disabled={!!errMsg || rolling}
+            className="flex-1 h-14 rounded-xl text-xl font-bold transition-colors disabled:opacity-50"
+            style={{
+              backgroundColor: "var(--accent)",
+              color: "var(--accent-foreground)",
+            }}
+          >
+            {rolling ? "生成中..." : "生成する"}
+          </button>
+          <button
+            onClick={handleShare}
+            className="h-14 px-4 rounded-xl border border-border bg-card hover:bg-muted transition-colors flex items-center gap-1.5 text-sm text-muted-foreground"
+            aria-label="設定をURLでシェア"
+          >
+            {shared ? <Check className="size-4 text-green-500" /> : <Share2 className="size-4" />}
+          </button>
+        </div>
 
         {/* Result display */}
         <div className="min-h-[200px] flex flex-col items-center justify-center rounded-xl bg-muted relative">
@@ -317,9 +366,9 @@ export function RandomNumberTool() {
                       ? { duration: 0.05 }
                       : { type: "spring", stiffness: 300, damping: 20 }
                   }
-                  className={`font-bold tabular-nums text-center px-4 ${getFontSize(displayResults.length)} font-[var(--font-inter)]`}
+                  className={`font-bold tabular-nums text-center px-4 ${getFontSize(sortedResults.length)} font-[var(--font-inter)]`}
                 >
-                  {displayResults.join(", ")}
+                  {sortedResults.join(", ")}
                 </motion.div>
               </AnimatePresence>
               {!rolling && results.length > 0 && (
@@ -329,6 +378,23 @@ export function RandomNumberTool() {
                 >
                   {copied ? "✓ コピー済み" : "コピー"}
                 </button>
+              )}
+              {!rolling && results.length > 1 && (
+                <div className="absolute top-2 left-2 flex gap-1">
+                  {(["none", "asc", "desc"] as const).map((order) => (
+                    <button
+                      key={order}
+                      onClick={() => setSortOrder(order)}
+                      className={`text-xs px-2 py-0.5 rounded-md border transition-colors ${
+                        sortOrder === order
+                          ? "border-[var(--accent)] text-[var(--accent)] bg-[var(--accent)]/10"
+                          : "border-border text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {order === "none" ? "生成順" : order === "asc" ? "昇順" : "降順"}
+                    </button>
+                  ))}
+                </div>
               )}
             </>
           ) : (
@@ -368,9 +434,21 @@ export function RandomNumberTool() {
           </div>
         )}
 
-        <p className="text-xs text-muted-foreground text-center">
-          Enter / R: 生成する
-        </p>
+        <div className="relative flex justify-center">
+          {showShortcuts && (
+            <div className="absolute bottom-full mb-2 w-64 rounded-lg border border-border bg-background shadow-lg p-3 z-50 text-xs text-muted-foreground">
+              <p className="font-semibold text-foreground mb-2">キーボードショートカット</p>
+              <div className="space-y-1">
+                <div className="flex justify-between"><span>Enter / R</span><span>生成する</span></div>
+              </div>
+            </div>
+          )}
+          <button
+            onClick={() => setShowShortcuts(v => !v)}
+            className="w-7 h-7 flex items-center justify-center rounded-md border border-border bg-card text-xs font-bold text-muted-foreground hover:bg-muted transition-colors"
+            aria-label="キーボードショートカット"
+          >?</button>
+        </div>
       </div>
     </ToolLayout>
   );

@@ -4,8 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ToolLayout } from "@/components/tool-layout/ToolLayout";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-
 type Hand = "rock" | "scissors" | "paper";
 type Result = "win" | "lose" | "draw";
 type Mode = "cpu" | "multiplayer";
@@ -30,101 +28,113 @@ interface JankenSettings {
   lastPlayers: string[];
 }
 
-// ─── Constants ───────────────────────────────────────────────────────────────
-
 const STORAGE_KEY = "phase1-janken-settings";
+const STATS_KEY   = "phase1-janken-stats";
 
-const HAND_EMOJI: Record<Hand, string> = {
-  rock: "✊",
-  scissors: "✌️",
-  paper: "✋",
-};
-
-const HAND_LABEL: Record<Hand, string> = {
-  rock: "グー",
-  scissors: "チョキ",
-  paper: "パー",
-};
-
-const BEATS: Record<Hand, Hand> = {
-  rock: "scissors",
-  scissors: "paper",
-  paper: "rock",
-};
-
+const HAND_EMOJI: Record<Hand, string> = { rock: "✊", scissors: "✌️", paper: "✋" };
+const HAND_LABEL: Record<Hand, string> = { rock: "グー", scissors: "チョキ", paper: "パー" };
+const BEATS: Record<Hand, Hand> = { rock: "scissors", scissors: "paper", paper: "rock" };
 const HANDS: Hand[] = ["rock", "scissors", "paper"];
 const COUNTDOWN_STEPS = ["3", "2", "1", "じゃんけん！"] as const;
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// 手ごとのカラーテーマ
+const HAND_THEME: Record<Hand, {
+  bg: string; activeBg: string; border: string; grad: string; glow: string;
+}> = {
+  rock:     { bg: "from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/20",     activeBg: "from-rose-400 to-pink-500",     border: "border-rose-200/80 dark:border-rose-700/30",     grad: "from-rose-400 to-pink-500",     glow: "shadow-rose-200 dark:shadow-rose-900/50"    },
+  scissors: { bg: "from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/20", activeBg: "from-amber-400 to-yellow-400", border: "border-amber-200/80 dark:border-amber-700/30", grad: "from-amber-400 to-yellow-400",  glow: "shadow-amber-200 dark:shadow-amber-900/50"  },
+  paper:    { bg: "from-sky-50 to-teal-50 dark:from-sky-950/30 dark:to-teal-950/20",       activeBg: "from-sky-400 to-teal-400",      border: "border-sky-200/80 dark:border-sky-700/30",       grad: "from-sky-400 to-teal-400",      glow: "shadow-sky-200 dark:shadow-sky-900/50"      },
+};
 
-function judgeResult(myHand: Hand, opponentHand: Hand): Result {
-  if (myHand === opponentHand) return "draw";
-  if (BEATS[myHand] === opponentHand) return "win";
-  return "lose";
+const RESULT_THEME: Record<Result, { label: string; grad: string; emoji: string }> = {
+  win:  { label: "あなたの勝ち！", grad: "from-emerald-400 to-green-400",  emoji: "🎉" },
+  lose: { label: "あなたの負け",   grad: "from-rose-400 to-red-400",       emoji: "😢" },
+  draw: { label: "あいこ！",       grad: "from-sky-400 to-violet-400",     emoji: "🤝" },
+};
+
+const COUNTDOWN_COLORS = ["from-rose-400 to-pink-400", "from-amber-400 to-yellow-400", "from-sky-400 to-teal-400", "from-violet-400 to-purple-400"];
+
+function judgeResult(my: Hand, opp: Hand): Result {
+  if (my === opp) return "draw";
+  return BEATS[my] === opp ? "win" : "lose";
 }
 
 function judgeMultiplayer(players: Player[]): { winners: string[]; isDraw: boolean } {
   const hands = players.map((p) => p.hand!);
-  const uniqueHands = new Set(hands);
-  if (uniqueHands.size === 1 || uniqueHands.size === 3) {
-    return { winners: [], isDraw: true };
-  }
-  const winningHand = [...uniqueHands].find((h) => uniqueHands.has(BEATS[h]))!;
-  return {
-    winners: players.filter((p) => p.hand === winningHand).map((p) => p.id),
-    isDraw: false,
-  };
+  const unique = new Set(hands);
+  if (unique.size === 1 || unique.size === 3) return { winners: [], isDraw: true };
+  const winHand = [...unique].find((h) => unique.has(BEATS[h]))!;
+  return { winners: players.filter((p) => p.hand === winHand).map((p) => p.id), isDraw: false };
 }
 
-function randomHand(): Hand {
-  return HANDS[Math.floor(Math.random() * 3)];
-}
+function randomHand(): Hand { return HANDS[Math.floor(Math.random() * 3)]; }
 
-// ─── Result label ─────────────────────────────────────────────────────────────
+// ─── ResultBanner ──────────────────────────────────────────────────────────────
 
-function ResultLabel({ result }: { result: Result }) {
-  const labels: Record<Result, { text: string; cls: string }> = {
-    win: { text: "あなたの勝ち！", cls: "text-green-500" },
-    lose: { text: "あなたの負け", cls: "text-red-500" },
-    draw: { text: "あいこ！", cls: "text-blue-500" },
-  };
-  const { text, cls } = labels[result];
+function ResultBanner({ result }: { result: Result }) {
+  const t = RESULT_THEME[result];
   return (
-    <motion.p
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.25 }}
-      className={`text-4xl font-bold text-center ${cls}`}
+    <motion.div
+      initial={{ scale: 0.5, opacity: 0, y: 20 }}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 300, damping: 18 }}
+      className={`py-4 rounded-2xl bg-gradient-to-r ${t.grad} text-white text-center shadow-lg`}
     >
-      {text}
-    </motion.p>
+      <span className="text-3xl mr-2">{t.emoji}</span>
+      <span className="text-2xl font-bold">{t.label}</span>
+    </motion.div>
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+// ─── HandButton ────────────────────────────────────────────────────────────────
+
+function HandButton({ hand, onClick, selected = false, disabled = false }: {
+  hand: Hand; onClick: () => void; selected?: boolean; disabled?: boolean;
+}) {
+  const t = HAND_THEME[hand];
+  return (
+    <motion.button
+      whileTap={{ scale: 0.93 }}
+      whileHover={{ scale: disabled ? 1 : 1.04 }}
+      onClick={onClick}
+      disabled={disabled}
+      className={`flex flex-col items-center justify-center h-[120px] rounded-2xl border transition-all duration-200 disabled:cursor-not-allowed ${
+        selected
+          ? `bg-gradient-to-br ${t.activeBg} border-transparent text-white shadow-lg ${t.glow}`
+          : `bg-gradient-to-br ${t.bg} ${t.border} hover:shadow-md hover:${t.glow}`
+      }`}
+    >
+      <motion.span
+        className="text-5xl"
+        animate={selected ? { scale: [1, 1.2, 1], rotate: [0, -10, 10, 0] } : {}}
+        transition={{ duration: 0.4 }}
+      >
+        {HAND_EMOJI[hand]}
+      </motion.span>
+      <span className={`text-sm font-bold mt-2 ${selected ? "text-white" : ""}`}>{HAND_LABEL[hand]}</span>
+    </motion.button>
+  );
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export function JankenTool() {
   const [mode, setMode] = useState<Mode>("cpu");
   const [phase, setPhase] = useState<GamePhase>("setup");
   const [players, setPlayers] = useState<Player[]>([
     { id: "player", name: "あなた", hand: null, result: null },
-    { id: "cpu", name: "CPU", hand: null, result: null },
+    { id: "cpu",    name: "CPU",   hand: null, result: null },
   ]);
   const [countdownStep, setCountdownStep] = useState(0);
   const [stats, setStats] = useState<SessionStats>({ wins: 0, losses: 0, draws: 0 });
-  const [settings, setSettings] = useState<JankenSettings>({
-    autoRetryOnDraw: true,
-    countdownSpeed: "normal",
-    lastPlayers: [],
-  });
+  const [settings, setSettings] = useState<JankenSettings>({ autoRetryOnDraw: true, countdownSpeed: "normal", lastPlayers: [] });
   const [adVisible, setAdVisible] = useState(true);
   const [mounted, setMounted] = useState(false);
-  // Multiplayer setup
+  const [showShortcuts, setShowShortcuts] = useState(false);
   const [mpPlayers, setMpPlayers] = useState<string[]>(["プレイヤー1", "プレイヤー2"]);
   const [mpCurrentIdx, setMpCurrentIdx] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Load settings
   useEffect(() => {
     setMounted(true);
     try {
@@ -132,131 +142,100 @@ export function JankenTool() {
       if (saved) {
         const s: JankenSettings = JSON.parse(saved);
         setSettings(s);
-        if (Array.isArray(s.lastPlayers) && s.lastPlayers.length >= 2) {
-          setMpPlayers(s.lastPlayers);
-        }
+        if (Array.isArray(s.lastPlayers) && s.lastPlayers.length >= 2) setMpPlayers(s.lastPlayers);
       }
+    } catch { /* ignore */ }
+    try {
+      const ss = localStorage.getItem(STATS_KEY);
+      if (ss) setStats(JSON.parse(ss));
     } catch { /* ignore */ }
   }, []);
 
-  // Save settings
   useEffect(() => {
     if (!mounted) return;
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-    } catch { /* ignore */ }
+    try { localStorage.setItem(STATS_KEY, JSON.stringify(stats)); } catch { /* ignore */ }
+  }, [stats, mounted]);
+
+  useEffect(() => {
+    if (!mounted) return;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); } catch { /* ignore */ }
   }, [mounted, settings]);
 
-  const clearTimer = () => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-  };
+  const clearTimer = () => { if (timerRef.current) clearTimeout(timerRef.current); };
 
-  // Countdown then reveal
-  const startCountdown = useCallback(
-    (pendingPlayers: Player[]) => {
-      setAdVisible(false);
-      setPhase("countdown");
-      setCountdownStep(0);
-      const stepMs = settings.countdownSpeed === "fast" ? 500 : 1000;
-
-      let step = 0;
-      const advance = () => {
-        step++;
-        if (step < COUNTDOWN_STEPS.length) {
-          setCountdownStep(step);
-          timerRef.current = setTimeout(advance, stepMs);
-        } else {
-          // Reveal
-          setPhase("result");
-          setPlayers(pendingPlayers);
-          setAdVisible(true);
-
-          // Stats update for CPU mode
-          if (mode === "cpu") {
-            const me = pendingPlayers.find((p) => p.id === "player");
-            if (me?.result === "win") setStats((s) => ({ ...s, wins: s.wins + 1 }));
-            else if (me?.result === "lose") setStats((s) => ({ ...s, losses: s.losses + 1 }));
-            else setStats((s) => ({ ...s, draws: s.draws + 1 }));
-
-            // Auto-retry on draw
-            if (me?.result === "draw" && settings.autoRetryOnDraw) {
-              timerRef.current = setTimeout(() => {
-                const newCpuHand = randomHand();
-                const myHand = me.hand!;
-                const result = judgeResult(myHand, newCpuHand);
-                const newPlayers: Player[] = [
-                  { id: "player", name: "あなた", hand: myHand, result },
-                  { id: "cpu", name: "CPU", hand: newCpuHand, result: judgeResult(newCpuHand, myHand) },
-                ];
-                startCountdown(newPlayers);
-              }, 1000);
-            }
+  const startCountdown = useCallback((pendingPlayers: Player[]) => {
+    setAdVisible(false);
+    setPhase("countdown");
+    setCountdownStep(0);
+    const stepMs = settings.countdownSpeed === "fast" ? 500 : 900;
+    let step = 0;
+    const advance = () => {
+      step++;
+      if (step < COUNTDOWN_STEPS.length) {
+        setCountdownStep(step);
+        timerRef.current = setTimeout(advance, stepMs);
+      } else {
+        setPhase("result");
+        setPlayers(pendingPlayers);
+        setAdVisible(true);
+        if (mode === "cpu") {
+          const me = pendingPlayers.find((p) => p.id === "player");
+          if (me?.result === "win")  setStats((s) => ({ ...s, wins: s.wins + 1 }));
+          else if (me?.result === "lose") setStats((s) => ({ ...s, losses: s.losses + 1 }));
+          else setStats((s) => ({ ...s, draws: s.draws + 1 }));
+          if (me?.result === "draw" && settings.autoRetryOnDraw) {
+            timerRef.current = setTimeout(() => {
+              const newCpu = randomHand();
+              const myHand = me.hand!;
+              const r = judgeResult(myHand, newCpu);
+              startCountdown([
+                { id: "player", name: "あなた", hand: myHand, result: r },
+                { id: "cpu",    name: "CPU",    hand: newCpu, result: judgeResult(newCpu, myHand) },
+              ]);
+            }, 1000);
           }
         }
-      };
-
-      timerRef.current = setTimeout(advance, stepMs);
-    },
-    [mode, settings]
-  );
-
-  // CPU mode: player picks hand
-  const handleCpuPick = useCallback(
-    (hand: Hand) => {
-      if (phase !== "setup") return;
-      const cpuHand = randomHand();
-      const result = judgeResult(hand, cpuHand);
-      const newPlayers: Player[] = [
-        { id: "player", name: "あなた", hand, result },
-        { id: "cpu", name: "CPU", hand: cpuHand, result: judgeResult(cpuHand, hand) },
-      ];
-      startCountdown(newPlayers);
-    },
-    [phase, startCountdown]
-  );
-
-  // Multiplayer: record hand for current player
-  const handleMpPick = useCallback(
-    (hand: Hand) => {
-      if (phase !== "selecting") return;
-      const currentPlayer = mpPlayers[mpCurrentIdx];
-      const nextPlayers = players.map((p) =>
-        p.id === currentPlayer ? { ...p, hand } : p
-      );
-
-      if (mpCurrentIdx < mpPlayers.length - 1) {
-        setPlayers(nextPlayers);
-        setMpCurrentIdx((i) => i + 1);
-      } else {
-        // All picked — judge
-        const judged = nextPlayers.map((p) => ({ ...p, result: null as Result | null }));
-        const { winners, isDraw } = judgeMultiplayer(judged);
-        const final = judged.map((p) => ({
-          ...p,
-          result: isDraw ? ("draw" as Result) : winners.includes(p.id) ? ("win" as Result) : ("lose" as Result),
-        }));
-        startCountdown(final);
       }
-    },
-    [phase, players, mpPlayers, mpCurrentIdx, startCountdown]
-  );
+    };
+    timerRef.current = setTimeout(advance, stepMs);
+  }, [mode, settings]);
 
-  // Start multiplayer game
+  const handleCpuPick = useCallback((hand: Hand) => {
+    if (phase !== "setup") return;
+    const cpuHand = randomHand();
+    const r = judgeResult(hand, cpuHand);
+    startCountdown([
+      { id: "player", name: "あなた", hand, result: r },
+      { id: "cpu",    name: "CPU",    hand: cpuHand, result: judgeResult(cpuHand, hand) },
+    ]);
+  }, [phase, startCountdown]);
+
+  const handleMpPick = useCallback((hand: Hand) => {
+    if (phase !== "selecting") return;
+    const cur = mpPlayers[mpCurrentIdx];
+    const next = players.map((p) => p.id === cur ? { ...p, hand } : p);
+    if (mpCurrentIdx < mpPlayers.length - 1) {
+      setPlayers(next);
+      setMpCurrentIdx((i) => i + 1);
+    } else {
+      const { winners, isDraw } = judgeMultiplayer(next);
+      const final = next.map((p) => ({
+        ...p,
+        result: isDraw ? ("draw" as Result) : winners.includes(p.id) ? ("win" as Result) : ("lose" as Result),
+      }));
+      startCountdown(final);
+    }
+  }, [phase, players, mpPlayers, mpCurrentIdx, startCountdown]);
+
   const startMpGame = () => {
     if (mpPlayers.length < 2) return;
-    const ps: Player[] = mpPlayers.map((name) => ({
-      id: name,
-      name,
-      hand: null,
-      result: null,
-    }));
-    setPlayers(ps);
+    setPlayers(mpPlayers.map((name) => ({ id: name, name, hand: null, result: null })));
     setMpCurrentIdx(0);
     setPhase("selecting");
     setSettings((s) => ({ ...s, lastPlayers: mpPlayers }));
   };
 
-  const reset = () => {
+  const reset = useCallback(() => {
     clearTimer();
     setPhase("setup");
     setCountdownStep(0);
@@ -265,12 +244,11 @@ export function JankenTool() {
     if (mode === "cpu") {
       setPlayers([
         { id: "player", name: "あなた", hand: null, result: null },
-        { id: "cpu", name: "CPU", hand: null, result: null },
+        { id: "cpu",    name: "CPU",    hand: null, result: null },
       ]);
     }
-  };
+  }, [mode]);
 
-  // Keyboard
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
@@ -291,31 +269,31 @@ export function JankenTool() {
 
   if (!mounted) return null;
 
-  const playerMe = players.find((p) => p.id === "player");
+  const playerMe  = players.find((p) => p.id === "player");
   const playerCpu = players.find((p) => p.id === "cpu");
 
   return (
     <ToolLayout title="じゃんけん" adVisible={adVisible}>
-      {/* Mode tabs */}
-      <div className="flex rounded-lg border border-border bg-muted p-1 mb-6">
+      {/* モードタブ */}
+      <div className="flex rounded-xl border border-border bg-muted/50 p-1 mb-6 gap-1">
         {(["cpu", "multiplayer"] as Mode[]).map((m) => (
           <button
             key={m}
-            onClick={() => {
-              setMode(m);
-              reset();
-            }}
-            className={`flex-1 py-1.5 rounded-md text-sm font-medium transition-colors ${
-              mode === m ? "bg-card shadow-sm" : "text-muted-foreground hover:text-foreground"
+            onClick={() => { setMode(m); reset(); }}
+            className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${
+              mode === m
+                ? "bg-gradient-to-r from-violet-400 to-purple-400 text-white shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {m === "cpu" ? "1人対CPU" : "多人数"}
+            {m === "cpu" ? "👤 1人対CPU" : "👥 多人数"}
           </button>
         ))}
       </div>
 
       <AnimatePresence mode="wait">
-        {/* ── Countdown ── */}
+
+        {/* ── カウントダウン ── */}
         {phase === "countdown" && (
           <motion.div
             key="countdown"
@@ -325,111 +303,141 @@ export function JankenTool() {
             className="flex items-center justify-center min-h-[300px]"
           >
             <AnimatePresence mode="wait">
-              <motion.p
+              <motion.div
                 key={countdownStep}
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: [0.5, 1.2, 1.0], opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.4 }}
-                className="text-9xl font-bold text-center"
+                initial={{ scale: 0.3, opacity: 0, rotate: -15 }}
+                animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                exit={{ scale: 1.5, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 350, damping: 18 }}
+                className={`text-8xl font-black text-center bg-gradient-to-r ${COUNTDOWN_COLORS[countdownStep]} bg-clip-text text-transparent`}
               >
                 {COUNTDOWN_STEPS[countdownStep]}
-              </motion.p>
+              </motion.div>
             </AnimatePresence>
           </motion.div>
         )}
 
-        {/* ── CPU mode: setup / result ── */}
+        {/* ── CPU モード ── */}
         {mode === "cpu" && phase !== "countdown" && (
           <motion.div
             key="cpu-game"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col gap-6"
+            className="flex flex-col gap-5"
           >
-            {/* Hands display */}
-            <div className="rounded-xl border border-border bg-card shadow-sm p-6 flex items-center justify-around">
-              <div className="flex flex-col items-center gap-2">
-                <span className="text-xs text-muted-foreground">CPU</span>
+            {/* 手表示エリア */}
+            <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-card to-muted/30 shadow-sm p-6 flex items-center justify-around">
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-xs font-medium text-muted-foreground px-2 py-0.5 rounded-full bg-muted">CPU</span>
                 <motion.span
                   key={`cpu-${playerCpu?.hand}`}
-                  initial={{ y: -20, opacity: 0 }}
+                  initial={{ y: -24, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-8xl"
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="text-7xl"
                 >
-                  {phase === "result" && playerCpu?.hand
-                    ? HAND_EMOJI[playerCpu.hand]
-                    : "❓"}
+                  {phase === "result" && playerCpu?.hand ? HAND_EMOJI[playerCpu.hand] : "❓"}
                 </motion.span>
               </div>
 
-              <span className="text-2xl font-bold text-muted-foreground">VS</span>
+              <div className="flex flex-col items-center">
+                <span className="text-2xl font-black bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
+                  VS
+                </span>
+              </div>
 
-              <div className="flex flex-col items-center gap-2">
-                <span className="text-xs text-muted-foreground">あなた</span>
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-xs font-medium text-muted-foreground px-2 py-0.5 rounded-full bg-muted">あなた</span>
                 <motion.span
                   key={`me-${playerMe?.hand}`}
-                  initial={{ y: 20, opacity: 0 }}
+                  initial={{ y: 24, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-8xl"
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="text-7xl"
                 >
-                  {phase === "result" && playerMe?.hand
-                    ? HAND_EMOJI[playerMe.hand]
-                    : "❓"}
+                  {phase === "result" && playerMe?.hand ? HAND_EMOJI[playerMe.hand] : "❓"}
                 </motion.span>
               </div>
             </div>
 
-            {/* Result */}
-            {phase === "result" && playerMe?.result && (
-              <ResultLabel result={playerMe.result} />
-            )}
+            {/* 結果 */}
+            <AnimatePresence>
+              {phase === "result" && playerMe?.result && (
+                <ResultBanner result={playerMe.result} />
+              )}
+            </AnimatePresence>
 
-            {/* Hand buttons */}
+            {/* 手選択ボタン */}
             {phase === "setup" && (
               <div className="grid grid-cols-3 gap-3">
                 {HANDS.map((hand) => (
-                  <motion.button
-                    key={hand}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleCpuPick(hand)}
-                    className="flex flex-col items-center justify-center h-[120px] rounded-xl border border-border bg-card shadow-sm hover:bg-muted hover:border-accent/40 transition-colors"
-                  >
-                    <span className="text-6xl">{HAND_EMOJI[hand]}</span>
-                    <span className="text-sm font-medium mt-1">{HAND_LABEL[hand]}</span>
-                  </motion.button>
+                  <HandButton key={hand} hand={hand} onClick={() => handleCpuPick(hand)} />
                 ))}
               </div>
             )}
 
-            {/* Replay */}
+            {/* もう一度 */}
             {phase === "result" && (
-              <button
+              <motion.button
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={reset}
-                className="w-full h-12 rounded-xl border border-border text-sm font-medium hover:bg-muted transition-colors"
+                className="w-full h-12 rounded-xl border border-border bg-card hover:bg-muted text-sm font-semibold transition-colors"
               >
                 もう一度 (Enter)
-              </button>
+              </motion.button>
             )}
 
-            {/* Stats */}
-            <p className="text-sm text-muted-foreground text-center tabular-nums">
-              勝: {stats.wins} &nbsp; 負: {stats.losses} &nbsp; あいこ: {stats.draws}
-            </p>
+            {/* 統計 */}
+            <div className="flex items-center justify-center gap-2 flex-wrap">
+              {[
+                { label: "勝", value: stats.wins,   color: "bg-emerald-500" },
+                { label: "負", value: stats.losses, color: "bg-rose-500"    },
+                { label: "△",  value: stats.draws,  color: "bg-sky-500"     },
+              ].map(({ label, value, color }) => (
+                <div key={label} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${color}/10 border border-current/20`}>
+                  <span className={`text-xs font-bold ${color.replace("bg-", "text-")}`}>{label}</span>
+                  <span className="text-sm font-bold tabular-nums">{value}</span>
+                </div>
+              ))}
+              {(stats.wins > 0 || stats.losses > 0 || stats.draws > 0) && (
+                <button
+                  onClick={() => setStats({ wins: 0, losses: 0, draws: 0 })}
+                  className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+                >
+                  リセット
+                </button>
+              )}
+            </div>
 
-            {/* Settings */}
-            <div className="text-xs text-muted-foreground text-center space-y-1">
-              <p>G: グー ・ C: チョキ ・ P: パー ・ Esc: リセット</p>
-              <label className="flex items-center justify-center gap-2 cursor-pointer">
+            {/* 設定 */}
+            <div className="text-xs text-muted-foreground text-center space-y-2">
+              <div className="relative flex justify-center">
+                {showShortcuts && (
+                  <div className="absolute bottom-full mb-2 w-64 rounded-lg border border-border bg-background shadow-lg p-3 z-50 text-xs text-muted-foreground text-left">
+                    <p className="font-semibold text-foreground mb-2">キーボードショートカット</p>
+                    <div className="space-y-1">
+                      <div className="flex justify-between"><span>G</span><span>グー</span></div>
+                      <div className="flex justify-between"><span>C</span><span>チョキ</span></div>
+                      <div className="flex justify-between"><span>P</span><span>パー</span></div>
+                      <div className="flex justify-between"><span>Enter</span><span>もう一度（結果画面）</span></div>
+                      <div className="flex justify-between"><span>Esc</span><span>リセット</span></div>
+                    </div>
+                  </div>
+                )}
+                <button
+                  onClick={() => setShowShortcuts(v => !v)}
+                  className="w-7 h-7 flex items-center justify-center rounded-md border border-border bg-card text-xs font-bold text-muted-foreground hover:bg-muted transition-colors"
+                  aria-label="キーボードショートカット"
+                >?</button>
+              </div>
+              <label className="flex items-center justify-center gap-2 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={settings.autoRetryOnDraw}
-                  onChange={(e) =>
-                    setSettings((s) => ({ ...s, autoRetryOnDraw: e.target.checked }))
-                  }
+                  onChange={(e) => setSettings((s) => ({ ...s, autoRetryOnDraw: e.target.checked }))}
                   className="accent-[var(--accent)]"
                 />
                 あいこ自動再戦
@@ -438,139 +446,115 @@ export function JankenTool() {
           </motion.div>
         )}
 
-        {/* ── Multiplayer: setup ── */}
+        {/* ── 多人数: セットアップ ── */}
         {mode === "multiplayer" && phase === "setup" && (
-          <motion.div
-            key="mp-setup"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col gap-4"
-          >
-            <p className="text-sm font-medium">参加者名を入力（2〜6人）</p>
+          <motion.div key="mp-setup" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-4">
+            <p className="text-sm font-semibold">参加者名を入力（2〜6人）</p>
             <div className="flex flex-col gap-2">
               {mpPlayers.map((name, i) => (
                 <div key={i} className="flex items-center gap-2">
                   <input
                     type="text"
                     value={name}
-                    onChange={(e) =>
-                      setMpPlayers((prev) =>
-                        prev.map((n, idx) => (idx === i ? e.target.value : n))
-                      )
-                    }
-                    className="flex-1 h-9 px-3 rounded-md border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-accent/50"
+                    onChange={(e) => setMpPlayers((prev) => prev.map((n, idx) => idx === i ? e.target.value : n))}
+                    className="flex-1 h-9 px-3 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-violet-400/50"
                   />
                   <button
                     onClick={() => setMpPlayers((prev) => prev.filter((_, idx) => idx !== i))}
-                    className="text-muted-foreground hover:text-destructive text-sm transition-colors"
+                    className="text-muted-foreground hover:text-destructive text-sm transition-colors px-1"
                   >
                     ×
                   </button>
                 </div>
               ))}
             </div>
-
             {mpPlayers.length < 6 && (
-              <button
-                onClick={() => setMpPlayers((prev) => [...prev, `プレイヤー${prev.length + 1}`])}
-                className="text-sm text-accent hover:underline text-left"
-              >
-                + 参加者を追加
+              <button onClick={() => setMpPlayers((prev) => [...prev, `プレイヤー${prev.length + 1}`])} className="text-sm text-violet-500 hover:underline text-left">
+                ＋ 参加者を追加
               </button>
             )}
-
-            <button
+            <motion.button
+              whileTap={{ scale: 0.97 }}
               onClick={startMpGame}
               disabled={mpPlayers.length < 2}
-              className="w-full h-12 rounded-xl font-bold text-sm transition-colors disabled:opacity-50"
-              style={{ backgroundColor: "var(--accent)", color: "var(--accent-foreground)" }}
+              className="w-full h-12 rounded-xl font-bold text-sm transition-all disabled:opacity-50 bg-gradient-to-r from-violet-400 to-purple-400 text-white shadow-md"
             >
               じゃんけんスタート！
-            </button>
+            </motion.button>
           </motion.div>
         )}
 
-        {/* ── Multiplayer: selecting ── */}
+        {/* ── 多人数: 選択中 ── */}
         {mode === "multiplayer" && phase === "selecting" && (
           <motion.div
             key={`mp-select-${mpCurrentIdx}`}
-            initial={{ opacity: 0, x: 10 }}
+            initial={{ opacity: 0, x: 16 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col gap-6"
+            className="flex flex-col gap-5"
           >
-            <p className="text-xl font-bold text-center">
-              {mpPlayers[mpCurrentIdx]} さんのターン
-            </p>
-            <p className="text-xs text-muted-foreground text-center">
-              他の人は画面を見ないでね
-            </p>
+            <div className="text-center">
+              <span className="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-violet-400 to-purple-400 text-white text-sm font-bold mb-2">
+                {mpCurrentIdx + 1} / {mpPlayers.length}
+              </span>
+              <p className="text-xl font-bold">{mpPlayers[mpCurrentIdx]} さんのターン</p>
+              <p className="text-xs text-muted-foreground mt-1">他の人は画面を見ないでね 🙈</p>
+            </div>
             <div className="grid grid-cols-3 gap-3">
               {HANDS.map((hand) => (
-                <motion.button
-                  key={hand}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleMpPick(hand)}
-                  className="flex flex-col items-center justify-center h-[120px] rounded-xl border border-border bg-card shadow-sm hover:bg-muted hover:border-accent/40 transition-colors"
-                >
-                  <span className="text-6xl">{HAND_EMOJI[hand]}</span>
-                  <span className="text-sm font-medium mt-1">{HAND_LABEL[hand]}</span>
-                </motion.button>
+                <HandButton key={hand} hand={hand} onClick={() => handleMpPick(hand)} />
               ))}
             </div>
-            <p className="text-xs text-muted-foreground text-center">
-              {mpCurrentIdx + 1} / {mpPlayers.length} 人が選択済み
-            </p>
           </motion.div>
         )}
 
-        {/* ── Multiplayer: result ── */}
+        {/* ── 多人数: 結果 ── */}
         {mode === "multiplayer" && phase === "result" && (
-          <motion.div
-            key="mp-result"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="flex flex-col gap-4"
-          >
+          <motion.div key="mp-result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-4">
             {players[0]?.result === "draw" ? (
-              <p className="text-4xl font-bold text-center text-blue-500">あいこ！</p>
+              <div className="py-4 rounded-2xl bg-gradient-to-r from-sky-400 to-violet-400 text-white text-center shadow-lg">
+                <span className="text-3xl">🤝</span>
+                <span className="text-2xl font-bold ml-2">あいこ！</span>
+              </div>
             ) : (
-              <p className="text-2xl font-bold text-center text-green-500">
-                勝者:{" "}
-                {players
-                  .filter((p) => p.result === "win")
-                  .map((p) => p.name)
-                  .join(", ")}
-              </p>
+              <div className="py-4 rounded-2xl bg-gradient-to-r from-emerald-400 to-green-400 text-white text-center shadow-lg">
+                <span className="text-2xl font-bold">
+                  🎉 {players.filter((p) => p.result === "win").map((p) => p.name).join(", ")} の勝ち！
+                </span>
+              </div>
             )}
-
             <div className="flex flex-col gap-2">
-              {players.map((p) => (
-                <div
-                  key={p.id}
-                  className={`flex items-center justify-between px-4 py-3 rounded-xl border ${
-                    p.result === "win" ? "border-green-500 bg-green-500/10" : "border-border bg-card"
-                  }`}
-                >
-                  <span className="font-medium">{p.name}</span>
-                  <span className="text-2xl">{p.hand ? HAND_EMOJI[p.hand] : "❓"}</span>
-                </div>
-              ))}
+              {players.map((p) => {
+                const handT = p.hand ? HAND_THEME[p.hand] : null;
+                return (
+                  <motion.div
+                    key={p.id}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className={`flex items-center justify-between px-4 py-3 rounded-xl border ${
+                      p.result === "win"
+                        ? "border-emerald-300 dark:border-emerald-700/50 bg-emerald-50 dark:bg-emerald-950/20"
+                        : "border-border bg-card"
+                    }`}
+                  >
+                    <span className="font-semibold">{p.name}</span>
+                    <span className={`text-2xl ${p.hand && handT ? "" : ""}`}>
+                      {p.hand ? HAND_EMOJI[p.hand] : "❓"}
+                    </span>
+                  </motion.div>
+                );
+              })}
             </div>
-
-            <button
-              onClick={() => {
-                setPhase("setup");
-                setMpCurrentIdx(0);
-              }}
-              className="w-full h-12 rounded-xl border border-border text-sm font-medium hover:bg-muted transition-colors"
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={() => { setPhase("setup"); setMpCurrentIdx(0); }}
+              className="w-full h-12 rounded-xl border border-border bg-card hover:bg-muted text-sm font-semibold transition-colors"
             >
               もう一度
-            </button>
+            </motion.button>
           </motion.div>
         )}
+
       </AnimatePresence>
     </ToolLayout>
   );
