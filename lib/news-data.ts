@@ -16,6 +16,26 @@ export type NewsItem = {
 
 export const NEWS_DATA: NewsItem[] = [
   {
+    id: "010",
+    date: "2026-05-28",
+    category: "お知らせ",
+    title: "【開発中】ただタダgames — ブラウザで遊べるゲームを準備しています",
+    summary: "ログイン不要・無料で遊べるブラウザゲームを開発中です。詳細は続報でお知らせします。",
+    body: "ただただの3つ目のサービス「ただタダgames」を開発中です。\n\nブラウザで手軽に遊べる、ログイン不要のゲームを目指しています。詳細な内容は続報でお知らせします。",
+    banner: { grad: ["#dbeafe", "#93c5fd", "#818cf8"], icon: "🎮" },
+    image: "/uploads/banner-game.png",
+  },
+  {
+    id: "009",
+    date: "2026-05-28",
+    category: "お知らせ",
+    title: "【開発中】ただただ一問一答 — クイズサービスを準備しています",
+    summary: "ログイン不要・無料で使える一問一答クイズサービスを開発中です。詳細は続報でお知らせします。",
+    body: "ただただの2つ目のサービス「ただただ一問一答」を開発中です。\n\nスキマ時間にサクッと使える、ログイン不要のクイズサービスを目指しています。詳細な内容は続報でお知らせします。",
+    banner: { grad: ["#fef9c3", "#fde68a", "#fcd34d"], icon: "📖" },
+    image: "/uploads/banner-quiz.png",
+  },
+  {
     id: "008",
     date: "2026-05-27",
     category: "リリース",
