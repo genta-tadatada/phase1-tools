@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link2 } from "lucide-react";
+import { toast } from "sonner";
 import { ToolLayout } from "@/components/tool-layout/ToolLayout";
 
 const STORAGE_KEY = "phase1-roulette-state";
@@ -30,6 +32,7 @@ export function RouletteTool() {
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [cumulativeMode, setCumulativeMode] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
+  const [shared, setShared] = useState(false);
   const cumulativeModeRef = useRef(false);
   const spinTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => { cumulativeModeRef.current = cumulativeMode; }, [cumulativeMode]);
@@ -71,6 +74,15 @@ export function RouletteTool() {
     setItems((prev) => prev.filter((_, idx) => idx !== selectedIndex));
     setSelectedIndex(null);
   };
+
+  const handleShare = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShared(true);
+      setTimeout(() => setShared(false), 1500);
+      toast("共有URLをコピーしました");
+    } catch { toast.error("コピーに失敗しました"); }
+  }, []);
 
   const spin = useCallback(() => {
     if (items.length < 2) { setError("2個以上の選択肢を追加してください"); return; }
@@ -246,7 +258,7 @@ export function RouletteTool() {
             </motion.span>
           ) : "🎡 スタート"}
         </motion.button>
-        <div className="relative flex justify-center">
+        <div className="relative flex justify-center items-center gap-2">
           {showShortcuts && (
             <div className="absolute bottom-full mb-2 w-64 rounded-lg border border-border bg-background shadow-lg p-3 z-50 text-xs text-muted-foreground">
               <p className="font-semibold text-foreground mb-2">キーボードショートカット</p>
@@ -260,6 +272,13 @@ export function RouletteTool() {
             className="w-7 h-7 flex items-center justify-center rounded-md border border-border bg-card text-xs font-bold text-muted-foreground hover:bg-muted transition-colors"
             aria-label="キーボードショートカット"
           >?</button>
+          <button
+            onClick={handleShare}
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted"
+          >
+            <Link2 className="size-3" />
+            {shared ? "コピー済" : "共有"}
+          </button>
         </div>
 
         {/* 当選履歴 */}

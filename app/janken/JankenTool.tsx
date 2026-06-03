@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link2 } from "lucide-react";
+import { toast } from "sonner";
 import { ToolLayout } from "@/components/tool-layout/ToolLayout";
 
 type Hand = "rock" | "scissors" | "paper";
@@ -130,6 +132,7 @@ export function JankenTool() {
   const [settings, setSettings] = useState<JankenSettings>({ autoRetryOnDraw: true, countdownSpeed: "normal", lastPlayers: [] });
   const [mounted, setMounted] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [shared, setShared] = useState(false);
   const [mpPlayers, setMpPlayers] = useState<string[]>(["プレイヤー1", "プレイヤー2"]);
   const [mpCurrentIdx, setMpCurrentIdx] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -232,6 +235,15 @@ export function JankenTool() {
     setSettings((s) => ({ ...s, lastPlayers: mpPlayers }));
   };
 
+  const handleShare = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShared(true);
+      setTimeout(() => setShared(false), 1500);
+      toast("共有URLをコピーしました");
+    } catch { toast.error("コピーに失敗しました"); }
+  }, []);
+
   const reset = useCallback(() => {
     clearTimer();
     setPhase("setup");
@@ -271,20 +283,29 @@ export function JankenTool() {
   return (
     <ToolLayout title="じゃんけん" adVisible>
       {/* モードタブ */}
-      <div className="flex rounded-xl border border-border bg-muted/50 p-1 mb-6 gap-1">
-        {(["cpu", "multiplayer"] as Mode[]).map((m) => (
-          <button
-            key={m}
-            onClick={() => { setMode(m); reset(); }}
-            className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${
-              mode === m
-                ? "bg-gradient-to-r from-violet-400 to-purple-400 text-white shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            {m === "cpu" ? "👤 1人対CPU" : "👥 多人数"}
-          </button>
-        ))}
+      <div className="flex items-center gap-2 mb-6">
+        <div className="flex flex-1 rounded-xl border border-border bg-muted/50 p-1 gap-1">
+          {(["cpu", "multiplayer"] as Mode[]).map((m) => (
+            <button
+              key={m}
+              onClick={() => { setMode(m); reset(); }}
+              className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${
+                mode === m
+                  ? "bg-gradient-to-r from-violet-400 to-purple-400 text-white shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {m === "cpu" ? "👤 1人対CPU" : "👥 多人数"}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={handleShare}
+          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted shrink-0"
+        >
+          <Link2 className="size-3" />
+          {shared ? "コピー済" : "共有"}
+        </button>
       </div>
 
       <AnimatePresence mode="wait">
