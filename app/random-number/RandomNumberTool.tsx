@@ -3,17 +3,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share2, Check } from "lucide-react";
+import { toast } from "sonner";
 import { ToolLayout } from "@/components/tool-layout/ToolLayout";
-import { Button } from "@/components/ui/button";
 import { decodeState, generateShareUrl } from "@/lib/share";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
+
+type DupMode = "allow" | "once" | "pool";
 
 interface SharePayload {
   min: number;
   max: number;
   count: number;
-  dups: boolean;
+  dups: DupMode | boolean;
 }
 
 interface HistoryEntry {
@@ -25,8 +27,10 @@ interface RandomState {
   min: number;
   max: number;
   count: number;
-  allowDuplicates: boolean;
+  dupMode?: DupMode;
+  allowDuplicates?: boolean; // legacy
   history: HistoryEntry[];
+  poolRemaining?: number[];
 }
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -34,21 +38,33 @@ interface RandomState {
 const STORAGE_KEY = "phase1-random-state";
 const MAX_HISTORY = 10;
 
-// Fisher-Yates shuffle for no-duplicates
-function sampleNoDuplicates(min: number, max: number, count: number): number[] {
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function shuffle<T>(arr: T[]): T[] {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function buildPool(min: number, max: number): number[] {
   const pool: number[] = [];
   for (let i = min; i <= max; i++) pool.push(i);
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
-  return pool.slice(0, count);
+  return pool;
 }
 
 function sampleWithDuplicates(min: number, max: number, count: number): number[] {
   return Array.from({ length: count }, () =>
     Math.floor(Math.random() * (max - min + 1)) + min
   );
+}
+
+function parseDupMode(raw: DupMode | boolean | undefined): DupMode {
+  if (raw === true)  return "allow";
+  if (raw === false) return "once";
+  if (raw === "allow" || raw === "once" || raw === "pool") return raw;
+  return "allow";
 }
 
 function getFontSize(count: number): string {
@@ -67,10 +83,11 @@ function formatTime(ts: number): string {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function RandomNumberTool() {
-  const [min, setMin] = useState(1);
-  const [max, setMax] = useState(100);
+  const [min, setMinState] = useState(1);
+  const [max, setMaxState] = useState(100);
   const [count, setCount] = useState(1);
-  const [allowDuplicates, setAllowDuplicates] = useState(true);
+  const [dupMode, setDupModeState] = useState<DupMode>("once");
+  const [poolRemaining, setPoolRemaining] = useState<number[]>([]);
   const [results, setResults] = useState<number[]>([]);
   const [displayResults, setDisplayResults] = useState<number[]>([]);
   const [rolling, setRolling] = useState(false);
@@ -86,18 +103,47 @@ export function RandomNumberTool() {
 
   const rollingRef = useRef(false);
 
+  // プール付きのセッター（min/maxが変わったらプールをリセット）
+  const setMin = useCallback((val: number) => {
+    setMinState(val);
+    setDupModeState((mode) => {
+      if (mode === "pool") setPoolRemaining(buildPool(val, max));
+      return mode;
+    });
+  }, [max]);
+
+  const setMax = useCallback((val: number) => {
+    setMaxState(val);
+    setDupModeState((mode) => {
+      if (mode === "pool") setPoolRemaining(buildPool(min, val));
+      return mode;
+    });
+  }, [min]);
+
+  const setDupMode = useCallback((mode: DupMode) => {
+    setDupModeState(mode);
+    if (mode === "pool") {
+      setMinState((mn) => {
+        setMaxState((mx) => {
+          setPoolRemaining(buildPool(mn, mx));
+          return mx;
+        });
+        return mn;
+      });
+    }
+  }, []);
+
   // Load from URL or localStorage
   useEffect(() => {
     setMounted(true);
-    // Try URL params first
     const param = new URLSearchParams(window.location.search).get("c");
     if (param) {
       const payload = decodeState<SharePayload>(param);
       if (payload) {
-        setMin(payload.min ?? 1);
-        setMax(payload.max ?? 100);
+        setMinState(payload.min ?? 1);
+        setMaxState(payload.max ?? 100);
         setCount(Math.min(10, Math.max(1, payload.count ?? 1)));
-        setAllowDuplicates(payload.dups ?? true);
+        setDupModeState(parseDupMode(payload.dups));
         return;
       }
     }
@@ -105,11 +151,19 @@ export function RandomNumberTool() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const state: RandomState = JSON.parse(saved);
-        setMin(state.min ?? 1);
-        setMax(state.max ?? 100);
+        const savedMin = state.min ?? 1;
+        const savedMax = state.max ?? 100;
+        setMinState(savedMin);
+        setMaxState(savedMax);
         setCount(Math.min(10, Math.max(1, state.count ?? 1)));
-        setAllowDuplicates(state.allowDuplicates ?? true);
+        const mode = parseDupMode(state.dupMode ?? state.allowDuplicates);
+        setDupModeState(mode);
         setHistory(state.history ?? []);
+        if (mode === "pool") {
+          setPoolRemaining(state.poolRemaining?.length
+            ? state.poolRemaining
+            : buildPool(savedMin, savedMax));
+        }
       }
     } catch {
       // ignore
@@ -120,39 +174,49 @@ export function RandomNumberTool() {
   useEffect(() => {
     if (!mounted) return;
     try {
-      const state: RandomState = { min, max, count, allowDuplicates, history };
+      const state: RandomState = { min, max, count, dupMode, history, poolRemaining };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       // ignore
     }
-  }, [mounted, min, max, count, allowDuplicates, history]);
+  }, [mounted, min, max, count, dupMode, history, poolRemaining]);
 
   // Validate
   const validate = useCallback((): string => {
     if (min > max) return "最小値は最大値より小さく設定してください";
     const range = max - min + 1;
-    if (!allowDuplicates && count > range)
-      return `この範囲では${range}個までしか生成できません（重複なし）`;
+    if ((dupMode === "once" || dupMode === "pool") && count > range)
+      return `この範囲では${range}個までしか生成できません`;
     return "";
-  }, [min, max, count, allowDuplicates]);
+  }, [min, max, count, dupMode]);
 
   // Generate with rolling animation
   const generate = useCallback(() => {
     const errMsg = validate();
-    if (errMsg) {
-      setError(errMsg);
-      return;
-    }
+    if (errMsg) { setError(errMsg); return; }
     setError("");
 
-    const finalValues = allowDuplicates
-      ? sampleWithDuplicates(min, max, count)
-      : sampleNoDuplicates(min, max, count);
+    let finalValues: number[];
+    let nextPool = poolRemaining;
+
+    if (dupMode === "pool") {
+      if (poolRemaining.length < count) {
+        nextPool = buildPool(min, max);
+        toast("プールをリセットしました（全数字使用済み）");
+      }
+      const shuffled = shuffle([...nextPool]);
+      finalValues = shuffled.slice(0, count);
+      nextPool = shuffled.slice(count);
+      setPoolRemaining(nextPool);
+    } else if (dupMode === "once") {
+      finalValues = shuffle(buildPool(min, max)).slice(0, count);
+    } else {
+      finalValues = sampleWithDuplicates(min, max, count);
+    }
 
     setRolling(true);
     rollingRef.current = true;
 
-    // Rolling animation: decrease interval over ~1200ms
     const steps = 20;
     const intervals = Array.from({ length: steps }, (_, i) =>
       Math.round(50 + (i / steps) ** 2 * 150)
@@ -162,13 +226,7 @@ export function RandomNumberTool() {
     const runStep = () => {
       if (!rollingRef.current) return;
       if (step < steps) {
-        setDisplayResults(
-          allowDuplicates
-            ? sampleWithDuplicates(min, max, count)
-            : Array.from({ length: count }, () =>
-                Math.floor(Math.random() * (max - min + 1)) + min
-              )
-        );
+        setDisplayResults(sampleWithDuplicates(min, max, count));
         setTimeout(runStep, intervals[step]);
         step++;
       } else {
@@ -185,7 +243,7 @@ export function RandomNumberTool() {
       }
     };
     runStep();
-  }, [min, max, count, allowDuplicates, validate]);
+  }, [min, max, count, dupMode, poolRemaining, validate]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -205,7 +263,7 @@ export function RandomNumberTool() {
   }, [generate]);
 
   const handleShare = async () => {
-    const payload: SharePayload = { min, max, count, dups: allowDuplicates };
+    const payload: SharePayload = { min, max, count, dups: dupMode };
     const url = generateShareUrl(payload);
     await navigator.clipboard.writeText(url);
     setShared(true);
@@ -235,6 +293,7 @@ export function RandomNumberTool() {
   if (!mounted) return null;
 
   const errMsg = validate();
+  const totalRange = max > min ? max - min + 1 : 0;
 
   return (
     <ToolLayout title="ランダム数字" adVisible>
@@ -280,54 +339,64 @@ export function RandomNumberTool() {
             </button>
           </div>
 
-          {/* Duplicates toggle */}
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground w-12">重複</span>
-            <button
-              onClick={() => setAllowDuplicates(!allowDuplicates)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                allowDuplicates
-                  ? "bg-accent"
-                  : "bg-muted border border-border"
-              }`}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow ${
-                  allowDuplicates ? "translate-x-6" : "translate-x-1"
-                }`}
-              />
-            </button>
-            <span className="text-sm text-muted-foreground">
-              {allowDuplicates ? "あり" : "なし"}
-            </span>
+          {/* Dup mode */}
+          <div className="flex items-start gap-3">
+            <span className="text-sm text-muted-foreground w-12 pt-1 shrink-0">重複</span>
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-1.5 flex-wrap">
+                {([
+                  { mode: "allow", label: "重複あり" },
+                  { mode: "once",  label: "この回は重複なし" },
+                  { mode: "pool",  label: "出た番号を除外" },
+                ] as const).map(({ mode, label }) => (
+                  <button
+                    key={mode}
+                    onClick={() => setDupMode(mode)}
+                    className={`px-2.5 py-1 rounded-full text-xs font-bold border transition-colors ${
+                      dupMode === mode
+                        ? "bg-foreground text-background border-foreground"
+                        : "text-muted-foreground border-border hover:border-accent"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              {/* Pool status */}
+              {dupMode === "pool" && !errMsg && totalRange > 0 && (
+                <div className="flex items-center justify-between text-xs text-muted-foreground bg-muted/60 rounded-lg px-3 py-2">
+                  <span>残り <span className="font-bold tabular-nums">{poolRemaining.length}</span> / {totalRange} 個</span>
+                  <button
+                    onClick={() => {
+                      setPoolRemaining(buildPool(min, max));
+                      toast("プールをリセットしました");
+                    }}
+                    className="hover:text-foreground transition-colors ml-3"
+                  >
+                    リセット
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Presets */}
           <div className="flex gap-2 flex-wrap">
-            <button
-              onClick={() => applyPreset(1, 6)}
-              className="h-8 px-3 rounded-md border border-border text-xs hover:bg-muted transition-colors"
-            >
+            <button onClick={() => applyPreset(1, 6)}
+              className="h-8 px-3 rounded-md border border-border text-xs hover:bg-muted transition-colors">
               1〜6（サイコロ）
             </button>
-            <button
-              onClick={() => applyPreset(1, 10)}
-              className="h-8 px-3 rounded-md border border-border text-xs hover:bg-muted transition-colors"
-            >
+            <button onClick={() => applyPreset(1, 10)}
+              className="h-8 px-3 rounded-md border border-border text-xs hover:bg-muted transition-colors">
               1〜10
             </button>
-            <button
-              onClick={() => applyPreset(1, 100)}
-              className="h-8 px-3 rounded-md border border-border text-xs hover:bg-muted transition-colors"
-            >
+            <button onClick={() => applyPreset(1, 100)}
+              className="h-8 px-3 rounded-md border border-border text-xs hover:bg-muted transition-colors">
               1〜100
             </button>
           </div>
 
-          {/* Error */}
-          {errMsg && (
-            <p className="text-sm text-destructive">{errMsg}</p>
-          )}
+          {errMsg && <p className="text-sm text-destructive">{errMsg}</p>}
         </div>
 
         {/* Generate button */}
@@ -336,10 +405,7 @@ export function RandomNumberTool() {
             onClick={generate}
             disabled={!!errMsg || rolling}
             className="flex-1 h-14 rounded-xl text-xl font-bold transition-colors disabled:opacity-50"
-            style={{
-              backgroundColor: "var(--accent)",
-              color: "var(--accent-foreground)",
-            }}
+            style={{ backgroundColor: "var(--accent)", color: "var(--accent-foreground)" }}
           >
             {rolling ? "生成中..." : "生成する"}
           </button>
@@ -398,9 +464,7 @@ export function RandomNumberTool() {
               )}
             </>
           ) : (
-            <p className="text-muted-foreground text-sm">
-              「生成する」を押してください
-            </p>
+            <p className="text-muted-foreground text-sm">「生成する」を押してください</p>
           )}
         </div>
 
@@ -425,16 +489,9 @@ export function RandomNumberTool() {
             {historyOpen && (
               <div className="divide-y divide-border">
                 {history.map((entry, i) => (
-                  <div
-                    key={i}
-                    className="px-4 py-2 flex items-center justify-between text-sm"
-                  >
-                    <span className="tabular-nums font-medium">
-                      {entry.values.join(", ")}
-                    </span>
-                    <span className="text-muted-foreground text-xs tabular-nums">
-                      {formatTime(entry.timestamp)}
-                    </span>
+                  <div key={i} className="px-4 py-2 flex items-center justify-between text-sm">
+                    <span className="tabular-nums font-medium">{entry.values.join(", ")}</span>
+                    <span className="text-muted-foreground text-xs tabular-nums">{formatTime(entry.timestamp)}</span>
                   </div>
                 ))}
               </div>
