@@ -70,7 +70,7 @@ export default async function NewsDetailPage({ params }: Props) {
               >
                 {item.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: item.imageContain ? "contain" : "cover", zIndex: 1 }} />
+                  <img src={item.image} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: item.imageContain ? "contain" : "cover", zIndex: 1, transform: item.imageZoom ? "scale(1.12)" : undefined }} />
                 ) : (
                   <span className="p-detail-banner-icon">{item.banner.icon}</span>
                 )}
