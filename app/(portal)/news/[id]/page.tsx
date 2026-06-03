@@ -80,6 +80,23 @@ export default async function NewsDetailPage({ params }: Props) {
                   <p key={i}>{p}</p>
                 ))}
               </div>
+              {item.toolPath && (
+                <div style={{ padding: "0 0 24px", textAlign: "center" }}>
+                  <Link
+                    href={item.toolPath}
+                    style={{
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      background: "linear-gradient(135deg, #c4b5fd 0%, #f9a8d4 100%)",
+                      color: "#fff", fontWeight: 800, fontSize: 15,
+                      padding: "14px 32px", borderRadius: 999,
+                      textDecoration: "none",
+                      boxShadow: "0 6px 20px -6px rgba(196,181,253,0.6)",
+                    }}
+                  >
+                    このツールを使う →
+                  </Link>
+                </div>
+              )}
               <div className="p-detail-footer">
                 {prev ? (
                   <Link href={`/news/${prev.id}`} className="p-nav-link">← 次の記事</Link>

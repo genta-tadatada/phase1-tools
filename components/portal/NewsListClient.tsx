@@ -75,6 +75,11 @@ export function NewsListClient({ allNews }: { allNews: NewsItem[] }) {
                   </div>
                   <h2 className="p-item-title">{item.title}</h2>
                   <p className="p-item-summary">{item.summary}</p>
+                  {item.toolPath && (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, marginTop: 8, fontSize: 12, fontWeight: 700, color: "#8b5cf6" }}>
+                      ツールを使う →
+                    </span>
+                  )}
                 </div>
               </Link>
             ))}

@@ -110,6 +110,11 @@ export function NewsCarousel({ items }: { items: NewsItem[] }) {
                     </div>
                     <h3 style={{ fontWeight: 900, fontSize: 15, color: "#1f1d2b", lineHeight: 1.45, marginBottom: 4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{item.title}</h3>
                     <p style={{ fontSize: 12, color: "#6b6779", lineHeight: 1.55, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{item.summary}</p>
+                    {item.toolPath && (
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 4, marginTop: 6, fontSize: 11, fontWeight: 700, color: "#8b5cf6" }}>
+                        ツールを使う →
+                      </span>
+                    )}
                   </div>
                 </div>
               </Link>
