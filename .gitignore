@@ -43,3 +43,4 @@ ss-temp.cjs
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+public/assets/_backup/

@@ -21,7 +21,7 @@ export default function PortalPage() {
       <header className="p-header">
         <div className="p-header-inner">
           <Link href="/" className="p-logo">
-            <TadatadaLogo charSize={56} textW={118} textH={79} />
+            <TadatadaLogo height={52} />
           </Link>
           <GlobalMenu activeSection={null} />
         </div>

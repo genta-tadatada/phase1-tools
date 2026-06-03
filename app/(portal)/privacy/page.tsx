@@ -30,7 +30,7 @@ export default function PrivacyPage() {
       <header className="p-header">
         <div className="p-header-inner md">
           <Link href="/" className="p-breadcrumb">
-            <TadatadaLogo charSize={36} textW={76} textH={51} />
+            <TadatadaLogo height={38} />
             <span className="p-sep">/</span>
             <span className="p-crumb current">プライバシーポリシー</span>
           </Link>

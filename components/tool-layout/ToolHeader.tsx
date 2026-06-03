@@ -29,12 +29,12 @@ export function ToolHeader({ title }: ToolHeaderProps) {
       }}>
         {/* 左：ロゴ（上段）＋ページ名（下段） */}
         <Link href="/" style={{ display: "flex", flexDirection: "column", gap: 2, textDecoration: "none", minWidth: 0 }}>
-          <TadatadaLogo charSize={36} textW={76} textH={51} />
+          <TadatadaLogo height={38} />
           <span style={{
             fontFamily: "'M PLUS Rounded 1c', sans-serif",
             fontWeight: 700, fontSize: 10,
             color: "var(--th-text-muted)",
-            paddingLeft: 40,
+            paddingLeft: 4,
             whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
             maxWidth: "55vw",
           }}>
