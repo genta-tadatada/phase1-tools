@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share2, Check } from "lucide-react";
 import { ToolLayout } from "@/components/tool-layout/ToolLayout";
@@ -87,6 +87,7 @@ export function DiceTool() {
   const [diceCount, setDiceCount] = useState(1);
   const [values, setValues] = useState<number[]>([1]);
   const [shaking, setShaking] = useState(false);
+  const cycleRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [mounted, setMounted] = useState(false);
   const [rollHistory, setRollHistory] = useState<{ values: number[]; faces: DiceFace }[]>([]);
   const [justRolled, setJustRolled] = useState(false);
@@ -155,13 +156,22 @@ export function DiceTool() {
     if (shaking) return;
     setShaking(true);
     setJustRolled(false);
+
+    // D6のみ: 転がり中にドットを高速サイクル
+    if (faces === 6) {
+      cycleRef.current = setInterval(() => {
+        setValues(Array.from({ length: diceCount }, () => Math.floor(Math.random() * 6) + 1));
+      }, 70);
+    }
+
     setTimeout(() => {
+      if (cycleRef.current) { clearInterval(cycleRef.current); cycleRef.current = null; }
       const newValues = Array.from({ length: diceCount }, () => Math.floor(Math.random() * faces) + 1);
       setValues(newValues);
       setShaking(false);
       setJustRolled(true);
       setRollHistory((prev) => [{ values: newValues, faces }, ...prev].slice(0, 5));
-    }, 520);
+    }, faces === 6 ? 900 : 520);
   }, [shaking, diceCount, faces]);
 
   useEffect(() => {
@@ -235,16 +245,22 @@ export function DiceTool() {
                 layout
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={
-                  shaking
-                    ? { rotate: [0, -18, 18, -12, 12, -6, 6, 0], y: [0, -10, 2, -5, 0], scale: 1 }
-                    : justRolled
-                      ? { rotate: 0, scale: [1.25, 0.95, 1.05, 1], y: 0 }
-                      : { rotate: 0, scale: 1, y: 0 }
+                  faces === 6
+                    ? shaking
+                      ? { rotate: [0, 360, 720, 1080], scale: [1, 1.08, 1.08, 1], y: [0, -12, -12, 0] }
+                      : justRolled
+                        ? { rotate: 0, scale: [1.3, 0.9, 1.07, 1], y: 0 }
+                        : { rotate: 0, scale: 1, y: 0 }
+                    : shaking
+                      ? { rotate: [0, -18, 18, -12, 12, -6, 6, 0], y: [0, -10, 2, -5, 0], scale: 1 }
+                      : justRolled
+                        ? { rotate: 0, scale: [1.25, 0.95, 1.05, 1], y: 0 }
+                        : { rotate: 0, scale: 1, y: 0 }
                 }
                 exit={{ opacity: 0, scale: 0.5 }}
                 transition={
                   shaking
-                    ? { duration: 0.52, ease: "easeInOut" }
+                    ? { duration: faces === 6 ? 0.9 : 0.52, ease: "easeInOut" }
                     : { type: "spring", stiffness: 350, damping: 14, delay: i * 0.06 }
                 }
                 className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br ${t.bg} shadow-md border ${t.border} ring-1 ${t.ring} flex items-center justify-center`}
