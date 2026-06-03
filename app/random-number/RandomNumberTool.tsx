@@ -407,13 +407,21 @@ export function RandomNumberTool() {
         {/* History */}
         {history.length > 0 && (
           <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
-            <button
-              onClick={() => setHistoryOpen(!historyOpen)}
-              className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium hover:bg-muted transition-colors"
-            >
-              <span>履歴（{history.length}件）</span>
-              <span className="text-muted-foreground">{historyOpen ? "▲" : "▼"}</span>
-            </button>
+            <div className="flex items-center">
+              <button
+                onClick={() => setHistoryOpen(!historyOpen)}
+                className="flex-1 flex items-center justify-between px-4 py-3 text-sm font-medium hover:bg-muted transition-colors"
+              >
+                <span>履歴（{history.length}件）</span>
+                <span className="text-muted-foreground">{historyOpen ? "▲" : "▼"}</span>
+              </button>
+              <button
+                onClick={() => setHistory([])}
+                className="px-3 py-3 text-xs text-muted-foreground/60 hover:text-destructive transition-colors"
+              >
+                クリア
+              </button>
+            </div>
             {historyOpen && (
               <div className="divide-y divide-border">
                 {history.map((entry, i) => (
