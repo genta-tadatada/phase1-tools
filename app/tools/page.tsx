@@ -81,12 +81,12 @@ export default function ToolsPage() {
       {/* ヘッダー */}
       <header className="p-header">
         <div className="p-header-inner md">
-          <Link href="/" className="p-breadcrumb">
-            <TadatadaLogo />
-            <span className="p-sep">/</span>
-            <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:15, letterSpacing:"0.02em", color:"var(--th-text)" }}>
-              タダ<span style={{ color:"#0ea5e9" }}>tools</span><span style={{ color:"#f9a8d4" }}>.</span>
-            </span>
+          <Link href="/" className="p-logo">
+            <TadatadaLogo titleNode={
+              <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:11, letterSpacing:"0.02em", color:"var(--th-text)" }}>
+                タダ<span style={{ color:"#0ea5e9" }}>tools</span><span style={{ color:"#f9a8d4" }}>.</span>
+              </span>
+            } />
           </Link>
           <div style={{ display:"flex", alignItems:"center", gap:8 }}>
             <DarkModeToggle />

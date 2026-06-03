@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
 
 const CHAR_W = 813;
 const CHAR_H = 601;
@@ -10,16 +11,19 @@ interface Props {
   charHeight?: number;
   /** ただただテキスト高さ (default: 24) */
   textHeight?: number;
-  /** 現在ページ名（ただただ下に小さく表示） */
+  /** 現在ページ名（ただただ下に小さく表示）プレーンテキスト */
   title?: string;
+  /** 現在ページ名 JSX版（カラー付きなど）。titleより優先 */
+  titleNode?: ReactNode;
   /** キャラとテキスト列の間隔 */
   gap?: number;
 }
 
 export function TadatadaLogo({
   charHeight = 52,
-  textHeight = 24,
+  textHeight = 30,
   title,
+  titleNode,
   gap = 8,
 }: Props) {
   const charW  = Math.round(charHeight * (CHAR_W / CHAR_H));
@@ -49,7 +53,7 @@ export function TadatadaLogo({
             style={{ objectFit: "contain", width: "100%", height: "100%" }}
           />
         </span>
-        {title && (
+        {(titleNode ?? title) && (
           <span style={{
             fontFamily: "'M PLUS Rounded 1c', sans-serif",
             fontWeight: 700,
@@ -58,7 +62,7 @@ export function TadatadaLogo({
             whiteSpace: "nowrap",
             lineHeight: 1,
           }}>
-            {title}
+            {titleNode ?? title}
           </span>
         )}
       </span>
