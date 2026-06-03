@@ -74,10 +74,16 @@ function traceAmida(startCol: number, rows: boolean[][], numPlayers: number): { 
   const path: { col: number; row: number }[] = [{ col: startCol, row: 0 }];
   let currentCol = startCol;
   for (let row = 0; row < rows.length; row++) {
+    let nextCol = currentCol;
     if (currentCol > 0 && rows[row][currentCol - 1]) {
-      currentCol -= 1;
+      nextCol = currentCol - 1;
     } else if (currentCol < numPlayers - 1 && rows[row][currentCol]) {
-      currentCol += 1;
+      nextCol = currentCol + 1;
+    }
+    if (nextCol !== currentCol) {
+      // 横棒の高さまで垂直に降りてから水平に移動（直角折れ線）
+      path.push({ col: currentCol, row: row + 1 });
+      currentCol = nextCol;
     }
     path.push({ col: currentCol, row: row + 1 });
   }
