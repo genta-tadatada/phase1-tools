@@ -85,9 +85,18 @@ function PolygonDiceSvg({ faces, value, color }: { faces: DiceFace; value: numbe
 // D6 アニメーション定数（コンポーネント外に置いて参照を固定）
 // setValues が 70ms ごとに再レンダーを起こすため、同一参照を渡さないと
 // framer-motion がアニメーションをリセットし続けて見えなくなる
-const D6_SHAKE_ANIMATE = { rotateX: [0, 360, 720, 1080], rotate: 0, scale: [1, 1.05, 1.05, 1], y: [0, -10, -10, 0] };
-const D6_LAND_ANIMATE  = { rotateX: 0, rotate: 0, scale: [1.3, 0.9, 1.07, 1], y: 0 };
-const D6_IDLE_ANIMATE  = { rotateX: 0, rotate: 0, scale: 1, y: 0 };
+// Z軸回転（rotate）+ バウンスで常に正面を向き、絶対に見えなくならない
+const D6_SHAKE_ANIMATE = {
+  rotate: [0, -28, 24, -20, 16, -12, 9, -6, 4, 0],
+  scale:  [1, 1.10, 1.04, 1.08, 1.03, 1.06, 1.02, 1.04, 1.01, 1],
+  y:      [0, -20, -6, -16, -6, -12, -5, -9, -3, 0],
+};
+const D6_LAND_ANIMATE = {
+  rotate: [10, -6, 4, -2, 0],
+  scale:  [1.35, 0.88, 1.10, 0.97, 1],
+  y:      0,
+};
+const D6_IDLE_ANIMATE = { rotate: 0, scale: 1, y: 0 };
 
 export function DiceTool() {
   const [faces, setFaces] = useState<DiceFace>(6);
@@ -251,7 +260,6 @@ export function DiceTool() {
                 key={i}
                 layout
                 initial={{ opacity: 0, scale: 0.5 }}
-                transformTemplate={(_, generated) => `perspective(500px) ${generated}`}
                 animate={
                   faces === 6
                     ? shaking ? D6_SHAKE_ANIMATE : justRolled ? D6_LAND_ANIMATE : D6_IDLE_ANIMATE
@@ -264,7 +272,7 @@ export function DiceTool() {
                 exit={{ opacity: 0, scale: 0.5 }}
                 transition={
                   shaking
-                    ? { duration: faces === 6 ? 0.9 : 0.52, ease: "easeInOut" }
+                    ? { duration: faces === 6 ? 0.9 : 0.52, ease: "easeInOut", times: faces === 6 ? [0, 0.1, 0.2, 0.3, 0.4, 0.55, 0.65, 0.75, 0.85, 1] : undefined }
                     : { type: "spring", stiffness: 350, damping: 14, delay: i * 0.06 }
                 }
                 className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br ${t.bg} shadow-md border ${t.border} ring-1 ${t.ring} flex items-center justify-center`}

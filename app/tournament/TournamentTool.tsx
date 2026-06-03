@@ -82,24 +82,36 @@ function buildTournament(names: string[], mode: "seeded" | "random"): Tournament
   const slots = calcTotalSlots(names.length);
   const totalRounds = Math.log2(slots);
 
-  let realParticipants: Participant[] = names.map((name, i) => ({
+  const realParticipants: Participant[] = names.map((name, i) => ({
     id: `p${i}`,
     name,
     isBye: false,
     seedNumber: mode === "seeded" ? i + 1 : undefined,
   }));
 
-  if (mode === "random") realParticipants = shuffle(realParticipants);
+  // スロット配置
+  // どちらのモードでも seededBracketOrder で Bye 配置位置を決定する。
+  // これにより Bye がシード順と同じ非隣接位置に分散し、Bye vs Bye が発生しない。
+  const order = seededBracketOrder(slots);
 
-  // スロット配置（シードモードは seededBracketOrder を使用）
-  const order = mode === "seeded"
-    ? seededBracketOrder(slots)
-    : Array.from({ length: slots }, (_, i) => i);
-
-  const participants: Participant[] = order.map((seedIdx) => {
-    if (seedIdx < realParticipants.length) return realParticipants[seedIdx];
-    return { id: `bye${seedIdx}`, name: "Bye", isBye: true };
-  });
+  let participants: Participant[];
+  if (mode === "random") {
+    // 実プレイヤーをシャッフルし、Byeでない（seedIdx < 実人数）スロットへ順に詰める
+    const shuffledPlayers = shuffle(realParticipants);
+    let playerIdx = 0;
+    participants = order.map((seedIdx, slotIdx) => {
+      if (seedIdx >= realParticipants.length) {
+        return { id: `bye${slotIdx}`, name: "Bye", isBye: true };
+      }
+      return shuffledPlayers[playerIdx++];
+    });
+  } else {
+    // シード対戦：入力順がシード順
+    participants = order.map((seedIdx, slotIdx) => {
+      if (seedIdx < realParticipants.length) return realParticipants[seedIdx];
+      return { id: `bye${slotIdx}`, name: "Bye", isBye: true };
+    });
+  }
 
   // ラウンドごとに試合を生成
   const matches: Match[][] = [];
@@ -180,21 +192,83 @@ function selectWinner(
   return processAllByes(advanceWinner(tournament, round, matchIndex, winnerId));
 }
 
+// ---- SVGスタイル定義 ----
+type SvgStyleKey = "official" | "colorful" | "kawaii";
+
+interface SvgStyleDef {
+  bg: string;
+  border: string;
+  text: string;
+  muted: string;
+  line: string;
+  accent: string;
+  winBg: string;
+  fontFamily: string;
+  title: string;
+  rx: number;
+  roundColors?: string[];
+  decorations?: string[];
+  gradient?: boolean;
+}
+
+const SVG_STYLES: Record<SvgStyleKey, SvgStyleDef> = {
+  official: {
+    bg: "white",
+    border: "#e2e8f0",
+    text: "#1e293b",
+    muted: "#94a3b8",
+    line: "#cbd5e1",
+    accent: "#1e293b",
+    winBg: "#1e293b",
+    fontFamily: "Georgia,serif",
+    title: "TOURNAMENT BRACKET",
+    rx: 6,
+  },
+  colorful: {
+    bg: "#fafafa",
+    border: "#e2e8f0",
+    text: "#1e293b",
+    muted: "#94a3b8",
+    line: "#cbd5e1",
+    accent: "#7c3aed",
+    winBg: "#7c3aed",
+    fontFamily: "system-ui,sans-serif",
+    title: "🏆 TOURNAMENT",
+    rx: 8,
+    roundColors: ["#f43f5e", "#f97316", "#eab308", "#22c55e", "#0ea5e9", "#8b5cf6"],
+    gradient: true,
+  },
+  kawaii: {
+    bg: "#fdf2f8",
+    border: "#f9a8d4",
+    text: "#831843",
+    muted: "#be185d",
+    line: "#fbcfe8",
+    accent: "#ec4899",
+    winBg: "#ec4899",
+    fontFamily: "system-ui,sans-serif",
+    title: "✨ とーなめんと ✨",
+    rx: 12,
+    decorations: ["🌸", "⭐", "💖", "🌟", "🎀"],
+  },
+};
+
 // ---- SVGブラケット生成（画像ダウンロード用） ----
-function generateSVGBracket(tournament: Tournament): string {
+function generateSVGBracket(tournament: Tournament, style: SvgStyleKey = "official"): string {
   const { participants, matches, totalRounds, winnerId } = tournament;
+  const st = SVG_STYLES[style];
 
   const MATCH_W = 170, SLOT_H = 32, MATCH_H = SLOT_H * 2 + 1;
-  const MATCH_GAP = 12, ROUND_GAP = 56, PAD = 28, LABEL_H = 26;
+  const MATCH_GAP = 12, ROUND_GAP = 56, PAD = 28, LABEL_H = 30, TITLE_H = 34;
   const unitH = MATCH_H + MATCH_GAP;
   const firstCount = matches[0].length;
 
   const svgW = PAD * 2 + totalRounds * MATCH_W + (totalRounds - 1) * ROUND_GAP;
-  const svgH = PAD * 2 + LABEL_H + firstCount * unitH - MATCH_GAP + 8;
+  const svgH = PAD * 2 + TITLE_H + LABEL_H + firstCount * unitH - MATCH_GAP + 8;
 
   const matchX = (r: number) => PAD + r * (MATCH_W + ROUND_GAP);
   const matchY = (r: number, mi: number): number => {
-    if (r === 0) return PAD + LABEL_H + mi * unitH;
+    if (r === 0) return PAD + TITLE_H + LABEL_H + mi * unitH;
     const gs = Math.pow(2, r);
     const fy = matchY(0, mi * gs) + MATCH_H / 2;
     const ly = matchY(0, (mi + 1) * gs - 1) + MATCH_H / 2;
@@ -204,24 +278,51 @@ function generateSVGBracket(tournament: Tournament): string {
   const getP = (id: string | null) => id ? participants.find(p => p.id === id) : undefined;
   const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-  const C_WIN = "#7c3aed", C_BORDER = "#e2e8f0", C_TEXT = "#1e293b";
-  const C_MUTED = "#94a3b8", C_LINE = "#cbd5e1";
+  // ラウンドごとの色（colorful/kawaiiは末尾＝決勝が濃い色になるよう逆引き）
+  const roundColor = (r: number): string => {
+    if (style === "colorful" && st.roundColors) {
+      return st.roundColors[r % st.roundColors.length];
+    }
+    if (style === "kawaii") return st.accent;
+    return st.accent;
+  };
+
+  let defs = "";
+  if (style === "kawaii") {
+    defs += `<linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fdf2f8"/><stop offset="100%" stop-color="#f0fdf4"/></linearGradient>`;
+  }
+  if (style === "colorful" && st.roundColors) {
+    st.roundColors.forEach((c, i) => {
+      defs += `<linearGradient id="winGrad${i}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="${c}" stop-opacity="0.22"/><stop offset="100%" stop-color="${c}" stop-opacity="0.08"/></linearGradient>`;
+    });
+  }
 
   let s = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}">`;
-  s += `<rect width="${svgW}" height="${svgH}" fill="white"/>`;
+  if (defs) s += `<defs>${defs}</defs>`;
+  s += `<rect width="${svgW}" height="${svgH}" fill="${style === "kawaii" ? "url(#bgGrad)" : st.bg}"/>`;
+
+  // タイトル
+  s += `<text x="${svgW / 2}" y="${PAD + 18}" text-anchor="middle" font-size="18" font-family="${st.fontFamily}" fill="${st.accent}" font-weight="700" letter-spacing="${style === "official" ? 2 : 0}">${esc(st.title)}</text>`;
+
+  // kawaii装飾（角に絵文字）
+  if (style === "kawaii" && st.decorations) {
+    s += `<text x="${PAD}" y="${PAD + 18}" font-size="16">${st.decorations[0]}</text>`;
+    s += `<text x="${svgW - PAD - 14}" y="${PAD + 18}" font-size="16">${st.decorations[2]}</text>`;
+  }
 
   // コネクター線
   for (let r = 0; r < totalRounds - 1; r++) {
     const midX = matchX(r) + MATCH_W + ROUND_GAP / 2;
+    const lc = style === "colorful" ? roundColor(r) : st.line;
     for (let mi = 0; mi < matches[r].length; mi++) {
       const cy = matchY(r, mi) + MATCH_H / 2;
       const nextMi = Math.floor(mi / 2);
       const nextCy = matchY(r + 1, nextMi) + MATCH_H / 2;
-      s += `<line x1="${matchX(r) + MATCH_W}" y1="${cy}" x2="${midX}" y2="${cy}" stroke="${C_LINE}" stroke-width="1.5"/>`;
+      s += `<line x1="${matchX(r) + MATCH_W}" y1="${cy}" x2="${midX}" y2="${cy}" stroke="${lc}" stroke-width="1.5"/>`;
       if (mi % 2 === 0 && mi + 1 < matches[r].length) {
         const partnerCy = matchY(r, mi + 1) + MATCH_H / 2;
-        s += `<line x1="${midX}" y1="${cy}" x2="${midX}" y2="${partnerCy}" stroke="${C_LINE}" stroke-width="1.5"/>`;
-        s += `<line x1="${midX}" y1="${nextCy}" x2="${matchX(r + 1)}" y2="${nextCy}" stroke="${C_LINE}" stroke-width="1.5"/>`;
+        s += `<line x1="${midX}" y1="${cy}" x2="${midX}" y2="${partnerCy}" stroke="${lc}" stroke-width="1.5"/>`;
+        s += `<line x1="${midX}" y1="${nextCy}" x2="${matchX(r + 1)}" y2="${nextCy}" stroke="${lc}" stroke-width="1.5"/>`;
       }
     }
   }
@@ -229,7 +330,10 @@ function generateSVGBracket(tournament: Tournament): string {
   // 試合カード
   for (let r = 0; r < totalRounds; r++) {
     const x = matchX(r);
-    s += `<text x="${x + MATCH_W / 2}" y="${PAD + LABEL_H - 4}" text-anchor="middle" font-size="11" font-family="system-ui,sans-serif" fill="${C_MUTED}" font-weight="600">${esc(getRoundName(r, totalRounds))}</text>`;
+    const rc = roundColor(r);
+    const labelDeco = style === "kawaii" && st.decorations ? `${st.decorations[(r + 1) % st.decorations.length]} ` : "";
+    const labelColor = style === "colorful" ? rc : st.muted;
+    s += `<text x="${x + MATCH_W / 2}" y="${PAD + TITLE_H + LABEL_H - 8}" text-anchor="middle" font-size="11" font-family="${st.fontFamily}" fill="${labelColor}" font-weight="600">${labelDeco}${esc(getRoundName(r, totalRounds))}</text>`;
 
     for (let mi = 0; mi < matches[r].length; mi++) {
       const match = matches[r][mi];
@@ -237,20 +341,24 @@ function generateSVGBracket(tournament: Tournament): string {
       const p1 = getP(match.player1Id);
       const p2 = getP(match.player2Id);
       const isFinal = r === totalRounds - 1;
+      const cardStroke = isFinal ? st.accent : (style === "colorful" ? rc : st.border);
 
-      s += `<rect x="${x}" y="${y}" width="${MATCH_W}" height="${MATCH_H}" rx="6" fill="white" stroke="${isFinal ? C_WIN : C_BORDER}" stroke-width="${isFinal ? 1.5 : 1}"/>`;
-      s += `<line x1="${x}" y1="${y + SLOT_H}" x2="${x + MATCH_W}" y2="${y + SLOT_H}" stroke="${C_BORDER}" stroke-width="0.5"/>`;
+      s += `<rect x="${x}" y="${y}" width="${MATCH_W}" height="${MATCH_H}" rx="${st.rx}" fill="${style === "kawaii" ? "#ffffff" : "white"}" stroke="${cardStroke}" stroke-width="${isFinal ? 2 : 1.2}"/>`;
+      s += `<line x1="${x}" y1="${y + SLOT_H}" x2="${x + MATCH_W}" y2="${y + SLOT_H}" stroke="${st.border}" stroke-width="0.5"/>`;
 
       const renderSlot = (p: Participant | undefined, slotY: number, isWin: boolean, isLose: boolean) => {
         const name = p ? (p.isBye ? "— Bye" : p.name.slice(0, 16)) : "?";
-        const color = isWin ? C_WIN : (isLose ? C_MUTED : C_TEXT);
+        const color = isWin ? (style === "official" ? st.accent : rc) : (isLose ? st.muted : st.text);
         const fw = isWin ? "700" : "400";
         if (isWin) {
-          s += `<rect x="${x}" y="${slotY}" width="${MATCH_W}" height="${SLOT_H}" rx="0" fill="${C_WIN}18"/>`;
+          const winFill = style === "colorful" && st.roundColors
+            ? `url(#winGrad${r % st.roundColors.length})`
+            : `${style === "kawaii" ? st.accent : st.winBg}1f`;
+          s += `<rect x="${x}" y="${slotY}" width="${MATCH_W}" height="${SLOT_H}" fill="${winFill}"/>`;
         }
-        s += `<text x="${x + 8}" y="${slotY + SLOT_H / 2 + 4}" font-size="12" font-family="system-ui,sans-serif" fill="${color}" font-weight="${fw}">${esc(name)}</text>`;
+        s += `<text x="${x + 8}" y="${slotY + SLOT_H / 2 + 4}" font-size="12" font-family="${st.fontFamily}" fill="${color}" font-weight="${fw}">${esc(name)}</text>`;
         if (p?.seedNumber) {
-          s += `<text x="${x + MATCH_W - 6}" y="${slotY + SLOT_H / 2 + 4}" font-size="9" font-family="system-ui,sans-serif" fill="${C_MUTED}" text-anchor="end">#${p.seedNumber}</text>`;
+          s += `<text x="${x + MATCH_W - 6}" y="${slotY + SLOT_H / 2 + 4}" font-size="9" font-family="${st.fontFamily}" fill="${st.muted}" text-anchor="end">#${p.seedNumber}</text>`;
         }
       };
 
@@ -262,13 +370,61 @@ function generateSVGBracket(tournament: Tournament): string {
   // 優勝バナー
   const champion = participants.find(p => p.id === winnerId && !p.isBye);
   if (champion) {
-    const by = svgH - 32;
-    s += `<rect x="${PAD}" y="${by}" width="${svgW - PAD * 2}" height="26" rx="6" fill="${C_WIN}12" stroke="${C_WIN}35" stroke-width="1"/>`;
-    s += `<text x="${svgW / 2}" y="${by + 17}" text-anchor="middle" font-size="13" font-family="system-ui,sans-serif" fill="${C_WIN}" font-weight="700">🏆 ${esc(champion.name)}</text>`;
+    const by = svgH - 34;
+    const deco = style === "kawaii" && st.decorations ? `${st.decorations[1]} ` : "";
+    s += `<rect x="${PAD}" y="${by}" width="${svgW - PAD * 2}" height="28" rx="${st.rx}" fill="${st.winBg}14" stroke="${st.winBg}40" stroke-width="1.2"/>`;
+    s += `<text x="${svgW / 2}" y="${by + 18}" text-anchor="middle" font-size="13" font-family="${st.fontFamily}" fill="${st.winBg}" font-weight="700">🏆 ${deco}${esc(champion.name)}${deco ? ` ${st.decorations![1]}` : ""}</text>`;
   }
 
   s += "</svg>";
   return s;
+}
+
+// ---- HTMLブラケット用コネクター線 ----
+function BracketConnectors({ totalRounds, matchesPerRound }: { totalRounds: number; matchesPerRound: number[] }) {
+  const MATCH_H = 65;
+  const COL_W = 112; // match card width
+  const COL_GAP = 20; // gap-5
+
+  return (
+    <>
+      {Array.from({ length: totalRounds - 1 }, (_, ri) => {
+        const spacing = (r: number) => Math.pow(2, r) * 78 - 78;
+        const topPad = (r: number) => (r > 0 ? (Math.pow(2, r) - 1) * 78 / 2 : 0);
+        const matchCenterY = (r: number, mi: number) =>
+          topPad(r) + mi * (MATCH_H + spacing(r)) + MATCH_H / 2;
+
+        const matchCount = matchesPerRound[ri];
+        const leftX = (COL_W + COL_GAP) * ri + COL_W; // right edge of round ri
+        const svgH = topPad(0) + matchesPerRound[0] * (MATCH_H + spacing(0)) - spacing(0) + MATCH_H;
+
+        return (
+          <svg
+            key={ri}
+            className="absolute pointer-events-none"
+            style={{ left: leftX, top: 28, width: COL_GAP, height: svgH }}
+          >
+            {Array.from({ length: matchCount }, (_, mi) => {
+              const cy = matchCenterY(ri, mi);
+              const nextCy = matchCenterY(ri + 1, Math.floor(mi / 2));
+              const midX = COL_GAP / 2;
+              return (
+                <g key={mi}>
+                  <line x1={0} y1={cy} x2={midX} y2={cy} stroke="#cbd5e1" strokeWidth={1.5} />
+                  {mi % 2 === 0 && mi + 1 < matchCount && (
+                    <>
+                      <line x1={midX} y1={cy} x2={midX} y2={matchCenterY(ri, mi + 1)} stroke="#cbd5e1" strokeWidth={1.5} />
+                      <line x1={midX} y1={nextCy} x2={COL_GAP} y2={nextCy} stroke="#cbd5e1" strokeWidth={1.5} />
+                    </>
+                  )}
+                </g>
+              );
+            })}
+          </svg>
+        );
+      })}
+    </>
+  );
 }
 
 // ---- MatchCard コンポーネント ----
@@ -401,33 +557,34 @@ function SetupScreen({ onStart }: { onStart: (names: string[], mode: "seeded" | 
         </div>
       </div>
 
-      {/* 配置モード */}
-      <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+      {/* 配置モード（カード型セレクター） */}
+      <div className="space-y-2">
         <p className="text-sm font-medium">シード設定</p>
-        <label className="flex items-start gap-3 cursor-pointer">
-          <input
-            type="radio"
-            className="mt-0.5 accent-[var(--accent)]"
-            checked={mode === "seeded"}
-            onChange={() => setMode("seeded")}
-          />
-          <div>
-            <span className="text-sm font-medium">シード対戦（推奨）</span>
-            <p className="text-xs text-muted-foreground mt-0.5">入力順がシード順。1位と2位は決勝まで当たらない最適配置に。</p>
-          </div>
-        </label>
-        <label className="flex items-start gap-3 cursor-pointer">
-          <input
-            type="radio"
-            className="mt-0.5 accent-[var(--accent)]"
-            checked={mode === "random"}
-            onChange={() => setMode("random")}
-          />
-          <div>
-            <span className="text-sm font-medium">ランダム抽選</span>
-            <p className="text-xs text-muted-foreground mt-0.5">完全無作為。誰が誰と当たるかは運次第。</p>
-          </div>
-        </label>
+        <div className="grid grid-cols-2 gap-3">
+          {([
+            { key: "seeded" as const, emoji: "🏅", title: "シード対戦", desc: "入力順がシード順。1位と2位は決勝まで当たらない最適配置。" },
+            { key: "random" as const, emoji: "🎲", title: "ランダム", desc: "完全無作為。誰が誰と当たるかは運次第。" },
+          ]).map(({ key, emoji, title, desc }) => {
+            const active = mode === key;
+            return (
+              <motion.button
+                key={key}
+                type="button"
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setMode(key)}
+                className={`text-left rounded-2xl border-2 p-4 transition-all ${
+                  active
+                    ? "border-[var(--accent)] bg-[var(--accent)]/10 shadow-sm"
+                    : "border-border bg-card hover:border-[var(--accent)]/40"
+                }`}
+              >
+                <span className="text-2xl">{emoji}</span>
+                <p className={`text-sm font-bold mt-1.5 ${active ? "text-[var(--accent)]" : ""}`}>{title}</p>
+                <p className="text-xs text-muted-foreground mt-0.5 leading-snug">{desc}</p>
+              </motion.button>
+            );
+          })}
+        </div>
       </div>
 
       <Button
@@ -455,6 +612,7 @@ function TournamentView({
   onBack: () => void;
 }) {
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [svgStyle, setSvgStyle] = useState<SvgStyleKey>("official");
   const winner = tournament.participants.find((p) => p.id === tournament.winnerId);
 
   const handleShare = async () => {
@@ -469,7 +627,7 @@ function TournamentView({
   const handlePrint = () => window.print();
 
   const handleDownloadSVG = () => {
-    const svg = generateSVGBracket(tournament);
+    const svg = generateSVGBracket(tournament, svgStyle);
     const blob = new Blob([svg], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -512,9 +670,13 @@ function TournamentView({
       {/* ブラケット */}
       <div className="overflow-x-auto tournament-bracket pb-2">
         <div
-          className="flex gap-5 items-start"
+          className="flex gap-5 items-start relative"
           style={{ minWidth: tournament.totalRounds * 120 }}
         >
+          <BracketConnectors
+            totalRounds={tournament.totalRounds}
+            matchesPerRound={tournament.matches.map((m) => m.length)}
+          />
           {tournament.matches.map((roundMatches, ri) => {
             const spacing = Math.pow(2, ri) * (65 + 13) - 65 - 13;
             const topPad = ri > 0 ? (Math.pow(2, ri) - 1) * (65 + 13) / 2 : 0;
@@ -525,7 +687,7 @@ function TournamentView({
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: ri * 0.08, duration: 0.2 }}
-                className="flex flex-col shrink-0"
+                className="flex flex-col shrink-0 relative z-10"
                 style={{ minWidth: 112 }}
               >
                 <div className="text-xs font-bold text-muted-foreground mb-2 text-center bg-muted/50 rounded-lg py-1 px-2">
@@ -550,6 +712,28 @@ function TournamentView({
             );
           })}
         </div>
+      </div>
+
+      {/* SVGデザイン選択 */}
+      <div className="flex gap-1.5 items-center flex-wrap action-buttons">
+        <span className="text-xs text-muted-foreground">デザイン:</span>
+        {([
+          { key: "official", label: "🏆 公式" },
+          { key: "colorful", label: "🌈 カラフル" },
+          { key: "kawaii",   label: "🌸 かわいい" },
+        ] as const).map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setSvgStyle(key)}
+            className={`text-xs rounded-full px-2.5 py-0.5 border transition-all ${
+              svgStyle === key
+                ? "bg-[var(--accent)] text-white border-transparent"
+                : "border-border hover:bg-muted"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* アクションボタン */}

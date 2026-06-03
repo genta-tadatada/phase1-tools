@@ -25,7 +25,8 @@ interface LotEntry {
   remaining: number;
 }
 
-type DrawAnimation = "scratch" | "envelope" | "instant";
+// 演出は常にガチャに統一（選択UIは廃止）。SharePayload 互換のため型自体は残す。
+type DrawAnimation = "gacha";
 type LotMode = "custom" | "number";
 
 interface DrawRecord {
@@ -84,157 +85,165 @@ function drawFromEntries(entries: LotEntry[]): { result: LotEntry; updated: LotE
   return { result: chosen, updated };
 }
 
-// ─── InstantCard ─────────────────────────────────────────────────────────────
-
-function InstantCard({ result, onDone }: { result: string; onDone: () => void }) {
-  const [displayText, setDisplayText] = useState("?");
-  const [revealed, setRevealed] = useState(false);
-
-  useEffect(() => {
-    const steps = 10;
-    let step = 0;
-    const decoys = ["?", "??", "?", "??", "?"];
-    const tick = () => {
-      step++;
-      if (step < steps) {
-        setDisplayText(decoys[step % decoys.length]);
-        setTimeout(tick, 30 + step * 8);
-      } else {
-        setDisplayText(result);
-        setRevealed(true);
-      }
-    };
-    setTimeout(tick, 30);
-  }, [result]);
-
-  useEffect(() => {
-    if (revealed) {
-      const t = setTimeout(onDone, 500);
-      return () => clearTimeout(t);
-    }
-  }, [revealed, onDone]);
-
-  return (
-    <div className="flex flex-col items-center justify-center py-4">
-      <motion.div
-        className="w-56 h-32 rounded-xl shadow-md border border-border bg-card flex items-center justify-center"
-        animate={revealed ? { scale: [1, 1.1, 1], borderColor: ["var(--border)", "var(--accent)", "var(--border)"] } : {}}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-      >
-        <span className="text-3xl font-bold">{displayText}</span>
-      </motion.div>
-    </div>
-  );
-}
-
-// ─── EnvelopeCard ─────────────────────────────────────────────────────────────
-
-function EnvelopeCard({ result, onDone }: { result: string; onDone: () => void }) {
-  const [opened, setOpened] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setOpened(true), 300);
-    return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
-    if (opened) {
-      const t = setTimeout(onDone, 800);
-      return () => clearTimeout(t);
-    }
-  }, [opened, onDone]);
-
-  return (
-    <div className="flex flex-col items-center justify-center gap-4 py-6">
-      <div className="relative w-40 h-28 perspective-[600px]">
-        {/* Envelope body */}
-        <div className="absolute inset-0 rounded-xl bg-amber-100 dark:bg-amber-950 border-2 border-amber-300 dark:border-amber-700 flex items-end justify-center pb-4 overflow-hidden">
-          <AnimatePresence>
-            {opened && (
-              <motion.div
-                initial={{ y: 24, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.35, delay: 0.25 }}
-                className="bg-white dark:bg-zinc-800 rounded-lg px-4 py-2 shadow text-sm font-bold text-center"
-              >
-                {result}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-        {/* Flap */}
-        <motion.div
-          className="absolute top-0 left-0 right-0 h-14 origin-top"
-          style={{ transformStyle: "preserve-3d" }}
-          animate={{ rotateX: opened ? -160 : 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-        >
-          <div className="w-full h-full bg-amber-200 dark:bg-amber-900 border-2 border-amber-300 dark:border-amber-700 rounded-t-xl"
-            style={{ clipPath: "polygon(0 0, 100% 0, 50% 100%)" }} />
-        </motion.div>
-      </div>
-      <p className="text-xs text-muted-foreground">封筒が開いています...</p>
-    </div>
-  );
-}
-
 // ─── GachaCard ───────────────────────────────────────────────────────────────
 
 function GachaCard({ result, onDone }: { result: string; onDone: () => void }) {
-  const [step, setStep] = useState<"enter" | "open" | "reveal">("enter");
+  const [step, setStep] = useState<"fall" | "shake" | "flash" | "open" | "reveal">("fall");
   const colorRef = useRef(GACHA_COLORS[Math.floor(Math.random() * GACHA_COLORS.length)]);
   const color = colorRef.current;
 
   useEffect(() => {
-    const t1 = setTimeout(() => setStep("open"),   700);
-    const t2 = setTimeout(() => setStep("reveal"), 1100);
-    const t3 = setTimeout(() => onDone(),          2400);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    const timers = [
+      setTimeout(() => setStep("shake"),  600),
+      setTimeout(() => setStep("flash"),  1000),
+      setTimeout(() => setStep("open"),   1300),
+      setTimeout(() => setStep("reveal"), 1700),
+      setTimeout(() => onDone(),          2800),
+    ];
+    return () => timers.forEach(clearTimeout);
   }, [onDone]);
 
-  const opening = step === "open" || step === "reveal";
+  // スパークル用パーティクル（8方向）
+  const sparkles = Array.from({ length: 8 }, (_, i) => ({
+    angle: i * 45,
+    id: i,
+    dx: Math.cos((i * 45 * Math.PI) / 180) * 60,
+    dy: Math.sin((i * 45 * Math.PI) / 180) * 60,
+  }));
 
   return (
-    <div className="flex flex-col items-center gap-5 py-4 min-h-[200px]">
+    <div className="flex flex-col items-center gap-6 py-6 min-h-[260px] relative">
+      {/* フラッシュエフェクト */}
+      <AnimatePresence>
+        {step === "flash" && (
+          <motion.div
+            className="absolute inset-0 rounded-2xl pointer-events-none"
+            style={{ background: "radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%)" }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: [0, 1, 0], scale: [0.5, 2, 3] }}
+            transition={{ duration: 0.3 }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* カプセル */}
-      <motion.div
-        className="relative shrink-0"
-        style={{ width: 112, height: 112 }}
-        initial={{ y: -240, rotate: -25, scale: 0.9 }}
-        animate={{ y: 0, rotate: 0, scale: 1 }}
-        transition={{ type: "spring", stiffness: 250, damping: 18 }}
-      >
-        {/* 本体（白ベース） */}
-        <div
-          className="absolute inset-0 rounded-full bg-white dark:bg-zinc-800"
-          style={{ border: `3px solid ${color}` }}
-        />
-        {/* 上半分（カラー・開封時に上に飛ぶ） */}
+      <div className="relative" style={{ width: 128, height: 128 }}>
+        {/* メインカプセル外周 */}
         <motion.div
-          className="absolute top-0 left-0 right-0 z-10"
-          style={{ height: "50%", borderRadius: "56px 56px 0 0", background: color }}
-          animate={opening ? { y: -72 } : { y: 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 16 }}
-        />
-        {/* シャイン */}
-        <div
-          className="absolute z-20 pointer-events-none"
-          style={{ top: 13, left: 18, width: 28, height: 18, background: "rgba(255,255,255,0.4)", borderRadius: "50%", filter: "blur(5px)" }}
-        />
-      </motion.div>
+          className="absolute inset-0 rounded-full"
+          style={{ border: `4px solid ${color}`, background: "white" }}
+          animate={
+            step === "fall" ? { y: 0, rotate: 0, scale: 1 } :
+            step === "shake" ? { x: [-8, 8, -6, 6, -4, 4, -2, 0], rotate: [-5, 5, -4, 4, -2, 2, 0, 0] } :
+            {}
+          }
+          initial={{ y: -280, rotate: -30, scale: 0.85 }}
+          transition={
+            step === "fall" ? { type: "spring", stiffness: 200, damping: 15 } :
+            step === "shake" ? { duration: 0.35, times: [0, 0.14, 0.28, 0.42, 0.56, 0.7, 0.84, 1] } :
+            {}
+          }
+        >
+          {/* 上半分（カラー・開封で飛ぶ） */}
+          <motion.div
+            className="absolute top-0 left-0 right-0 z-10"
+            style={{
+              height: "52%",
+              borderRadius: "64px 64px 0 0",
+              background: `linear-gradient(135deg, ${color}dd, ${color})`,
+            }}
+            animate={step === "open" || step === "reveal" ? { y: -90, opacity: 0 } : { y: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          />
+          {/* 下半分（白・結果が透けて見える感じ） */}
+          <div
+            className="absolute bottom-0 left-0 right-0"
+            style={{
+              height: "52%",
+              borderRadius: "0 0 64px 64px",
+              background: "linear-gradient(135deg, #f8f8f8, #fff)",
+            }}
+          />
+          {/* ハイライト */}
+          <div
+            className="absolute z-20 pointer-events-none"
+            style={{
+              top: 16,
+              left: 20,
+              width: 32,
+              height: 22,
+              background: "rgba(255,255,255,0.5)",
+              borderRadius: "50%",
+              filter: "blur(6px)",
+            }}
+          />
+          {/* 開封マーク */}
+          {(step === "open" || step === "reveal") && (
+            <motion.div
+              className="absolute inset-0 flex items-center justify-center z-30 text-2xl"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: [0, 1.3, 1], opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              ✨
+            </motion.div>
+          )}
+        </motion.div>
+
+        {/* スパークルパーティクル */}
+        <AnimatePresence>
+          {(step === "open" || step === "reveal") && sparkles.map((s) => (
+            <motion.div
+              key={s.id}
+              className="absolute w-3 h-3 rounded-full z-40"
+              style={{
+                top: "50%",
+                left: "50%",
+                marginTop: -6,
+                marginLeft: -6,
+                background: color,
+              }}
+              initial={{ x: 0, y: 0, scale: 0, opacity: 1 }}
+              animate={{ x: s.dx, y: s.dy, scale: [0, 1.2, 0], opacity: [1, 1, 0] }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: s.id * 0.02 }}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {/* OPEN!テキスト */}
+      <AnimatePresence>
+        {step === "open" && (
+          <motion.p
+            className="text-sm font-black tracking-widest"
+            style={{ color }}
+            initial={{ opacity: 0, scale: 0.5, y: -10 }}
+            animate={{ opacity: 1, scale: 1.2, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            OPEN!
+          </motion.p>
+        )}
+      </AnimatePresence>
 
       {/* 結果カード */}
       <AnimatePresence>
         {step === "reveal" && (
           <motion.div
-            initial={{ scale: 0.2, opacity: 0, y: -10 }}
+            initial={{ scale: 0.1, opacity: 0, y: 30 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 20 }}
-            className="rounded-2xl px-8 py-3 text-center shadow-xl"
-            style={{ background: color }}
+            transition={{ type: "spring", stiffness: 450, damping: 18 }}
+            className="rounded-2xl px-10 py-4 text-center shadow-2xl"
+            style={{
+              background: `linear-gradient(135deg, ${color}ee, ${color})`,
+              boxShadow: `0 8px 32px ${color}55`,
+            }}
           >
-            <p className="text-xs font-medium mb-0.5" style={{ color: "rgba(255,255,255,0.7)" }}>結果</p>
-            <p className="text-2xl font-black text-white">{result}</p>
+            <p className="text-xs font-semibold mb-1" style={{ color: "rgba(255,255,255,0.75)" }}>
+              ✨ 結果 ✨
+            </p>
+            <p className="text-3xl font-black text-white drop-shadow">{result}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -252,7 +261,6 @@ export function LotTool() {
   ]);
   const [numberMax, setNumberMax] = useState(10);
   const [numberDrawn, setNumberDrawn] = useState<number[]>([]);
-  const [drawAnimation, setDrawAnimation] = useState<DrawAnimation>("scratch");
   const [phase, setPhase] = useState<LotState["phase"]>("setup");
   const [records, setRecords] = useState<DrawRecord[]>([]);
   const [currentResult, setCurrentResult] = useState<string | null>(null);
@@ -269,7 +277,6 @@ export function LotTool() {
       const payload = decodeState<SharePayload>(param);
       if (payload) {
         setMode(payload.mode);
-        setDrawAnimation(payload.anim);
         if (payload.entries) {
           setEntries(payload.entries.map((e) => ({ id: genId(), label: e.l, totalCount: e.c, remaining: e.c })));
         }
@@ -280,7 +287,6 @@ export function LotTool() {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
           const saved = JSON.parse(raw);
-          if (saved.drawAnimation) setDrawAnimation(saved.drawAnimation);
           if (saved.lastEntries) {
             setEntries(saved.lastEntries.map((e: { label: string; count: number }) => ({
               id: genId(), label: e.label, totalCount: e.count, remaining: e.count
@@ -297,11 +303,10 @@ export function LotTool() {
     if (!mounted) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        drawAnimation,
         lastEntries: entries.map((e) => ({ label: e.label, count: e.totalCount })),
       }));
     } catch { /* ignore */ }
-  }, [drawAnimation, entries, mounted]);
+  }, [entries, mounted]);
 
   const totalEntries = entries.reduce((sum, e) => sum + e.totalCount, 0);
   const totalRemaining = entries.reduce((sum, e) => sum + e.remaining, 0);
@@ -329,7 +334,7 @@ export function LotTool() {
   const handleShare = useCallback(() => {
     const payload: SharePayload = {
       mode,
-      anim: drawAnimation,
+      anim: "gacha",
       entries: mode === "custom" ? entries.map((e) => ({ l: e.label, c: e.totalCount })) : undefined,
       max: mode === "number" ? numberMax : undefined,
     };
@@ -338,7 +343,7 @@ export function LotTool() {
       () => toast("共有URLをコピーしました"),
       () => toast("URLのコピーに失敗しました")
     );
-  }, [mode, drawAnimation, entries, numberMax]);
+  }, [mode, entries, numberMax]);
 
   const handleStart = useCallback(() => {
     setRecords([]);
@@ -367,7 +372,7 @@ export function LotTool() {
 
     setCurrentResult(result);
     setIsAnimating(true);
-  }, [isAnimating, isComplete, mode, numberMax, numberDrawn, entries, drawAnimation]);
+  }, [isAnimating, isComplete, mode, numberMax, numberDrawn, entries]);
 
   const handleAnimationDone = useCallback(() => {
     setIsAnimating(false);
@@ -412,28 +417,35 @@ export function LotTool() {
               className="space-y-5"
             >
               {/* ヘッダービジュアル */}
-              <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 border border-amber-200/60 dark:border-amber-700/30">
-                <span className="text-4xl">🎲</span>
+              <div className="flex items-center gap-4 p-5 rounded-3xl bg-gradient-to-br from-amber-100 via-orange-50 to-yellow-100 dark:from-amber-950/40 dark:via-orange-950/30 dark:to-yellow-950/20 border border-amber-200/70 dark:border-amber-700/40 shadow-sm">
+                <motion.span
+                  className="text-5xl"
+                  animate={{ rotate: [0, -8, 8, -4, 0], y: [0, -3, 0] }}
+                  transition={{ repeat: Infinity, repeatDelay: 2.5, duration: 1 }}
+                >
+                  🎰
+                </motion.span>
                 <div>
-                  <p className="text-sm font-bold text-amber-700 dark:text-amber-300">くじ引き</p>
-                  <p className="text-xs text-amber-600/70 dark:text-amber-400/70 mt-0.5">設定してくじを引こう！ガチャ演出で結果を発表。</p>
+                  <p className="text-lg font-black text-amber-700 dark:text-amber-300 tracking-tight">くじ引き</p>
+                  <p className="text-xs text-amber-600/80 dark:text-amber-400/70 mt-0.5">設定してくじを引こう！ワクワクのガチャ演出で結果を発表 ✨</p>
                 </div>
               </div>
 
               {/* Mode tabs */}
-              <div className="flex rounded-xl border border-border bg-muted/50 p-1 gap-1">
+              <div className="flex rounded-2xl border border-amber-200/60 dark:border-amber-700/30 bg-amber-50/50 dark:bg-amber-950/20 p-1.5 gap-1.5">
                 {(["custom", "number"] as LotMode[]).map((m) => (
-                  <button
+                  <motion.button
                     key={m}
+                    whileTap={{ scale: 0.96 }}
                     onClick={() => setMode(m)}
-                    className={`flex-1 rounded-lg py-2 text-sm font-bold transition-all duration-200 ${
+                    className={`flex-1 rounded-xl py-2.5 text-sm font-black transition-all duration-200 ${
                       mode === m
-                        ? "bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
+                        ? "bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-md"
+                        : "text-amber-700/60 dark:text-amber-400/60 hover:text-amber-700 dark:hover:text-amber-300"
                     }`}
                   >
                     {m === "custom" ? "🎟️ カスタム" : "🔢 数字くじ"}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
 
@@ -489,22 +501,6 @@ export function LotTool() {
                 </div>
               )}
 
-              {/* Animation selector */}
-              <div className="space-y-2">
-                <p className="text-sm font-medium">演出</p>
-                <div className="flex gap-2">
-                  {(["scratch", "envelope", "instant"] as DrawAnimation[]).map((anim) => (
-                    <button
-                      key={anim}
-                      onClick={() => setDrawAnimation(anim)}
-                      className={`flex-1 rounded-lg py-1.5 text-xs border transition-colors ${drawAnimation === anim ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]" : "border-border text-muted-foreground hover:border-border/80"}`}
-                    >
-                      {anim === "scratch" ? "🎲 ガチャ" : anim === "envelope" ? "封筒" : "即表示"}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* CTA */}
               <div className="space-y-2">
                 <motion.button
@@ -547,13 +543,7 @@ export function LotTool() {
               {/* Lot card area */}
               <div className="flex flex-col items-center justify-center min-h-48">
                 {isAnimating && currentResult !== null ? (
-                  drawAnimation === "scratch" ? (
-                    <GachaCard result={currentResult} onDone={handleAnimationDone} />
-                  ) : drawAnimation === "envelope" ? (
-                    <EnvelopeCard result={currentResult} onDone={handleAnimationDone} />
-                  ) : (
-                    <InstantCard result={currentResult} onDone={handleAnimationDone} />
-                  )
+                  <GachaCard result={currentResult} onDone={handleAnimationDone} />
                 ) : currentResult !== null && !isAnimating ? (
                   <motion.div
                     key={`result-${records.length}`}

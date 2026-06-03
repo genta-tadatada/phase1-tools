@@ -260,6 +260,10 @@ export function AmidaTool() {
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [mounted, setMounted] = useState(false);
   const traceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tracingColRef = useRef<number | null>(null);
+
+  // tracingCol を ref に同期（startTrace のクロージャから最新値を参照するため）
+  useEffect(() => { tracingColRef.current = tracingCol; }, [tracingCol]);
 
   // Load from URL or localStorage
   useEffect(() => {
@@ -356,10 +360,11 @@ export function AmidaTool() {
   }, [entries]);
 
   // Trace animation step
-  const startTrace = useCallback((colIdx: number) => {
-    if (tracingCol !== null) return;
+  const startTrace = useCallback((colIdx: number, onComplete?: () => void) => {
+    if (tracingColRef.current !== null) return;
     const path = tracedPaths[colIdx];
     if (!path || path.length === 0) return;
+    tracingColRef.current = colIdx;
     setTracingCol(colIdx);
     setTracingStep(0);
     setPhase("tracing");
@@ -373,23 +378,25 @@ export function AmidaTool() {
       } else {
         // Done
         setRevealedCols((prev) => new Set([...prev, colIdx]));
+        tracingColRef.current = null;
         setTracingCol(null);
         setPhase("amida");
+        if (onComplete) setTimeout(onComplete, 300);
       }
     };
     traceTimerRef.current = setTimeout(tick, SPEED_MS[traceSpeed]);
-  }, [tracingCol, tracedPaths, traceSpeed]);
+  }, [tracedPaths, traceSpeed]);
 
   const handleRevealAll = useCallback(() => {
-    if (tracingCol !== null) return;
-    // Stagger all traces
-    let delay = 0;
-    entries.forEach((_, i) => {
-      if (revealedCols.has(i)) return;
-      setTimeout(() => startTrace(i), delay);
-      delay += (rows.length * SPEED_MS[traceSpeed]) + 300;
-    });
-  }, [tracingCol, entries, revealedCols, rows.length, traceSpeed, startTrace]);
+    if (tracingColRef.current !== null) return;
+    const unrevealedCols = entries.map((_, i) => i).filter((i) => !revealedCols.has(i));
+    if (unrevealedCols.length === 0) return;
+    const traceSequentially = (idx: number) => {
+      if (idx >= unrevealedCols.length) return;
+      startTrace(unrevealedCols[idx], () => traceSequentially(idx + 1));
+    };
+    traceSequentially(0);
+  }, [entries, revealedCols, startTrace]);
 
   const handleShare = useCallback(() => {
     const payload: SharePayload = {
@@ -496,14 +503,15 @@ export function AmidaTool() {
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-xs text-muted-foreground">テンプレート:</span>
                 {[
-                  { key: "winlose" as const, label: "🎯 当たり / はずれ" },
-                  { key: "number"  as const, label: "🔢 1〜N番" },
-                ].map(({ key, label }) => (
+                  { key: "winlose" as const, label: "🎯 当たり / はずれ", grad: "from-rose-400 to-pink-400" },
+                  { key: "number"  as const, label: "🔢 1〜N番", grad: "from-sky-400 to-indigo-400" },
+                ].map(({ key, label, grad }) => (
                   <motion.button
                     key={key}
                     whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.03 }}
                     onClick={() => applyTemplate(key)}
-                    className="text-xs rounded-full border border-border bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20 border-violet-200/60 dark:border-violet-700/30 text-violet-600 dark:text-violet-400 px-3 py-1 hover:shadow-sm transition-all"
+                    className={`text-xs rounded-full bg-gradient-to-r ${grad} text-white font-bold px-3.5 py-1.5 shadow-sm hover:shadow transition-all`}
                   >
                     {label}
                   </motion.button>
