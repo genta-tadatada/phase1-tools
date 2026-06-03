@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Copy, Trash2, Link2 } from "lucide-react";
+import { Copy, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { ToolLayout } from "@/components/tool-layout/ToolLayout";
 import { Button } from "@/components/ui/button";
@@ -98,7 +98,6 @@ export function WordCountTool() {
   const [limitInput, setLimitInput] = useState(""); // 空 = 制限なし
   const [isWeighted, setIsWeighted] = useState(false);
   const [mounted, setMounted]       = useState(false);
-  const [shared, setShared]         = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -149,15 +148,6 @@ export function WordCountTool() {
     try { await navigator.clipboard.writeText(text); toast.success("コピーしました"); }
     catch { toast.error("コピーに失敗しました"); }
   };
-
-  const handleShare = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setShared(true);
-      setTimeout(() => setShared(false), 1500);
-      toast("共有URLをコピーしました");
-    } catch { toast.error("コピーに失敗しました"); }
-  }, []);
 
   const handleClear = () => {
     if (text === "") return;
@@ -210,13 +200,6 @@ export function WordCountTool() {
             >
               <Trash2 className="size-3.5" /> クリア
             </Button>
-            <button
-              onClick={handleShare}
-              className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted ml-auto"
-            >
-              <Link2 className="size-3" />
-              {shared ? "コピー済" : "共有"}
-            </button>
           </div>
         </div>
 
