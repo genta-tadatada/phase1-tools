@@ -5,6 +5,7 @@ interface Props {
   textW?: number;
   textH?: number;
   scale?: number;
+  gap?: number;
 }
 
 export function TadatadaLogo({
@@ -12,10 +13,11 @@ export function TadatadaLogo({
   textW = 168,
   textH = 112,
   scale = 1.0,
+  gap = 6,
 }: Props) {
   const s = `scale(${scale})`;
   return (
-    <>
+    <span style={{ display:"inline-flex", alignItems:"center", gap, flexShrink:0 }}>
       <span style={{ display:"inline-block", width:charSize, height:charSize, overflow:"hidden", flexShrink:0 }}>
         <Image
           src="/assets/tadatada-char.png"
@@ -34,6 +36,6 @@ export function TadatadaLogo({
           style={{ objectFit:"contain", transform:s }}
         />
       </span>
-    </>
+    </span>
   );
 }

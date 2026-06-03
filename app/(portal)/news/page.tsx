@@ -16,7 +16,7 @@ export default function NewsPage() {
       <header className="p-header">
         <div className="p-header-inner md">
           <Link href="/" className="p-breadcrumb">
-            <TadatadaLogo />
+            <TadatadaLogo charSize={36} textW={76} textH={51} />
             <span className="p-sep">/</span>
             <span className="p-page-tag">お知らせ</span>
           </Link>

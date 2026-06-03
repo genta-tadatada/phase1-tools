@@ -22,18 +22,28 @@ export function ToolHeader({ title }: ToolHeaderProps) {
         borderBottom: "1px solid var(--th-border)",
       }}
     >
-      <div style={{ height: 80, padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", overflow: "hidden" }}>
-        {/* 左：breadcrumb */}
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-          <TadatadaLogo />
-          <span style={{ color: "var(--th-text-muted)", fontSize: 12 }}>/</span>
-          <span style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 700, fontSize: 14, color: "var(--th-text)" }}>
+      <div style={{
+        padding: "6px 16px",
+        display: "flex", alignItems: "center",
+        justifyContent: "space-between", gap: 8,
+      }}>
+        {/* 左：ロゴ（上段）＋ページ名（下段） */}
+        <Link href="/" style={{ display: "flex", flexDirection: "column", gap: 2, textDecoration: "none", minWidth: 0 }}>
+          <TadatadaLogo charSize={36} textW={76} textH={51} />
+          <span style={{
+            fontFamily: "'M PLUS Rounded 1c', sans-serif",
+            fontWeight: 700, fontSize: 10,
+            color: "var(--th-text-muted)",
+            paddingLeft: 40,
+            whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+            maxWidth: "55vw",
+          }}>
             {title}
           </span>
         </Link>
 
-        {/* 右：ダークモード + グローバルメニュー */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        {/* 右：ダークモード + グローバルメニュー（flexShrink:0で常に表示） */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
           <DarkModeToggle />
           <GlobalMenu activeSection="tools" />
         </div>

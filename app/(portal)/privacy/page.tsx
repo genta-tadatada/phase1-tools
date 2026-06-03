@@ -30,7 +30,7 @@ export default function PrivacyPage() {
       <header className="p-header">
         <div className="p-header-inner md">
           <Link href="/" className="p-breadcrumb">
-            <TadatadaLogo />
+            <TadatadaLogo charSize={36} textW={76} textH={51} />
             <span className="p-sep">/</span>
             <span className="p-crumb current">プライバシーポリシー</span>
           </Link>
@@ -155,7 +155,7 @@ export default function PrivacyPage() {
             <section style={SECTION_STYLE}>
               <h2 style={H2_STYLE}>運営者情報</h2>
               <p style={P_STYLE}>
-                サイト名: TADATADA（タダtools）<br />
+                サイト名: ただただ（タダtools）<br />
                 お問い合わせ: <Link href="/contact" style={{ color: "#8b5cf6", textDecoration: "underline" }}>お問い合わせページ</Link>
               </p>
             </section>

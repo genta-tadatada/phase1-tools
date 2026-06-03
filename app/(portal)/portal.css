@@ -138,8 +138,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  overflow: hidden;
+  overflow: clip;
 }
+/* GlobalMenu側は必ず表示 */
+.portal-page .p-header-inner > :last-child { flex-shrink: 0; }
 .portal-page .p-header-inner.md {
   height: 80px;
   padding: 0 24px;
@@ -189,7 +191,9 @@
   margin-left: 2px;
   vertical-align: middle;
 }
-.portal-page .p-sep { color: var(--p-fg-faint); font-size: 12px; }
+.portal-page .p-sep { color: var(--p-fg-faint); font-size: 12px; white-space: nowrap; }
+.portal-page .p-page-tag,
+.portal-page .p-crumb { white-space: nowrap; }
 .portal-page .p-crumb {
   font-family: var(--p-font-jp);
   font-weight: 700;
@@ -1146,12 +1150,26 @@
   .portal-page .p-form-card { padding: 24px 22px; }
 }
 @media (max-width: 520px) {
-  .portal-page .p-header-inner { height: 68px; padding: 0 20px; }
+  .portal-page .p-header-inner { height: auto; min-height: 60px; padding: 6px 16px; }
   .portal-page .p-logo { font-size: 20px; }
+  /* breadcrumb: 2行レイアウト（ロゴ行 + ページ名行） */
+  .portal-page .p-breadcrumb { flex-direction: column; align-items: flex-start; gap: 1px; }
+  .portal-page .p-sep { display: none; }
+  .portal-page .p-page-tag { font-size: 10px; font-weight: 700; padding-left: 4px; }
+  .portal-page .p-crumb.current { font-size: 10px; padding-left: 4px; }
   .portal-page .p-container { padding: 0 20px; }
   .portal-page .p-hero { padding: 48px 0 32px; }
   .portal-page .p-hero-art { height: 280px; }
   .portal-page .m-zero { font-size: 40px; width: 150px; height: 110px; }
   .portal-page .m-laptop { width: 140px; height: 90px; }
   .portal-page .p-feat-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+}
+@media (max-width: 480px) {
+  /* フィルターボタン: 2列グリッド */
+  .portal-page .p-filter-btn {
+    flex: 1 1 calc(50% - 4px);
+    text-align: center;
+    padding: 7px 8px;
+    font-size: 12px;
+  }
 }
