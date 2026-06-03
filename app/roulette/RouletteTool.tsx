@@ -161,6 +161,15 @@ export function RouletteTool() {
     <ToolLayout title="ルーレット" adVisible>
       <div className="flex flex-col gap-5">
 
+        {/* ヘッダービジュアル */}
+        <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/20 border border-violet-200/60 dark:border-violet-700/30">
+          <span className="text-4xl">🎡</span>
+          <div>
+            <p className="text-sm font-bold text-violet-700 dark:text-violet-300">ルーレット</p>
+            <p className="text-xs text-violet-600/70 dark:text-violet-400/70 mt-0.5">選択肢を追加してスタート！針が止まった項目が当選。</p>
+          </div>
+        </div>
+
         {/* 入力 */}
         <div className="flex gap-2">
           <input

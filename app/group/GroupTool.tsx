@@ -223,7 +223,7 @@ export function GroupTool() {
   }, [phase, handleReshuffle]);
 
   return (
-    <ToolLayout title="グループ分け">
+    <ToolLayout title="グループ分け" adVisible>
       <div className="space-y-4">
         <AnimatePresence mode="wait">
           {phase === "setup" ? (
@@ -235,6 +235,15 @@ export function GroupTool() {
               transition={{ duration: 0.2 }}
               className="space-y-4"
             >
+              {/* ヘッダービジュアル */}
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-fuchsia-50 dark:from-violet-950/30 dark:to-fuchsia-950/20 border border-violet-200/60 dark:border-violet-700/30">
+                <span className="text-4xl">🎯</span>
+                <div>
+                  <p className="text-sm font-bold text-violet-700 dark:text-violet-300">グループ分け</p>
+                  <p className="text-xs text-violet-600/70 dark:text-violet-400/70 mt-0.5">メンバーを入力して、公平にランダムでチーム分け！</p>
+                </div>
+              </div>
+
               {/* Member input */}
               <div className="space-y-1">
                 <div className="flex items-center justify-between">

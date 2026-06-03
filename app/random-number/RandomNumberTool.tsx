@@ -298,6 +298,15 @@ export function RandomNumberTool() {
   return (
     <ToolLayout title="ランダム数字" adVisible>
       <div className="flex flex-col gap-6">
+        {/* ヘッダービジュアル */}
+        <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-sky-50 to-cyan-50 dark:from-sky-950/30 dark:to-cyan-950/20 border border-sky-200/60 dark:border-sky-700/30">
+          <span className="text-4xl">🔢</span>
+          <div>
+            <p className="text-sm font-bold text-sky-700 dark:text-sky-300">ランダム数字</p>
+            <p className="text-xs text-sky-600/70 dark:text-sky-400/70 mt-0.5">範囲と個数を決めて、ランダムな数字を生成！</p>
+          </div>
+        </div>
+
         {/* Settings */}
         <div className="rounded-xl border border-border bg-card shadow-sm p-5 flex flex-col gap-4">
           <div className="grid grid-cols-2 gap-4">
