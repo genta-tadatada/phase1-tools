@@ -31,7 +31,7 @@ export const NEWS_DATA: NewsItem[] = [
     summary: "カウンター・タイマー・電卓・じゃんけんなど15種類のツールを順次公開中。すべて無料でそのまま使えます。",
     body: "タダtools（tadatools.pages.dev）を正式公開しました。広告まみれの無料サービスに疲れていませんか？タダtoolsは「ログイン不要・広告控えめ・完全無料」をポリシーに運営します。\n\nカウンター・ストップウォッチ・タイマー・BPMメトロノーム・電卓・ランダム数字・サイコロ・ルーレット・じゃんけん・あみだくじ・くじ引き・グループ分け・文字数カウントなど、日常のちょっとした作業をサポートするツールを15種類順次追加予定です。",
     banner: { grad: ["#d1fae5", "#6ee7b7", "#a7f3d0"], icon: "🧰" },
-    image: "/uploads/kawaii-rocket-scene.svg",
+    image: "/uploads/news-rocket.png",
     imageContain: true,
   },
   {
