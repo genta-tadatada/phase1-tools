@@ -35,7 +35,8 @@ const HAND_EMOJI: Record<Hand, string> = { rock: "✊", scissors: "✌️", pape
 const HAND_LABEL: Record<Hand, string> = { rock: "グー", scissors: "チョキ", paper: "パー" };
 const BEATS: Record<Hand, Hand> = { rock: "scissors", scissors: "paper", paper: "rock" };
 const HANDS: Hand[] = ["rock", "scissors", "paper"];
-const COUNTDOWN_STEPS = ["3", "2", "1", "じゃんけん！"] as const;
+const JANKEN_WORDS  = ["じゃん", "けん", "ポン！"] as const;
+const JANKEN_COLORS = ["from-rose-400 to-pink-400", "from-amber-400 to-yellow-400", "from-violet-400 to-purple-400"];
 
 // 手ごとのカラーテーマ
 const HAND_THEME: Record<Hand, {
@@ -52,7 +53,6 @@ const RESULT_THEME: Record<Result, { label: string; grad: string; emoji: string 
   draw: { label: "あいこ！",       grad: "from-sky-400 to-violet-400",     emoji: "🤝" },
 };
 
-const COUNTDOWN_COLORS = ["from-rose-400 to-pink-400", "from-amber-400 to-yellow-400", "from-sky-400 to-teal-400", "from-violet-400 to-purple-400"];
 
 function judgeResult(my: Hand, opp: Hand): Result {
   if (my === opp) return "draw";
@@ -165,33 +165,36 @@ export function JankenTool() {
   const startCountdown = useCallback((pendingPlayers: Player[]) => {
     setPhase("countdown");
     setCountdownStep(0);
-    const stepMs = settings.countdownSpeed === "fast" ? 500 : 900;
+    const stepMs = settings.countdownSpeed === "fast" ? 400 : 650;
     let step = 0;
     const advance = () => {
       step++;
-      if (step < COUNTDOWN_STEPS.length) {
+      if (step < JANKEN_WORDS.length) {
         setCountdownStep(step);
         timerRef.current = setTimeout(advance, stepMs);
       } else {
-        setPhase("result");
-        setPlayers(pendingPlayers);
-        if (mode === "cpu") {
-          const me = pendingPlayers.find((p) => p.id === "player");
-          if (me?.result === "win")  setStats((s) => ({ ...s, wins: s.wins + 1 }));
-          else if (me?.result === "lose") setStats((s) => ({ ...s, losses: s.losses + 1 }));
-          else setStats((s) => ({ ...s, draws: s.draws + 1 }));
-          if (me?.result === "draw" && settings.autoRetryOnDraw) {
-            timerRef.current = setTimeout(() => {
-              const newCpu = randomHand();
-              const myHand = me.hand!;
-              const r = judgeResult(myHand, newCpu);
-              startCountdown([
-                { id: "player", name: "あなた", hand: myHand, result: r },
-                { id: "cpu",    name: "CPU",    hand: newCpu, result: judgeResult(newCpu, myHand) },
-              ]);
-            }, 1000);
+        // ポン！が出揃ってから少し待って結果へ
+        timerRef.current = setTimeout(() => {
+          setPhase("result");
+          setPlayers(pendingPlayers);
+          if (mode === "cpu") {
+            const me = pendingPlayers.find((p) => p.id === "player");
+            if (me?.result === "win")  setStats((s) => ({ ...s, wins: s.wins + 1 }));
+            else if (me?.result === "lose") setStats((s) => ({ ...s, losses: s.losses + 1 }));
+            else setStats((s) => ({ ...s, draws: s.draws + 1 }));
+            if (me?.result === "draw" && settings.autoRetryOnDraw) {
+              timerRef.current = setTimeout(() => {
+                const newCpu = randomHand();
+                const myHand = me.hand!;
+                const r = judgeResult(myHand, newCpu);
+                startCountdown([
+                  { id: "player", name: "あなた", hand: myHand, result: r },
+                  { id: "cpu",    name: "CPU",    hand: newCpu, result: judgeResult(newCpu, myHand) },
+                ]);
+              }, 1000);
+            }
           }
-        }
+        }, 700);
       }
     };
     timerRef.current = setTimeout(advance, stepMs);
@@ -298,18 +301,21 @@ export function JankenTool() {
             exit={{ opacity: 0 }}
             className="flex items-center justify-center min-h-[300px]"
           >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={countdownStep}
-                initial={{ scale: 0.3, opacity: 0, rotate: -15 }}
-                animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                exit={{ scale: 1.5, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 350, damping: 18 }}
-                className={`text-8xl font-black text-center bg-gradient-to-r ${COUNTDOWN_COLORS[countdownStep]} bg-clip-text text-transparent`}
-              >
-                {COUNTDOWN_STEPS[countdownStep]}
-              </motion.div>
-            </AnimatePresence>
+            <div className="flex items-end justify-center gap-1 sm:gap-3 flex-wrap">
+              {JANKEN_WORDS.map((word, i) =>
+                countdownStep >= i ? (
+                  <motion.span
+                    key={i}
+                    initial={{ scale: 0.3, opacity: 0, y: 30 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    transition={{ type: "spring", stiffness: 420, damping: 16 }}
+                    className={`text-6xl sm:text-7xl font-black bg-gradient-to-r ${JANKEN_COLORS[i]} bg-clip-text text-transparent`}
+                  >
+                    {word}
+                  </motion.span>
+                ) : null
+              )}
+            </div>
           </motion.div>
         )}
 
