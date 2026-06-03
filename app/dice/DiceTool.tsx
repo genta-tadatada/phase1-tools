@@ -82,6 +82,13 @@ function PolygonDiceSvg({ faces, value, color }: { faces: DiceFace; value: numbe
   );
 }
 
+// D6 アニメーション定数（コンポーネント外に置いて参照を固定）
+// setValues が 70ms ごとに再レンダーを起こすため、同一参照を渡さないと
+// framer-motion がアニメーションをリセットし続けて見えなくなる
+const D6_SHAKE_ANIMATE = { rotateX: [0, 360, 720, 1080], rotate: 0, scale: [1, 1.05, 1.05, 1], y: [0, -10, -10, 0] };
+const D6_LAND_ANIMATE  = { rotateX: 0, rotate: 0, scale: [1.3, 0.9, 1.07, 1], y: 0 };
+const D6_IDLE_ANIMATE  = { rotateX: 0, rotate: 0, scale: 1, y: 0 };
+
 export function DiceTool() {
   const [faces, setFaces] = useState<DiceFace>(6);
   const [diceCount, setDiceCount] = useState(1);
@@ -237,20 +244,17 @@ export function DiceTool() {
         </div>
 
         {/* サイコロ表示 */}
-        <div className="flex flex-wrap gap-4 justify-center py-2" style={{ perspective: "600px" }}>
+        <div className="flex flex-wrap gap-4 justify-center py-2">
           <AnimatePresence mode="popLayout">
             {values.map((val, i) => (
               <motion.div
                 key={i}
                 layout
                 initial={{ opacity: 0, scale: 0.5 }}
+                transformTemplate={(_, generated) => `perspective(500px) ${generated}`}
                 animate={
                   faces === 6
-                    ? shaking
-                      ? { rotateX: [0, 360, 720, 1080], rotate: 0, scale: [1, 1.05, 1.05, 1], y: [0, -10, -10, 0] }
-                      : justRolled
-                        ? { rotateX: 0, rotate: 0, scale: [1.3, 0.9, 1.07, 1], y: 0 }
-                        : { rotateX: 0, rotate: 0, scale: 1, y: 0 }
+                    ? shaking ? D6_SHAKE_ANIMATE : justRolled ? D6_LAND_ANIMATE : D6_IDLE_ANIMATE
                     : shaking
                       ? { rotate: [0, -18, 18, -12, 12, -6, 6, 0], y: [0, -10, 2, -5, 0], scale: 1 }
                       : justRolled

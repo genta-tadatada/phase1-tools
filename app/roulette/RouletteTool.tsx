@@ -232,21 +232,27 @@ export function RouletteTool() {
                   : "none",
               }}
             >
-              {/* 針の棒（影） */}
-              <line x1={CX} y1={CY} x2={CX} y2={CY - R + 12} stroke="rgba(0,0,0,0.2)" strokeWidth={5} strokeLinecap="round" />
-              {/* 針の棒 */}
-              <line x1={CX} y1={CY} x2={CX} y2={CY - R + 12} stroke="white" strokeWidth={3} strokeLinecap="round" />
-              {/* 矢印先端 */}
+              {/* 針の影 */}
               <polygon
-                points={`${CX - 9},${CY - R + 24} ${CX},${CY - R + 4} ${CX + 9},${CY - R + 24}`}
-                fill="white"
-                stroke="rgba(0,0,0,0.1)"
-                strokeWidth={1}
+                points={`${CX},${CY - 96} ${CX + 6},${CY - 58} ${CX + 3},${CY - 20} ${CX - 3},${CY - 20} ${CX - 6},${CY - 58}`}
+                fill="rgba(0,0,0,0.22)"
+                transform="translate(2,4)"
               />
-              {/* 中心円 */}
-              <circle cx={CX} cy={CY} r={18} fill="#8b5cf6" />
-              <circle cx={CX} cy={CY} r={10} fill="white" />
-              <circle cx={CX} cy={CY} r={5} fill="#8b5cf6" />
+              {/* 針本体（テーパー形状） */}
+              <polygon
+                points={`${CX},${CY - 96} ${CX + 6},${CY - 58} ${CX + 3},${CY - 20} ${CX - 3},${CY - 20} ${CX - 6},${CY - 58}`}
+                fill="white"
+                stroke="rgba(255,255,255,0.6)"
+                strokeWidth={0.5}
+              />
+              {/* 先端ハイライト */}
+              <circle cx={CX} cy={CY - 94} r={2.5} fill="rgba(255,255,255,0.95)" />
+              {/* 中心ハブ（同心円デザイン） */}
+              <circle cx={CX} cy={CY} r={22} fill="#6d28d9" />
+              <circle cx={CX} cy={CY} r={16} fill="white" />
+              <circle cx={CX} cy={CY} r={10} fill="#8b5cf6" />
+              <circle cx={CX} cy={CY} r={5}  fill="white" />
+              <circle cx={CX} cy={CY} r={2.5} fill="#6d28d9" />
             </svg>
           </div>
         </div>
