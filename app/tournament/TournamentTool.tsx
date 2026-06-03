@@ -640,6 +640,37 @@ function TournamentView({
     toast("SVG画像をダウンロードしました");
   };
 
+  const handleDownloadPNG = () => {
+    const svg = generateSVGBracket(tournament, svgStyle);
+    const svgBlob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+    const svgUrl = URL.createObjectURL(svgBlob);
+    const img = new Image();
+    img.onload = () => {
+      const scale = 2;
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.scale(scale, scale);
+      ctx.drawImage(img, 0, 0);
+      canvas.toBlob((pngBlob) => {
+        if (!pngBlob) return;
+        const url = URL.createObjectURL(pngBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "tournament-bracket.png";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        URL.revokeObjectURL(svgUrl);
+        toast("PNG画像をダウンロードしました");
+      }, "image/png");
+    };
+    img.src = svgUrl;
+  };
+
   return (
     <div className="flex flex-col gap-4">
       {/* 優勝者表示 */}
@@ -748,7 +779,11 @@ function TournamentView({
         </Button>
         <Button variant="outline" size="sm" onClick={handleDownloadSVG} className="gap-1.5">
           <Download className="size-3.5" />
-          画像DL
+          SVG
+        </Button>
+        <Button variant="outline" size="sm" onClick={handleDownloadPNG} className="gap-1.5">
+          <Download className="size-3.5" />
+          PNG
         </Button>
         <Button variant="outline" size="sm" onClick={handleShare} className="gap-1.5">
           <Share2 className="size-3.5" />
