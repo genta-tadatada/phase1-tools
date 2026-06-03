@@ -203,22 +203,22 @@ export default function PortalPage() {
               <p className="p-feat-desc">難しい設定は一切なし。<br />開いてそのまま使えます。</p>
             </div>
             <div className="p-feat-card">
-              <div className="p-feat-icon i-2 has-img">
-                <Image src="/uploads/news-noauth.png" alt="" width={48} height={48} className="blend" />
+              <div className="p-feat-icon i-2">
+                <Image src="/uploads/kawaii-padlock.svg" alt="" width={52} height={52} style={{ width: 52, height: 52, objectFit: "contain" }} />
               </div>
               <div className="p-feat-name">ログイン不要</div>
               <p className="p-feat-desc">アカウント作成なしで<br />すべての機能が使えます。</p>
             </div>
             <div className="p-feat-card">
-              <div className="p-feat-icon i-3 has-img">
-                <Image src="/uploads/news-free.png" alt="" width={48} height={48} className="blend" />
+              <div className="p-feat-icon i-3">
+                <Image src="/uploads/kawaii-tag-free.svg" alt="" width={52} height={52} style={{ width: 52, height: 52, objectFit: "contain" }} />
               </div>
               <div className="p-feat-name">すべて無料</div>
               <p className="p-feat-desc">隠れた課金は一切なし。<br />ずっとタダで使えます。</p>
             </div>
             <div className="p-feat-card">
-              <div className="p-feat-icon i-4 has-img">
-                <Image src="/uploads/news-megaphone.png" alt="" width={48} height={48} className="blend" />
+              <div className="p-feat-icon i-4">
+                <Image src="/uploads/kawaii-desktop-screen.svg" alt="" width={52} height={52} style={{ width: 52, height: 52, objectFit: "contain" }} />
               </div>
               <div className="p-feat-name">広告は控えめに</div>
               <p className="p-feat-desc">ツール使用中は広告を非表示。<br />使うことだけに集中できます。</p>
