@@ -18,10 +18,8 @@ export default function ContactPage() {
       `}</style>
       <header className="p-header">
         <div className="p-header-inner md">
-          <Link href="/" className="p-breadcrumb">
-            <TadatadaLogo height={38} />
-            <span className="p-sep">/</span>
-            <span className="p-crumb current">お問い合わせ</span>
+          <Link href="/" className="p-logo">
+            <TadatadaLogo title="お問い合わせ" />
           </Link>
           <GlobalMenu activeSection={null} />
         </div>

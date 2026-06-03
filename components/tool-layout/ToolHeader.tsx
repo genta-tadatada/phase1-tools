@@ -27,22 +27,9 @@ export function ToolHeader({ title }: ToolHeaderProps) {
         display: "flex", alignItems: "center",
         justifyContent: "space-between", gap: 8,
       }}>
-        {/* 左：ロゴ（上段）＋ページ名（下段） */}
-        <Link href="/" style={{ display: "flex", flexDirection: "column", gap: 2, textDecoration: "none", minWidth: 0 }}>
-          <TadatadaLogo height={38} />
-          <span style={{
-            fontFamily: "'M PLUS Rounded 1c', sans-serif",
-            fontWeight: 700, fontSize: 10,
-            color: "var(--th-text-muted)",
-            paddingLeft: 4,
-            whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-            maxWidth: "55vw",
-          }}>
-            {title}
-          </span>
+        <Link href="/" style={{ textDecoration: "none", flexShrink: 0 }}>
+          <TadatadaLogo title={title} />
         </Link>
-
-        {/* 右：ダークモード + グローバルメニュー（flexShrink:0で常に表示） */}
         <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
           <DarkModeToggle />
           <GlobalMenu activeSection="tools" />

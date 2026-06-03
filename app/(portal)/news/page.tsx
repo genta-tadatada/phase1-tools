@@ -15,10 +15,8 @@ export default function NewsPage() {
     <>
       <header className="p-header">
         <div className="p-header-inner md">
-          <Link href="/" className="p-breadcrumb">
-            <TadatadaLogo height={38} />
-            <span className="p-sep">/</span>
-            <span className="p-page-tag">お知らせ</span>
+          <Link href="/" className="p-logo">
+            <TadatadaLogo title="お知らせ" />
           </Link>
           <GlobalMenu activeSection={null} />
         </div>
