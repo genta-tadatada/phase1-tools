@@ -63,8 +63,7 @@ export const NEWS_DATA: NewsItem[] = [
     summary: "使うたびに広告が邪魔、ログインを求められる…そんなストレスをなくしたいと思ってつくりました。",
     body: "「無料のくせに広告だらけ」「ちょっと使いたいだけなのにアカウント登録が必要」— そんな体験に不満を感じてTADATADAを作りました。\n\nTADATADAのすべてのサービスは、アカウント登録なし・ログインなしで使えます。広告はページ下部の細いバナーのみ。ツールの操作中・ゲームのプレイ中には表示しません。これからもずっと、タダで使えるサービスを目指します。",
     banner: { grad: ["#fce7f3", "#fbcfe8", "#c4b5fd"], icon: "🎀" },
-    image: "/uploads/kawaii-padlock.svg",
-    imageContain: true,
+    image: "/uploads/banner-padlock.png",
   },
   {
     id: "005",
@@ -74,7 +73,7 @@ export const NEWS_DATA: NewsItem[] = [
     summary: "ランチ選び・チーム決め・当番決め…グループでの決め事はタダtoolsにおまかせ。",
     body: "タダtoolsに抽選・対戦系ツールを続々追加予定です。ルーレット・サイコロ・じゃんけん・あみだくじ・くじ引き・グループ分けなど、日常の「決め事」を公平に楽しく解決できるツール群を開発しています。\n\n使用シーン例：ランチのお店選び・プレゼント交換の順番・学校のグループ分け・部活の対戦相手決め・宴会の余興など。スマホでもPCでもそのまま使えます。",
     banner: { grad: ["#fef3c7", "#fcd34d", "#fbcfe8"], icon: "🎲" },
-    // asset-dice.png は縦長素材のためバナー未使用
+    image: "/uploads/banner-dice.png",
   },
   {
     id: "004",
@@ -104,8 +103,7 @@ export const NEWS_DATA: NewsItem[] = [
     summary: "便利ツール・一問一答クイズ・ブラウザゲームの3サービスを順次公開していきます。すべて無料・ログイン不要。",
     body: "TADATADA（ただただ）のサービスをスタートしました。「タダで使える・ただただシンプル・何度でもただで使える」というコンセプトで3つのサービスを展開します。\n\n① タダtools：日常ツール集（現在公開中）\n② ただただ一問一答：一問一答クイズ（開発中・夏予定）\n③ ただタダgames：ブラウザゲーム（開発中・高校サッカー育成シミュレーション）\n\nこれからよろしくお願いします！",
     banner: { grad: ["#f9a8d4", "#c4b5fd", "#6ee7b7"], icon: "🌸" },
-    image: "/uploads/kawaii-tag-free.svg",
-    imageContain: true,
+    image: "/uploads/banner-tag-free.png",
   },
   {
     id: "001",
@@ -115,8 +113,7 @@ export const NEWS_DATA: NewsItem[] = [
     summary: "マルチカウンターを皮切りに、ツール・クイズ・ゲームを順次リリース予定。最新情報はここでお知らせします。",
     body: "TADATADAの今後のおおまかな公開スケジュールです。\n\n【6月予定】マルチカウンター（タダtools）\n【6月以降 順次】ストップウォッチ・BPM・ルーレット・じゃんけん・あみだくじ等（タダtools）\n【夏ごろ予定】ただただ一問一答 ベータ版\n【時期未定】高校サッカー育成シミュレーション（ただタダgames）\n\n更新情報はこのお知らせページで随時発信します。気になるツール・クイズジャンル・ゲームのリクエストはお問い合わせフォームから気軽にどうぞ。",
     banner: { grad: ["#fef3c7", "#a7f3d0", "#c4b5fd"], icon: "📅" },
-    image: "/uploads/kawaii-megaphone.svg",
-    imageContain: true,
+    image: "/uploads/banner-megaphone.png",
   },
 ];
 
