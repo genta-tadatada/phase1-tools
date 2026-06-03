@@ -237,7 +237,7 @@ export function DiceTool() {
         </div>
 
         {/* サイコロ表示 */}
-        <div className="flex flex-wrap gap-4 justify-center py-2">
+        <div className="flex flex-wrap gap-4 justify-center py-2" style={{ perspective: "600px" }}>
           <AnimatePresence mode="popLayout">
             {values.map((val, i) => (
               <motion.div
@@ -247,10 +247,10 @@ export function DiceTool() {
                 animate={
                   faces === 6
                     ? shaking
-                      ? { rotate: [0, 360, 720, 1080], scale: [1, 1.08, 1.08, 1], y: [0, -12, -12, 0] }
+                      ? { rotateX: [0, 360, 720, 1080], rotate: 0, scale: [1, 1.05, 1.05, 1], y: [0, -10, -10, 0] }
                       : justRolled
-                        ? { rotate: 0, scale: [1.3, 0.9, 1.07, 1], y: 0 }
-                        : { rotate: 0, scale: 1, y: 0 }
+                        ? { rotateX: 0, rotate: 0, scale: [1.3, 0.9, 1.07, 1], y: 0 }
+                        : { rotateX: 0, rotate: 0, scale: 1, y: 0 }
                     : shaking
                       ? { rotate: [0, -18, 18, -12, 12, -6, 6, 0], y: [0, -10, 2, -5, 0], scale: 1 }
                       : justRolled

@@ -50,7 +50,7 @@ function weightedRandom(items: RouletteItem[]): number {
 export function RouletteTool() {
   const [items, setItems] = useState<RouletteItem[]>(DEFAULT_ITEMS);
   const [newLabel, setNewLabel] = useState("");
-  const [wheelAngle, setWheelAngle] = useState(0);
+  const [pointerAngle, setPointerAngle] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -72,15 +72,16 @@ export function RouletteTool() {
       if (saved) {
         const s = JSON.parse(saved);
         if (Array.isArray(s.items) && s.items.length >= 2) setItems(s.items);
-        if (typeof s.wheelAngle === "number") setWheelAngle(s.wheelAngle % 360);
+        const savedAngle = s.pointerAngle ?? s.wheelAngle;
+        if (typeof savedAngle === "number") setPointerAngle(savedAngle % 360);
       }
     } catch { /* ignore */ }
   }, []);
 
   useEffect(() => {
     if (!mounted) return;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ items, wheelAngle: wheelAngle % 360 })); } catch { /* ignore */ }
-  }, [mounted, items, wheelAngle]);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ items, pointerAngle: pointerAngle % 360 })); } catch { /* ignore */ }
+  }, [mounted, items, pointerAngle]);
 
   // セクター計算
   const totalWeight = items.reduce((s, it) => s + it.weight, 0);
@@ -123,11 +124,11 @@ export function RouletteTool() {
     const offset = (Math.random() - 0.5) * sectorAngle * 0.6;
     const midAngle = startA + sectorAngle / 2 + offset;
 
-    // ホイール回転量：midAngleがポインター(上=0°)に来るように
-    const raw = ((-(wheelAngle % 360) - midAngle) % 360 + 360) % 360;
+    // 針回転量：固定ホイールの midAngle セクターを指すように
+    const raw = ((midAngle - (pointerAngle % 360)) % 360 + 360) % 360;
     const totalRotation = 1800 + raw; // 5回転 + 位置合わせ
 
-    setWheelAngle(wheelAngle + totalRotation);
+    setPointerAngle(pointerAngle + totalRotation);
 
     spinTimerRef.current = setTimeout(() => {
       setSpinning(false);
@@ -142,7 +143,7 @@ export function RouletteTool() {
         }, 1800);
       }
     }, 4300);
-  }, [spinning, items, wheelAngle]);
+  }, [spinning, items, pointerAngle]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -179,29 +180,11 @@ export function RouletteTool() {
         {/* 円形ルーレット */}
         <div className="flex justify-center select-none">
           <div className="relative" style={{ width: CX * 2, height: CY * 2 }}>
-            {/* ポインター（固定・上部中央） */}
-            <div
-              className="absolute left-1/2 -translate-x-1/2 z-10"
-              style={{ top: -4 }}
-            >
-              <div style={{
-                width: 0, height: 0,
-                borderLeft: "11px solid transparent",
-                borderRight: "11px solid transparent",
-                borderTop: "22px solid hsl(var(--foreground))",
-                filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.25))",
-              }} />
-            </div>
-
-            {/* 回転するホイール */}
+            {/* 固定ホイール */}
             <svg
               width={CX * 2} height={CY * 2}
               viewBox={`0 0 ${CX * 2} ${CY * 2}`}
-              style={{
-                transform: `rotate(${wheelAngle}deg)`,
-                transition: spinning ? "transform 4.3s cubic-bezier(0.17, 0.67, 0.12, 0.99)" : "none",
-                display: "block",
-              }}
+              style={{ display: "block" }}
             >
               {/* セクター */}
               {sectors.map((s, i) => {
@@ -230,9 +213,40 @@ export function RouletteTool() {
                   </g>
                 );
               })}
+              {/* 外周リング */}
+              <circle cx={CX} cy={CY} r={R + 1} fill="none" stroke="#e2e8f0" strokeWidth={2} />
+              {/* 中心下地 */}
+              <circle cx={CX} cy={CY} r={20} fill="white" stroke="#e2e8f0" strokeWidth={2} />
+            </svg>
+
+            {/* 回転ポインター（針） */}
+            <svg
+              width={CX * 2} height={CY * 2}
+              viewBox={`0 0 ${CX * 2} ${CY * 2}`}
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                transformOrigin: "50% 50%",
+                transform: `rotate(${pointerAngle}deg)`,
+                transition: spinning
+                  ? "transform 4.3s cubic-bezier(0.17, 0.67, 0.12, 0.99)"
+                  : "none",
+              }}
+            >
+              {/* 針の棒（影） */}
+              <line x1={CX} y1={CY} x2={CX} y2={CY - R + 12} stroke="rgba(0,0,0,0.2)" strokeWidth={5} strokeLinecap="round" />
+              {/* 針の棒 */}
+              <line x1={CX} y1={CY} x2={CX} y2={CY - R + 12} stroke="white" strokeWidth={3} strokeLinecap="round" />
+              {/* 矢印先端 */}
+              <polygon
+                points={`${CX - 9},${CY - R + 24} ${CX},${CY - R + 4} ${CX + 9},${CY - R + 24}`}
+                fill="white"
+                stroke="rgba(0,0,0,0.1)"
+                strokeWidth={1}
+              />
               {/* 中心円 */}
-              <circle cx={CX} cy={CY} r={22} fill="white" stroke="#e2e8f0" strokeWidth={2} />
-              <circle cx={CX} cy={CY} r={15} fill="#8b5cf6" />
+              <circle cx={CX} cy={CY} r={18} fill="#8b5cf6" />
+              <circle cx={CX} cy={CY} r={10} fill="white" />
+              <circle cx={CX} cy={CY} r={5} fill="#8b5cf6" />
             </svg>
           </div>
         </div>

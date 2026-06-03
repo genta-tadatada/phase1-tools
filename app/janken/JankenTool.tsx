@@ -302,39 +302,8 @@ export function JankenTool() {
             exit={{ opacity: 0 }}
             className="flex flex-col gap-5"
           >
-            {/* 手表示エリア（じゃんけん言葉オーバーレイ付き） */}
-            <div className="relative">
-              {/* じゃん・けん・ポン！オーバーレイ */}
-              <AnimatePresence>
-                {phase === "countdown" && (
-                  <motion.div
-                    key="janken-words"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0, transition: { duration: 0.3 } }}
-                    className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
-                  >
-                    <div className="flex items-end justify-center gap-1 sm:gap-3 flex-wrap">
-                      {JANKEN_WORDS.map((word, i) =>
-                        countdownStep >= i ? (
-                          <motion.span
-                            key={i}
-                            initial={{ scale: 0.3, opacity: 0, y: 30 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            transition={{ type: "spring", stiffness: 420, damping: 16 }}
-                            className={`text-6xl sm:text-7xl font-black bg-gradient-to-r ${JANKEN_COLORS[i]} bg-clip-text text-transparent drop-shadow-sm`}
-                          >
-                            {word}
-                          </motion.span>
-                        ) : null
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* 手表示カード */}
-              <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-card to-muted/30 shadow-sm p-6 flex items-center justify-around">
+            {/* 手表示カード */}
+            <div className="rounded-2xl border border-border/60 bg-gradient-to-br from-card to-muted/30 shadow-sm p-6 flex items-center justify-around">
                 {/* CPU */}
                 <div className="flex flex-col items-center gap-1">
                   <span className="text-xs font-medium text-muted-foreground px-2 py-0.5 rounded-full bg-muted">CPU</span>
@@ -369,8 +338,6 @@ export function JankenTool() {
                   </motion.span>
                 </div>
               </div>
-            </div>
-
             {/* 結果バナー */}
             <AnimatePresence>
               {phase === "result" && playerMe?.result && (
@@ -378,24 +345,56 @@ export function JankenTool() {
               )}
             </AnimatePresence>
 
-            {/* 手選択ボタン（setup時 OR あいこ時） */}
-            {(phase === "setup" || isDraw) && (
-              <motion.div
-                key={isDraw ? "redraw" : "first"}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="grid grid-cols-3 gap-3"
-              >
-                {isDraw && (
-                  <p className="col-span-3 text-center text-sm text-muted-foreground mb-1">
-                    もう一度選んでね！
-                  </p>
+            {/* 手選択ボタン + じゃんけん言葉オーバーレイ（同じエリア） */}
+            <div className="relative min-h-[130px]">
+              {/* じゃん・けん・ポン！オーバーレイ */}
+              <AnimatePresence>
+                {phase === "countdown" && (
+                  <motion.div
+                    key="janken-words"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, transition: { duration: 0.3 } }}
+                    className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
+                  >
+                    <div className="flex items-end justify-center gap-1 sm:gap-3 flex-wrap">
+                      {JANKEN_WORDS.map((word, i) =>
+                        countdownStep >= i ? (
+                          <motion.span
+                            key={i}
+                            initial={{ scale: 0.3, opacity: 0, y: 30 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            transition={{ type: "spring", stiffness: 420, damping: 16 }}
+                            className={`text-6xl sm:text-7xl font-black bg-gradient-to-r ${JANKEN_COLORS[i]} bg-clip-text text-transparent drop-shadow-sm`}
+                          >
+                            {word}
+                          </motion.span>
+                        ) : null
+                      )}
+                    </div>
+                  </motion.div>
                 )}
-                {HANDS.map((hand) => (
-                  <HandButton key={hand} hand={hand} onClick={() => handleCpuPick(hand)} />
-                ))}
-              </motion.div>
-            )}
+              </AnimatePresence>
+
+              {/* 手選択ボタン（setup時 OR あいこ時） */}
+              {(phase === "setup" || isDraw) && (
+                <motion.div
+                  key={isDraw ? "redraw" : "first"}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="grid grid-cols-3 gap-3"
+                >
+                  {isDraw && (
+                    <p className="col-span-3 text-center text-sm text-muted-foreground mb-1">
+                      もう一度選んでね！
+                    </p>
+                  )}
+                  {HANDS.map((hand) => (
+                    <HandButton key={hand} hand={hand} onClick={() => handleCpuPick(hand)} />
+                  ))}
+                </motion.div>
+              )}
+            </div>
 
             {/* もう一度ボタン（draw以外の結果） */}
             {phase === "result" && !isDraw && (

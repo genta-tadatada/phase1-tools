@@ -362,7 +362,7 @@ export function RandomNumberTool() {
           {/* 出た番号を除外（独立トグル） */}
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-3">
-              <span className="text-sm text-muted-foreground flex-1">出た番号を除外</span>
+              <span className="text-sm text-muted-foreground">出た番号を除外</span>
               <button
                 role="switch"
                 aria-checked={dupMode === "pool"}
