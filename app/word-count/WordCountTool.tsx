@@ -9,6 +9,16 @@ import { Button } from "@/components/ui/button";
 
 const STORAGE_KEY = "phase1-word-count-v2";
 
+// ---- 絵文字カウント ----
+function countEmoji(text: string): number {
+  return (text.match(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu) ?? []).length;
+}
+
+// ---- コードポイント単位の文字数（絵文字=1文字） ----
+function cpLength(text: string): number {
+  return [...text].length;
+}
+
 // ---- CJK 判定 ----
 function isHeavyChar(code: number): boolean {
   return (
@@ -25,7 +35,9 @@ function isHeavyChar(code: number): boolean {
     (code >= 0xFE30 && code <= 0xFE4F) ||
     (code >= 0xFF01 && code <= 0xFF60) ||
     (code >= 0x1B000 && code <= 0x1B0FF) ||
-    (code >= 0x20000 && code <= 0x2A6DF)
+    (code >= 0x20000 && code <= 0x2A6DF) ||
+    (code >= 0x2600  && code <= 0x27BF)  || // 記号・絵文字（全角扱い）
+    (code >= 0x1F000 && code <= 0x1FFFF)    // 絵文字ブロック（全角扱い）
   );
 }
 
@@ -44,30 +56,33 @@ interface CountResult {
   noSpace: number;
   noNewline: number;
   lines: number;
-  words: number;
   paragraphs: number;
   bytes: number;
   xWeighted: number;
+  emoji: number;
 }
 
 function calcCount(text: string): CountResult {
   return {
-    total:      text.length,
+    total:      cpLength(text),
     noSpace:    text.replace(/[\s　]/g, "").length,
     noNewline:  text.replace(/\n/g, "").length,
     lines:      text === "" ? 0 : text.split("\n").length,
-    words:      text.trim() === "" ? 0 : text.trim().split(/\s+/).filter(Boolean).length,
     paragraphs: text === "" ? 0 : text.split(/\n\s*\n/).filter((s) => s.trim()).length,
     bytes:      new TextEncoder().encode(text).length,
     xWeighted:  calcXWeighted(text),
+    emoji:      countEmoji(text),
   };
 }
 
 // ---- プリセット定義 ----
 const PRESETS = [
-  { label: "X (CJK×2)", value: "280", weighted: true },
-  { label: "Instagram", value: "2200", weighted: false },
-  { label: "YouTube",   value: "5000", weighted: false },
+  { label: "X（140字）",     value: "140",  weighted: true  },
+  { label: "Instagram",      value: "2200", weighted: false },
+  { label: "YouTube概要欄",  value: "5000", weighted: false },
+  { label: "レポート1000字", value: "1000", weighted: false },
+  { label: "レポート1600字", value: "1600", weighted: false },
+  { label: "レポート2000字", value: "2000", weighted: false },
 ] as const;
 
 // ---- プログレスバーカラー ----
@@ -122,10 +137,12 @@ export function WordCountTool() {
   const count = useMemo(() => calcCount(text), [text]);
 
   const effectiveLimit   = limitInput ? parseInt(limitInput) || null : null;
-  const effectiveCount   = isWeighted ? count.xWeighted : count.total;
+  // weighted: 全角=1, 半角=0.5（xWeighted÷2）/ 通常: 全文字=1
+  const effectiveCount   = isWeighted ? count.xWeighted / 2 : count.total;
   const pct              = effectiveLimit ? Math.round((effectiveCount / effectiveLimit) * 100) : 0;
   const remaining        = effectiveLimit !== null ? effectiveLimit - effectiveCount : null;
   const isOver           = remaining !== null && remaining < 0;
+  const fmtCount = (v: number) => Number.isInteger(v) ? v.toLocaleString("ja-JP") : v.toFixed(1);
 
   const handleCopy = async () => {
     try { await navigator.clipboard.writeText(text); toast.success("コピーしました"); }
@@ -140,15 +157,15 @@ export function WordCountTool() {
 
   interface CountRow { label: string; value: number; format?: (v: number) => string; }
   const countRows: CountRow[] = [
-    { label: "総文字数",          value: count.total },
-    { label: "スペース除き",      value: count.noSpace },
-    { label: "改行除き",          value: count.noNewline },
-    { label: "行数",              value: count.lines },
-    { label: "原稿用紙（400字）", value: count.total / 400, format: (v) => v === 0 ? "0 枚" : v.toFixed(1) + " 枚" },
-    { label: "X換算（CJK=2）",   value: count.xWeighted },
-    { label: "単語数（英語）",    value: count.words },
-    { label: "段落数",            value: count.paragraphs },
-    { label: "バイト数（UTF-8）", value: count.bytes },
+    { label: "総文字数",            value: count.total },
+    { label: "スペース除き",        value: count.noSpace },
+    { label: "改行除き",            value: count.noNewline },
+    { label: "行数",                value: count.lines },
+    { label: "原稿用紙（400字）",   value: count.total / 400, format: (v) => v === 0 ? "0 枚" : v.toFixed(1) + " 枚" },
+    { label: "半角0.5換算",         value: count.xWeighted / 2, format: fmtCount },
+    { label: "絵文字",              value: count.emoji },
+    { label: "段落数",              value: count.paragraphs },
+    { label: "バイト数（UTF-8）",   value: count.bytes },
   ];
 
   return (
@@ -243,8 +260,8 @@ export function WordCountTool() {
                   <>
                     <span className={isOver ? "text-red-500 font-medium" : "text-muted-foreground"}>
                       {isOver
-                        ? `${Math.abs(remaining!)}${isWeighted ? "w" : ""} 文字超過`
-                        : `残り ${remaining}${isWeighted ? "w" : ""} 文字`}
+                        ? `${fmtCount(Math.abs(remaining!))} 文字超過`
+                        : `残り ${fmtCount(remaining!)} 文字`}
                     </span>
                     <span className="tabular-nums font-medium">{effectiveCount}/{effectiveLimit}</span>
                   </>
