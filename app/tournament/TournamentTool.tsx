@@ -531,6 +531,15 @@ function SetupScreen({ onStart }: { onStart: (names: string[], mode: "seeded" | 
 
   return (
     <div className="flex flex-col gap-5">
+      {/* ヘッダービジュアル */}
+      <div className="relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/20 border border-amber-200/60 dark:border-amber-700/30">
+        <img src="/uploads/kawaii-blob-mint.svg" alt="" aria-hidden="true" className="absolute -right-6 -bottom-6 w-28 h-28 opacity-20 pointer-events-none select-none" />
+        <img src="/assets/icon-tournament.png" alt="" aria-hidden="true" className="w-16 h-16 object-contain flex-shrink-0 relative z-10" />
+        <div className="relative z-10">
+          <p className="text-sm font-bold text-amber-700 dark:text-amber-300">トーナメント表</p>
+          <p className="text-xs text-amber-600/70 dark:text-amber-400/70 mt-0.5">参加者を入力してトーナメントを作成！シード設定もできる。</p>
+        </div>
+      </div>
       <div>
         <label className="text-sm font-medium text-muted-foreground block mb-2">
           参加者名を入力（改行区切り）

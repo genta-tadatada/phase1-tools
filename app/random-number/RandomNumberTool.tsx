@@ -306,9 +306,10 @@ export function RandomNumberTool() {
     <ToolLayout title="ランダム数字" adVisible>
       <div className="flex flex-col gap-6">
         {/* ヘッダービジュアル */}
-        <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-sky-50 to-cyan-50 dark:from-sky-950/30 dark:to-cyan-950/20 border border-sky-200/60 dark:border-sky-700/30">
-          <span className="text-4xl">🔢</span>
-          <div>
+        <div className="relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-sky-50 to-cyan-50 dark:from-sky-950/30 dark:to-cyan-950/20 border border-sky-200/60 dark:border-sky-700/30">
+          <img src="/uploads/kawaii-blob-blue.svg" alt="" aria-hidden="true" className="absolute -right-6 -bottom-6 w-28 h-28 opacity-20 pointer-events-none select-none" />
+          <img src="/assets/icon-random-number.png" alt="" aria-hidden="true" className="w-16 h-16 object-contain flex-shrink-0 relative z-10" />
+          <div className="relative z-10">
             <p className="text-sm font-bold text-sky-700 dark:text-sky-300">ランダム数字</p>
             <p className="text-xs text-sky-600/70 dark:text-sky-400/70 mt-0.5">範囲と個数を決めて、ランダムな数字を生成！</p>
           </div>

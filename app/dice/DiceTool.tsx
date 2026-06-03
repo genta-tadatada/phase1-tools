@@ -209,6 +209,15 @@ export function DiceTool() {
   return (
     <ToolLayout title="サイコロ" adVisible>
       <div className="flex flex-col gap-6">
+        {/* ヘッダービジュアル */}
+        <div className="relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/20 border border-rose-200/60 dark:border-rose-700/30">
+          <img src="/uploads/kawaii-blob-pink.svg" alt="" aria-hidden="true" className="absolute -right-6 -bottom-6 w-28 h-28 opacity-20 pointer-events-none select-none" />
+          <img src="/assets/icon-dice.png" alt="" aria-hidden="true" className="w-16 h-16 object-contain flex-shrink-0 relative z-10" />
+          <div className="relative z-10">
+            <p className="text-sm font-bold text-rose-700 dark:text-rose-300">サイコロ</p>
+            <p className="text-xs text-rose-600/70 dark:text-rose-400/70 mt-0.5">面数と個数を選んで振ろう！</p>
+          </div>
+        </div>
 
         {/* 面数セレクター */}
         <div className="flex gap-2 flex-wrap justify-center">

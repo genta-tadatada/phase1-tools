@@ -236,9 +236,12 @@ export function GroupTool() {
               className="space-y-4"
             >
               {/* ヘッダービジュアル */}
-              <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-fuchsia-50 dark:from-violet-950/30 dark:to-fuchsia-950/20 border border-violet-200/60 dark:border-violet-700/30">
-                <span className="text-4xl">🎯</span>
-                <div>
+              <div className="relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-fuchsia-50 dark:from-violet-950/30 dark:to-fuchsia-950/20 border border-violet-200/60 dark:border-violet-700/30">
+                <img src="/uploads/kawaii-blob-lavender.svg" alt="" aria-hidden="true" className="absolute -right-6 -bottom-6 w-28 h-28 opacity-20 pointer-events-none select-none" />
+                <div className="w-16 h-16 flex-shrink-0 relative z-10 bg-white/50 rounded-xl p-1">
+                  <img src="/assets/icon-group.png" alt="" aria-hidden="true" className="w-full h-full object-contain" />
+                </div>
+                <div className="relative z-10">
                   <p className="text-sm font-bold text-violet-700 dark:text-violet-300">グループ分け</p>
                   <p className="text-xs text-violet-600/70 dark:text-violet-400/70 mt-0.5">メンバーを入力して、公平にランダムでチーム分け！</p>
                 </div>

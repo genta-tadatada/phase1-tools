@@ -417,15 +417,12 @@ export function LotTool() {
               className="space-y-5"
             >
               {/* ヘッダービジュアル */}
-              <div className="flex items-center gap-4 p-5 rounded-3xl bg-gradient-to-br from-amber-100 via-orange-50 to-yellow-100 dark:from-amber-950/40 dark:via-orange-950/30 dark:to-yellow-950/20 border border-amber-200/70 dark:border-amber-700/40 shadow-sm">
-                <motion.span
-                  className="text-5xl"
-                  animate={{ rotate: [0, -8, 8, -4, 0], y: [0, -3, 0] }}
-                  transition={{ repeat: Infinity, repeatDelay: 2.5, duration: 1 }}
-                >
-                  🎰
-                </motion.span>
-                <div>
+              <div className="relative overflow-hidden flex items-center gap-4 p-5 rounded-3xl bg-gradient-to-br from-amber-100 via-orange-50 to-yellow-100 dark:from-amber-950/40 dark:via-orange-950/30 dark:to-yellow-950/20 border border-amber-200/70 dark:border-amber-700/40 shadow-sm">
+                <img src="/uploads/kawaii-blob-pink.svg" alt="" aria-hidden="true" className="absolute -right-6 -bottom-6 w-28 h-28 opacity-20 pointer-events-none select-none" />
+                <div className="w-16 h-16 flex-shrink-0 relative z-10 bg-white/50 rounded-xl p-1">
+                  <img src="/assets/icon-lot.png" alt="" aria-hidden="true" className="w-full h-full object-contain" />
+                </div>
+                <div className="relative z-10">
                   <p className="text-lg font-black text-amber-700 dark:text-amber-300 tracking-tight">くじ引き</p>
                   <p className="text-xs text-amber-600/80 dark:text-amber-400/70 mt-0.5">設定してくじを引こう！ワクワクのガチャ演出で結果を発表 ✨</p>
                 </div>
