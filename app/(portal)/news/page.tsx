@@ -16,7 +16,7 @@ export default function NewsPage() {
       <header className="p-header">
         <div className="p-header-inner md">
           <Link href="/" className="p-logo">
-            <TadatadaLogo title="お知らせ" />
+            <TadatadaLogo title="お知らせ" titleStyle={{ color: "#a78bfa", fontWeight: 900, letterSpacing: "0.05em" }} />
           </Link>
           <GlobalMenu activeSection={null} />
         </div>

@@ -21,7 +21,7 @@ export default function PortalPage() {
       <header className="p-header">
         <div className="p-header-inner">
           <Link href="/" className="p-logo">
-            <TadatadaLogo title="ホーム" />
+            <TadatadaLogo title="ホーム" titleStyle={{ color: "#f9a8d4", fontWeight: 900, letterSpacing: "0.05em" }} />
           </Link>
           <GlobalMenu activeSection={null} />
         </div>

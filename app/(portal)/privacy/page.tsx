@@ -30,7 +30,7 @@ export default function PrivacyPage() {
       <header className="p-header">
         <div className="p-header-inner md">
           <Link href="/" className="p-logo">
-            <TadatadaLogo title="プライバシーポリシー" />
+            <TadatadaLogo title="プライバシーポリシー" titleStyle={{ color: "#7dd3fc", fontWeight: 900, letterSpacing: "0.03em" }} />
           </Link>
           <GlobalMenu activeSection={null} />
         </div>

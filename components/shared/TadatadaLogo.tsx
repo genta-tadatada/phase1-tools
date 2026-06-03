@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { ReactNode } from "react";
+import type { ReactNode, CSSProperties } from "react";
 
 const CHAR_W = 813;
 const CHAR_H = 601;
@@ -9,12 +9,14 @@ const TEXT_H = 328;
 interface Props {
   /** キャラクター高さ (全ページ共通 default: 52) */
   charHeight?: number;
-  /** ただただテキスト高さ (default: 24) */
+  /** ただただテキスト高さ (default: 30) */
   textHeight?: number;
   /** 現在ページ名（ただただ下に小さく表示）プレーンテキスト */
   title?: string;
   /** 現在ページ名 JSX版（カラー付きなど）。titleより優先 */
   titleNode?: ReactNode;
+  /** ページ名のスタイル上書き（color・fontWeightなど） */
+  titleStyle?: CSSProperties;
   /** キャラとテキスト列の間隔 */
   gap?: number;
 }
@@ -24,6 +26,7 @@ export function TadatadaLogo({
   textHeight = 30,
   title,
   titleNode,
+  titleStyle,
   gap = 8,
 }: Props) {
   const charW  = Math.round(charHeight * (CHAR_W / CHAR_H));
@@ -61,6 +64,7 @@ export function TadatadaLogo({
             color: "var(--th-text-muted, #9a96a8)",
             whiteSpace: "nowrap",
             lineHeight: 1,
+            ...titleStyle,
           }}>
             {titleNode ?? title}
           </span>
