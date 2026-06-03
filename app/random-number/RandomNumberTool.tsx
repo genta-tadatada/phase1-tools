@@ -321,9 +321,9 @@ export function RandomNumberTool() {
             </label>
           </div>
 
-          {/* Count */}
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground w-12">個数</span>
+          {/* Count + 重複チップ（個数2以上・pool OFF時のみ） */}
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-sm text-muted-foreground w-12 shrink-0">個数</span>
             <button
               onClick={() => setCount((c) => Math.max(1, c - 1))}
               className="w-8 h-8 rounded-md border border-border bg-card flex items-center justify-center text-sm hover:bg-muted transition-colors"
@@ -337,17 +337,11 @@ export function RandomNumberTool() {
             >
               ＋
             </button>
-          </div>
-
-          {/* Dup mode */}
-          <div className="flex items-start gap-3">
-            <span className="text-sm text-muted-foreground w-12 pt-1 shrink-0">重複</span>
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-1.5 flex-wrap">
+            {count >= 2 && dupMode !== "pool" && (
+              <div className="flex gap-1.5 ml-1">
                 {([
                   { mode: "allow", label: "重複あり" },
-                  { mode: "once",  label: "この回は重複なし" },
-                  { mode: "pool",  label: "出た番号を除外" },
+                  { mode: "once",  label: "重複なし" },
                 ] as const).map(({ mode, label }) => (
                   <button
                     key={mode}
@@ -362,22 +356,41 @@ export function RandomNumberTool() {
                   </button>
                 ))}
               </div>
-              {/* Pool status */}
-              {dupMode === "pool" && !errMsg && totalRange > 0 && (
-                <div className="flex items-center justify-between text-xs text-muted-foreground bg-muted/60 rounded-lg px-3 py-2">
-                  <span>残り <span className="font-bold tabular-nums">{poolRemaining.length}</span> / {totalRange} 個</span>
-                  <button
-                    onClick={() => {
-                      setPoolRemaining(buildPool(min, max));
-                      toast("プールをリセットしました");
-                    }}
-                    className="hover:text-foreground transition-colors ml-3"
-                  >
-                    リセット
-                  </button>
-                </div>
-              )}
+            )}
+          </div>
+
+          {/* 出た番号を除外（独立トグル） */}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-muted-foreground flex-1">出た番号を除外</span>
+              <button
+                role="switch"
+                aria-checked={dupMode === "pool"}
+                onClick={() => setDupMode(dupMode === "pool" ? "once" : "pool")}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  dupMode === "pool" ? "bg-accent" : "bg-muted border border-border"
+                }`}
+              >
+                <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                  dupMode === "pool" ? "translate-x-6" : "translate-x-1"
+                }`} />
+              </button>
             </div>
+            {/* Pool status */}
+            {dupMode === "pool" && !errMsg && totalRange > 0 && (
+              <div className="flex items-center justify-between text-xs text-muted-foreground bg-muted/60 rounded-lg px-3 py-2">
+                <span>残り <span className="font-bold tabular-nums">{poolRemaining.length}</span> / {totalRange} 個</span>
+                <button
+                  onClick={() => {
+                    setPoolRemaining(buildPool(min, max));
+                    toast("プールをリセットしました");
+                  }}
+                  className="hover:text-foreground transition-colors ml-3"
+                >
+                  リセット
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Presets */}
