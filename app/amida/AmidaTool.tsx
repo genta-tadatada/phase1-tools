@@ -61,9 +61,11 @@ function generateAmida(numPlayers: number): boolean[][] {
   const rows: boolean[][] = [];
   for (let row = 0; row < NUM_ROWS; row++) {
     const line: boolean[] = new Array(numPlayers - 1).fill(false);
-    for (let col = 0; col < numPlayers - 1; col++) {
-      if (col > 0 && line[col - 1]) continue;
-      line[col] = Math.random() > 0.5;
+    if (row < NUM_ROWS - 1) { // 最終行は横棒なし（底部をすっきり見せる）
+      for (let col = 0; col < numPlayers - 1; col++) {
+        if (col > 0 && line[col - 1]) continue;
+        line[col] = Math.random() > 0.5;
+      }
     }
     rows.push(line);
   }
@@ -223,22 +225,24 @@ function AmidaSVG({ entries, rows, revealedCols, tracingCol, tracingStep, traced
         );
       })}
 
-      {/* Results (bottom) */}
-      {entries.map((entry, i) => {
-        const isRevealed = revealedCols.has(i);
-        const lastStep = tracedPaths[i]?.[tracedPaths[i].length - 1];
-        const resultText = isRevealed ? (entry.result || (lastStep ? `→${lastStep.col + 1}` : "?")) : "?";
+      {/* Results (bottom) - 各列jの到達点に結果を表示 */}
+      {entries.map((_, j) => {
+        // 列jに到達する人を探す
+        const personIdx = tracedPaths.findIndex(
+          (path) => path.length > 0 && path[path.length - 1].col === j
+        );
+        const isRevealed = personIdx !== -1 && revealedCols.has(personIdx);
+        const resultText = isRevealed ? (entries[j].result || "?") : "?";
         return (
           <text
-            key={`result-${i}`}
-            x={colToX(i, numPlayers)}
+            key={`result-${j}`}
+            x={colToX(j, numPlayers)}
             y={svgHeight - 8}
             textAnchor="middle"
             fontSize={11}
             fontFamily="inherit"
-            className={isRevealed ? "font-bold" : "fill-muted-foreground"}
-            style={isRevealed ? { fill: "var(--accent)" } : undefined}
-            opacity={isRevealed ? 1 : 0.4}
+            fontWeight={isRevealed ? "bold" : "normal"}
+            style={isRevealed ? { fill: "var(--accent)" } : { opacity: 0.4 }}
           >
             {resultText}
           </text>
