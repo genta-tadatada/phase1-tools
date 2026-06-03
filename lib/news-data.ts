@@ -17,7 +17,7 @@ export type NewsItem = {
 export const NEWS_DATA: NewsItem[] = [
   {
     id: "010",
-    date: "2026-05-28",
+    date: "2026-06-03",
     category: "お知らせ",
     title: "【開発中】ただタダgames — ブラウザで遊べるゲームを準備しています",
     summary: "ログイン不要・無料で遊べるブラウザゲームを開発中です。詳細は続報でお知らせします。",
@@ -27,7 +27,7 @@ export const NEWS_DATA: NewsItem[] = [
   },
   {
     id: "009",
-    date: "2026-05-28",
+    date: "2026-06-03",
     category: "お知らせ",
     title: "【開発中】ただただ一問一答 — クイズサービスを準備しています",
     summary: "ログイン不要・無料で使える一問一答クイズサービスを開発中です。詳細は続報でお知らせします。",
@@ -37,7 +37,7 @@ export const NEWS_DATA: NewsItem[] = [
   },
   {
     id: "008",
-    date: "2026-05-27",
+    date: "2026-06-03",
     category: "リリース",
     title: "履歴付き電卓 — 数学関数・メモリ機能も搭載",
     summary: "計算履歴が残る電卓。三角関数・対数・メモリ機能など本格的な数学計算にも対応します。",
@@ -48,7 +48,7 @@ export const NEWS_DATA: NewsItem[] = [
   },
   {
     id: "007",
-    date: "2026-05-26",
+    date: "2026-06-03",
     category: "リリース",
     title: "BPMメトロノーム — テンポを指定してリズムを刻む",
     summary: "楽器練習・ダンス・リズムトレーニングに。BPMを指定してメトロノームを鳴らせます。",
@@ -59,7 +59,7 @@ export const NEWS_DATA: NewsItem[] = [
   },
   {
     id: "006",
-    date: "2026-05-26",
+    date: "2026-06-03",
     category: "リリース",
     title: "カウントダウンタイマー — 時間を逆算して管理",
     summary: "指定した時間を逆算して計測。終了時にアラームでお知らせします。",
@@ -70,7 +70,7 @@ export const NEWS_DATA: NewsItem[] = [
   },
   {
     id: "005",
-    date: "2026-05-26",
+    date: "2026-06-03",
     category: "リリース",
     title: "ストップウォッチ — ラップ機能付き",
     summary: "シンプルなストップウォッチ。ラップタイムを記録しながら計測できます。",
@@ -81,7 +81,7 @@ export const NEWS_DATA: NewsItem[] = [
   },
   {
     id: "004",
-    date: "2026-05-26",
+    date: "2026-06-03",
     category: "リリース",
     title: "マルチカウンター — 複数のカウンターを同時管理",
     summary: "スポーツ審判・在庫管理・入場者カウントに。複数列を同時操作できます。",
@@ -92,7 +92,7 @@ export const NEWS_DATA: NewsItem[] = [
   },
   {
     id: "003",
-    date: "2026-05-22",
+    date: "2026-06-03",
     category: "お知らせ",
     title: "タダtools — 公開予定ツール一覧",
     summary: "カウンターから抽選・計算まで。タダtoolsの全ラインナップをご紹介します。",
@@ -102,7 +102,7 @@ export const NEWS_DATA: NewsItem[] = [
   },
   {
     id: "002",
-    date: "2026-05-22",
+    date: "2026-06-03",
     category: "お知らせ",
     title: "ただただのポリシー：ログイン不要・広告控えめ・すべて無料",
     summary: "使うたびに広告が邪魔、ログインを求められる…そんなストレスをなくしたいと思ってつくりました。",
@@ -112,7 +112,7 @@ export const NEWS_DATA: NewsItem[] = [
   },
   {
     id: "001",
-    date: "2026-05-22",
+    date: "2026-06-03",
     category: "お知らせ",
     title: "ただただをはじめました",
     summary: "「タダで、ただただシンプルに使える」をコンセプトに、便利ツール・クイズ・ゲームの3サービスを展開します。",
