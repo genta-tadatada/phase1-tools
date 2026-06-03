@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="430 148 100 100" fill="none">
+  <g transform="translate(480 198)">
+    <rect x="-4" y="-44" width="8" height="22" rx="4" fill="#8f86e0" transform="rotate(0)"></rect>
+    <rect x="-4" y="-44" width="8" height="22" rx="4" fill="#9a91e6" transform="rotate(30)"></rect>
+    <rect x="-4" y="-44" width="8" height="22" rx="4" fill="#a89fee" transform="rotate(60)"></rect>
+    <rect x="-4" y="-44" width="8" height="22" rx="4" fill="#b6aef2" transform="rotate(90)"></rect>
+    <rect x="-4" y="-44" width="8" height="22" rx="4" fill="#c4bdf5" transform="rotate(120)"></rect>
+    <rect x="-4" y="-44" width="8" height="22" rx="4" fill="#d2ccf8" transform="rotate(150)"></rect>
+    <rect x="-4" y="-44" width="8" height="22" rx="4" fill="#ddd8fa" transform="rotate(180)"></rect>
+    <rect x="-4" y="-44" width="8" height="22" rx="4" fill="#d2ccf8" transform="rotate(210)"></rect>
+    <rect x="-4" y="-44" width="8" height="22" rx="4" fill="#c4bdf5" transform="rotate(240)"></rect>
+    <rect x="-4" y="-44" width="8" height="22" rx="4" fill="#b6aef2" transform="rotate(270)"></rect>
+    <rect x="-4" y="-44" width="8" height="22" rx="4" fill="#a89fee" transform="rotate(300)"></rect>
+    <rect x="-4" y="-44" width="8" height="22" rx="4" fill="#9a91e6" transform="rotate(330)"></rect>
+  </g>
+</svg>

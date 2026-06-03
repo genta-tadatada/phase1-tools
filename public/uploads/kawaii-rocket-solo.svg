@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" fill="none">
+  <defs>
+    <linearGradient id="rTrail" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f06fa0" stop-opacity="0.9"></stop>
+      <stop offset="1" stop-color="#f7c0d4" stop-opacity="0"></stop>
+    </linearGradient>
+  </defs>
+  
+  <path d="M86 248 L114 248 L126 278 Q100 290 74 278 Z" fill="url(#rTrail)"></path>
+  
+  <path d="M70 176 L34 224 L42 248 L72 222 Z" fill="#8f86e0"></path>
+  <path d="M130 176 L166 224 L158 248 L128 222 Z" fill="#8f86e0"></path>
+  
+  <path d="M62 80 L138 80 L138 230 Q138 248 120 248 L80 248 Q62 248 62 230 Z" fill="#f7f5fc"></path>
+  
+  <rect x="80" y="238" width="40" height="26" rx="9" fill="#8f86e0"></rect>
+  
+  <path d="M100 10 Q128 28 138 80 L62 80 Q72 28 100 10 Z" fill="#9a91e6"></path>
+  
+  <circle cx="100" cy="126" r="30" fill="#8f86e0"></circle>
+  <circle cx="100" cy="126" r="20" fill="#b3a9f0"></circle>
+</svg>

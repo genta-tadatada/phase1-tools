@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 580" fill="none">
+  <defs>
+    <linearGradient id="trail" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f06fa0" stop-opacity="0.9"></stop>
+      <stop offset="0.55" stop-color="#f7a6c4" stop-opacity="0.65"></stop>
+      <stop offset="1" stop-color="#f7c0d4" stop-opacity="0"></stop>
+    </linearGradient>
+    <linearGradient id="cloudG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cdc4f2"></stop>
+      <stop offset="1" stop-color="#e3ddf8"></stop>
+    </linearGradient>
+  </defs>
+
+  
+  <g fill="url(#cloudG)">
+    <path d="M-20 560 L-20 470 Q-10 420 40 430 Q55 380 110 392 Q150 360 200 400&#xA;             Q250 380 270 430 Q330 430 340 480 Q420 470 430 530 L430 560 Z"></path>
+    <path d="M360 560 Q380 500 450 510 Q470 470 520 492 Q560 478 580 520 Q650 522 660 560 Z"></path>
+  </g>
+
+  
+  <g transform="translate(720 60) rotate(42)">
+    
+    <path d="M86 250 L114 250 L150 560 Q100 600 50 560 Z" fill="url(#trail)"></path>
+    
+    <path d="M70 178 L34 226 L42 250 L72 224 Z" fill="#8f86e0"></path>
+    <path d="M130 178 L166 226 L158 250 L128 224 Z" fill="#8f86e0"></path>
+    
+    <path d="M62 88 L138 88 L138 232 Q138 250 120 250 L80 250 Q62 250 62 232 Z" fill="#f7f5fc"></path>
+    
+    <rect x="80" y="240" width="40" height="26" rx="9" fill="#8f86e0"></rect>
+    
+    <path d="M100 12 Q128 30 138 88 L62 88 Q72 30 100 12 Z" fill="#9a91e6"></path>
+    
+    <circle cx="100" cy="128" r="30" fill="#8f86e0"></circle>
+    <circle cx="100" cy="128" r="20" fill="#b3a9f0"></circle>
+  </g>
+</svg>

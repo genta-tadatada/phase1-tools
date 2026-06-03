@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="60 34 408 300" fill="none">
+  <defs>
+    <filter id="tagSh" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#b9a8e8" flood-opacity="0.35"></feDropShadow>
+    </filter>
+  </defs>
+  <g transform="rotate(-9 220 185)">
+    
+    <path d="M165 70 L405 70 Q430 70 430 95 L430 270 Q430 295 405 295 L165 295 L70 182 Z" transform="translate(13 15)" fill="#a9e9c9"></path>
+    
+    <path d="M165 70 L405 70 Q430 70 430 95 L430 270 Q430 295 405 295 L165 295 L70 182 Z" fill="#caf3df" filter="url(#tagSh)"></path>
+    
+    <circle cx="128" cy="182" r="26" fill="#a9e9c9"></circle>
+    <circle cx="128" cy="182" r="22" fill="#eafaf2"></circle>
+    
+    <g fill="#46cda0">
+      <path d="M236 132 L252 174 L268 132 L288 132 L266 180 L284 180 L284 194 L258 194 L258 206 L284 206 L284 220 L258 220 L258 240 L246 240 L246 220 L220 220 L220 206 L246 206 L246 194 L220 194 L220 180 L238 180 L216 132 Z"></path>
+    </g>
+    
+    <text x="345" y="240" font-family="Helvetica,Arial,sans-serif" font-weight="700" font-size="190" fill="#46cda0" text-anchor="middle">0</text>
+  </g>
+</svg>

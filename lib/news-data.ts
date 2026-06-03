@@ -114,7 +114,8 @@ export const NEWS_DATA: NewsItem[] = [
     summary: "マルチカウンターを皮切りに、ツール・クイズ・ゲームを順次リリース予定。最新情報はここでお知らせします。",
     body: "TADATADAの今後のおおまかな公開スケジュールです。\n\n【6月予定】マルチカウンター（タダtools）\n【6月以降 順次】ストップウォッチ・BPM・ルーレット・じゃんけん・あみだくじ等（タダtools）\n【夏ごろ予定】ただただ一問一答 ベータ版\n【時期未定】高校サッカー育成シミュレーション（ただタダgames）\n\n更新情報はこのお知らせページで随時発信します。気になるツール・クイズジャンル・ゲームのリクエストはお問い合わせフォームから気軽にどうぞ。",
     banner: { grad: ["#fef3c7", "#a7f3d0", "#c4b5fd"], icon: "📅" },
-    image: "/uploads/news-megaphone.png",
+    image: "/uploads/kawaii-megaphone.svg",
+    imageContain: true,
   },
 ];
 

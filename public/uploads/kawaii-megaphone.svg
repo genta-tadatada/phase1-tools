@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="50 -6 350 360" width="350" height="360">
+  <defs>
+    <linearGradient id="cone" x1="0.15" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#ffbaa8"/>
+      <stop offset="1" stop-color="#ff8f79"/>
+    </linearGradient>
+    <linearGradient id="neck" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fb9580"/>
+      <stop offset="1" stop-color="#ef7a64"/>
+    </linearGradient>
+    <radialGradient id="mouth" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0" stop-color="#d9583f"/>
+      <stop offset="1" stop-color="#e8694f"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ground shadow -->
+  <ellipse cx="188" cy="318" rx="108" ry="15" fill="#efe7f0"/>
+
+  <g transform="rotate(-20 205 190)">
+
+    <!-- handle -->
+    <rect x="120" y="190" width="32" height="74" rx="15" fill="#ed7460"/>
+
+    <!-- back body / cap -->
+    <rect x="104" y="124" width="60" height="92" rx="28" fill="url(#neck)"/>
+    <!-- talk button -->
+    <circle cx="132" cy="116" r="9" fill="#f7a18d"/>
+
+    <!-- cone funnel -->
+    <path d="M152 116 L350 58 A26 94 0 0 1 350 242 L152 186 A20 38 0 0 1 152 116 Z" fill="url(#cone)"/>
+    <!-- soft underside shading on cone -->
+    <path d="M152 186 L350 242 A26 94 0 0 0 350 198 Z" fill="#f47e69" opacity="0.45"/>
+    <!-- mouth rim -->
+    <ellipse cx="350" cy="150" rx="26" ry="94" fill="#ff8f79"/>
+    <!-- mouth interior -->
+    <ellipse cx="352" cy="150" rx="15" ry="80" fill="url(#mouth)"/>
+    <!-- rim top highlight -->
+    <path d="M338 64 A25 88 0 0 0 333 150" fill="none" stroke="#ffd6ca" stroke-width="7" stroke-linecap="round"/>
+  </g>
+</svg>
