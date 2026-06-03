@@ -2,7 +2,7 @@
 
 import { useReducer, useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2 } from "lucide-react";
+import { Trash2, Link2, ClipboardList, FileDown } from "lucide-react";
 import { ToolLayout } from "@/components/tool-layout/ToolLayout";
 import {
   Dialog,
@@ -309,6 +309,7 @@ export function CalculatorTool() {
   const [resultKey, setResultKey] = useState(0);
   const [showClearHistoryDialog, setShowClearHistoryDialog] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [copiedType, setCopiedType] = useState<"url" | "text" | null>(null);
 
   const prevExprRef = useRef<string>("");
 
@@ -364,6 +365,40 @@ export function CalculatorTool() {
   }, []);
 
   const clearHistory = () => setShowClearHistoryDialog(true);
+
+  const handleShare = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopiedType("url");
+      setTimeout(() => setCopiedType(null), 1500);
+    } catch { /* ignore */ }
+  }, []);
+
+  const handleCopyHistory = useCallback(async () => {
+    if (history.length === 0) return;
+    const text = history.map(e => `${e.expression} = ${e.result}`).join("\n");
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedType("text");
+      setTimeout(() => setCopiedType(null), 1500);
+    } catch { /* ignore */ }
+  }, [history]);
+
+  const handleDownloadCSV = useCallback(() => {
+    if (history.length === 0) return;
+    const rows = history.map(e => {
+      const date = new Date(e.timestamp).toLocaleString("ja-JP");
+      return `"${e.expression}","${e.result}","${date}"`;
+    });
+    const csv = "﻿式,結果,日時\n" + rows.join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `calc-${new Date().toLocaleDateString("ja-JP").replace(/\//g, "-")}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [history]);
   const confirmClearHistory = () => {
     setHistory([]);
     setShowClearHistoryDialog(false);
@@ -582,14 +617,46 @@ export function CalculatorTool() {
 
         {/* 履歴パネル */}
         <div className="flex-1 flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">履歴（{history.length}件）</span>
-            {history.length > 0 && (
-              <button onClick={clearHistory} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition-colors">
-                <Trash2 className="size-3.5" />
-                全削除
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-sm font-medium text-muted-foreground shrink-0">履歴（{history.length}件）</span>
+            <div className="flex items-center gap-1.5 flex-wrap justify-end">
+              {/* URL共有 */}
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted"
+              >
+                <Link2 className="size-3" />
+                {copiedType === "url" ? "コピー済" : "共有"}
               </button>
-            )}
+              {history.length > 0 && (
+                <>
+                  {/* テキストコピー */}
+                  <button
+                    onClick={handleCopyHistory}
+                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted"
+                  >
+                    <ClipboardList className="size-3" />
+                    {copiedType === "text" ? "コピー済" : "コピー"}
+                  </button>
+                  {/* CSVダウンロード */}
+                  <button
+                    onClick={handleDownloadCSV}
+                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted"
+                  >
+                    <FileDown className="size-3" />
+                    CSV
+                  </button>
+                  {/* 全削除 */}
+                  <button
+                    onClick={clearHistory}
+                    className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition-colors px-2 py-1 rounded-md hover:bg-muted"
+                  >
+                    <Trash2 className="size-3" />
+                    全削除
+                  </button>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="rounded-xl border border-border bg-card overflow-hidden">
