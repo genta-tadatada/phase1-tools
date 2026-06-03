@@ -7,12 +7,18 @@
     "deny": [
       "Bash(*gentaai*)",
       "Bash(git push --force*)",
-      "Bash(git push -f *)",
+      "Bash(git push -f*)",
+      "Bash(git push * --force*)",
+      "Bash(git push * -f*)",
+      "Bash(git push *--force-with-lease*)",
       "Bash(git reset --hard*)",
-      "Bash(rm -rf /*)",
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
       "PowerShell(*gentaai*)",
       "PowerShell(*Format-Volume*)",
-      "PowerShell(*Format-Disk*)"
+      "PowerShell(*Format-Disk*)",
+      "PowerShell(Remove-Item * -Recurse*)",
+      "PowerShell(Remove-Item * -r *)"
     ]
   },
   "hooks": {
