@@ -55,3 +55,31 @@ Switch with: `/model opus` or `/model sonnet`
 
 詳細は `.secretary/design/phase1-theme.md` の「ブランド保護要素」セクション参照。
 <!-- END:visual-change-rules -->
+
+<!-- BEGIN:command-execution-policy -->
+# コマンド実行ポリシー
+
+## 基本方針
+commandのプロンプト（ツール許可ダイアログ）は出さない。
+リスクがある場合は**チャットで先に説明**してから実行する。
+
+## 自動実行（説明不要・即実行）
+- ファイル読み書き・編集・削除（`C:\MY SSD\webdev\` 配下）
+- git add / commit / push（通常のmainへのpush）
+- npm / npx / node の実行
+- ビルド・型チェック・テスト
+- PowerShell・Bash 一般操作
+
+## チャットで事前説明が必要（1〜2行で何をするか・なぜリスクかを伝えてから実行）
+- `settings.json` / `CLAUDE.md` / `AGENTS.md` の変更
+- `package.json` の dependencies 追加・削除・バージョン変更
+- 外部APIへのデータ初回送信（エンドポイント設定確認）
+- `.env` や APIキーを含むファイルの操作
+- `C:\MY SSD\webdev\` 配下**以外**のファイル編集
+
+## 自動拒否（説明なしに停止・チャットで報告）
+以下は settings.json の deny に入っており実行不可。実行しようとした場合はチャットで理由を報告する:
+- `git push --force` / `git reset --hard` ─ 履歴の破壊的書き換え
+- `rm -rf /` ─ システム破壊
+- `*gentaai*` ─ プロジェクト分離ルール違反
+<!-- END:command-execution-policy -->

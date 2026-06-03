@@ -1,12 +1,18 @@
 {
   "permissions": {
+    "allow": [
+      "Bash(*)",
+      "PowerShell(*)"
+    ],
     "deny": [
-      "Bash(rm -rf *)",
-      "Bash(Remove-Item -Recurse -Force *)",
+      "Bash(*gentaai*)",
       "Bash(git push --force*)",
       "Bash(git push -f *)",
       "Bash(git reset --hard*)",
-      "Bash(*gentaai*)"
+      "Bash(rm -rf /*)",
+      "PowerShell(*gentaai*)",
+      "PowerShell(*Format-Volume*)",
+      "PowerShell(*Format-Disk*)"
     ]
   },
   "hooks": {
