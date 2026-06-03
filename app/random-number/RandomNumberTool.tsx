@@ -258,9 +258,16 @@ export function RandomNumberTool() {
     window.addEventListener("keydown", handleKey);
     return () => {
       window.removeEventListener("keydown", handleKey);
-      rollingRef.current = false;
+      // rollingRef はここでリセットしない。
+      // generate の deps(poolRemaining 等)が変わるたびに cleanup が走り
+      // アニメーション途中でキャンセルされてしまうため。
     };
   }, [generate]);
+
+  // アンマウント時のみ rolling をキャンセル
+  useEffect(() => {
+    return () => { rollingRef.current = false; };
+  }, []);
 
   const handleShare = async () => {
     const payload: SharePayload = { min, max, count, dups: dupMode };

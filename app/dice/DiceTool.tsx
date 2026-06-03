@@ -82,21 +82,21 @@ function PolygonDiceSvg({ faces, value, color }: { faces: DiceFace; value: numbe
   );
 }
 
-// D6 アニメーション定数（コンポーネント外に置いて参照を固定）
-// setValues が 70ms ごとに再レンダーを起こすため、同一参照を渡さないと
-// framer-motion がアニメーションをリセットし続けて見えなくなる
-// Z軸回転（rotate）+ バウンスで常に正面を向き、絶対に見えなくならない
+// D6 アニメーション定数（コンポーネント外・参照を固定）
+// opacity: 1 を明示しないと initial={{ opacity: 0 }} から戻らない場合があるため必ず含める
 const D6_SHAKE_ANIMATE = {
-  rotate: [0, -28, 24, -20, 16, -12, 9, -6, 4, 0],
-  scale:  [1, 1.10, 1.04, 1.08, 1.03, 1.06, 1.02, 1.04, 1.01, 1],
-  y:      [0, -20, -6, -16, -6, -12, -5, -9, -3, 0],
+  opacity: 1,
+  rotate: [0, -35, 30, -25, 20, -15, 10, -5, 3, 0],
+  scale:  [1, 1.15, 1.05, 1.12, 1.03, 1.08, 1.02, 1.05, 1.01, 1],
+  y:      [0, -28, -8, -22, -8, -16, -6, -12, -4, 0],
 };
 const D6_LAND_ANIMATE = {
+  opacity: 1,
   rotate: [10, -6, 4, -2, 0],
   scale:  [1.35, 0.88, 1.10, 0.97, 1],
   y:      0,
 };
-const D6_IDLE_ANIMATE = { rotate: 0, scale: 1, y: 0 };
+const D6_IDLE_ANIMATE = { opacity: 1, rotate: 0, scale: 1, y: 0 };
 
 export function DiceTool() {
   const [faces, setFaces] = useState<DiceFace>(6);
@@ -264,10 +264,10 @@ export function DiceTool() {
                   faces === 6
                     ? shaking ? D6_SHAKE_ANIMATE : justRolled ? D6_LAND_ANIMATE : D6_IDLE_ANIMATE
                     : shaking
-                      ? { rotate: [0, -18, 18, -12, 12, -6, 6, 0], y: [0, -10, 2, -5, 0], scale: 1 }
+                      ? { opacity: 1, rotate: [0, -18, 18, -12, 12, -6, 6, 0], y: [0, -10, 2, -5, 0], scale: 1 }
                       : justRolled
-                        ? { rotate: 0, scale: [1.25, 0.95, 1.05, 1], y: 0 }
-                        : { rotate: 0, scale: 1, y: 0 }
+                        ? { opacity: 1, rotate: 0, scale: [1.25, 0.95, 1.05, 1], y: 0 }
+                        : { opacity: 1, rotate: 0, scale: 1, y: 0 }
                 }
                 exit={{ opacity: 0, scale: 0.5 }}
                 transition={
