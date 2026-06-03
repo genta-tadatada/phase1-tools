@@ -36,6 +36,11 @@ const SPEED_MS: Record<TraceSpeed, number> = {
   fast: 60,
 };
 
+const PATH_COLORS = [
+  "#f43f5e", "#8b5cf6", "#0ea5e9", "#10b981",
+  "#f97316", "#d946ef", "#f59e0b", "#14b8a6",
+];
+
 // SVG layout
 const COL_WIDTH = 80;
 const SVG_PAD_TOP = 50;
@@ -170,7 +175,14 @@ function AmidaSVG({ entries, rows, revealedCols, tracingCol, tracingStep, traced
         if (path.length < 2) return null;
         const colIdx = path[0].col;
         const isActive = tracingCol === colIdx;
+        const isRevealed = revealedCols.has(colIdx);
+        // トレース中 or 開示済みのパスのみ描画
+        if (!isActive && !isRevealed) return null;
+
         const visiblePath = isActive ? path.slice(0, tracingStep + 1) : path;
+        const pathColor = PATH_COLORS[colIdx % PATH_COLORS.length];
+        // 別の人をトレース中は他のパスを薄く表示
+        const opacity = (tracingCol !== null && !isActive) ? 0.25 : 0.9;
 
         const d = visiblePath
           .map((pt, i) => {
@@ -185,11 +197,11 @@ function AmidaSVG({ entries, rows, revealedCols, tracingCol, tracingStep, traced
             <path
               d={d}
               fill="none"
-              stroke="var(--accent)"
+              stroke={pathColor}
               strokeWidth={4}
               strokeLinecap="round"
               strokeLinejoin="round"
-              opacity={0.9}
+              opacity={opacity}
             />
             {/* Current position dot */}
             {isActive && tracingStep < path.length && (
@@ -197,7 +209,8 @@ function AmidaSVG({ entries, rows, revealedCols, tracingCol, tracingStep, traced
                 cx={colToX(visiblePath[visiblePath.length - 1].col, numPlayers)}
                 cy={rowToY(visiblePath[visiblePath.length - 1].row)}
                 r={7}
-                fill="var(--accent)"
+                fill={pathColor}
+                opacity={opacity}
               />
             )}
           </g>

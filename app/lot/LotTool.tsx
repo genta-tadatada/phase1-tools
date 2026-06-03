@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, X, RotateCcw, Share2, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -56,6 +56,7 @@ interface SharePayload {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const STORAGE_KEY = "phase1-lot-settings";
+const GACHA_COLORS = ["#f43f5e", "#8b5cf6", "#0ea5e9", "#10b981", "#f97316"];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -177,38 +178,66 @@ function EnvelopeCard({ result, onDone }: { result: string; onDone: () => void }
   );
 }
 
-// ─── ScratchCard ─────────────────────────────────────────────────────────────
+// ─── GachaCard ───────────────────────────────────────────────────────────────
 
-function ScratchCard({ result, onDone }: { result: string; onDone: () => void }) {
-  const [scratched, setScratched] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setScratched(true), 200);
-    return () => clearTimeout(t);
-  }, []);
+function GachaCard({ result, onDone }: { result: string; onDone: () => void }) {
+  const [step, setStep] = useState<"enter" | "open" | "reveal">("enter");
+  const colorRef = useRef(GACHA_COLORS[Math.floor(Math.random() * GACHA_COLORS.length)]);
+  const color = colorRef.current;
 
   useEffect(() => {
-    if (scratched) {
-      const t = setTimeout(onDone, 600);
-      return () => clearTimeout(t);
-    }
-  }, [scratched, onDone]);
+    const t1 = setTimeout(() => setStep("open"),   700);
+    const t2 = setTimeout(() => setStep("reveal"), 1100);
+    const t3 = setTimeout(() => onDone(),          2400);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [onDone]);
+
+  const opening = step === "open" || step === "reveal";
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 py-4">
-      <div className="relative w-56 h-32 rounded-xl overflow-hidden shadow-md border border-border bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 flex items-center justify-center">
-        {/* Result underneath */}
-        <span className="text-2xl font-bold">{result}</span>
-        {/* Scratch overlay */}
+    <div className="flex flex-col items-center gap-5 py-4 min-h-[200px]">
+      {/* カプセル */}
+      <motion.div
+        className="relative shrink-0"
+        style={{ width: 112, height: 112 }}
+        initial={{ y: -240, rotate: -25, scale: 0.9 }}
+        animate={{ y: 0, rotate: 0, scale: 1 }}
+        transition={{ type: "spring", stiffness: 250, damping: 18 }}
+      >
+        {/* 本体（白ベース） */}
+        <div
+          className="absolute inset-0 rounded-full bg-white dark:bg-zinc-800"
+          style={{ border: `3px solid ${color}` }}
+        />
+        {/* 上半分（カラー・開封時に上に飛ぶ） */}
         <motion.div
-          className="absolute inset-0 bg-zinc-400 dark:bg-zinc-600 flex items-center justify-center"
-          initial={{ x: "0%" }}
-          animate={{ x: scratched ? "100%" : "0%" }}
-          transition={{ duration: 0.4, ease: "easeIn" }}
-        >
-          <span className="text-zinc-500 dark:text-zinc-400 text-sm font-medium">スクラッチ中...</span>
-        </motion.div>
-      </div>
+          className="absolute top-0 left-0 right-0 z-10"
+          style={{ height: "50%", borderRadius: "56px 56px 0 0", background: color }}
+          animate={opening ? { y: -72 } : { y: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 16 }}
+        />
+        {/* シャイン */}
+        <div
+          className="absolute z-20 pointer-events-none"
+          style={{ top: 13, left: 18, width: 28, height: 18, background: "rgba(255,255,255,0.4)", borderRadius: "50%", filter: "blur(5px)" }}
+        />
+      </motion.div>
+
+      {/* 結果カード */}
+      <AnimatePresence>
+        {step === "reveal" && (
+          <motion.div
+            initial={{ scale: 0.2, opacity: 0, y: -10 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 20 }}
+            className="rounded-2xl px-8 py-3 text-center shadow-xl"
+            style={{ background: color }}
+          >
+            <p className="text-xs font-medium mb-0.5" style={{ color: "rgba(255,255,255,0.7)" }}>結果</p>
+            <p className="text-2xl font-black text-white">{result}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -461,7 +490,7 @@ export function LotTool() {
                       onClick={() => setDrawAnimation(anim)}
                       className={`flex-1 rounded-lg py-1.5 text-xs border transition-colors ${drawAnimation === anim ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]" : "border-border text-muted-foreground hover:border-border/80"}`}
                     >
-                      {anim === "scratch" ? "スクラッチ" : anim === "envelope" ? "封筒" : "即表示"}
+                      {anim === "scratch" ? "🎲 ガチャ" : anim === "envelope" ? "封筒" : "即表示"}
                     </button>
                   ))}
                 </div>
@@ -510,7 +539,7 @@ export function LotTool() {
               <div className="flex flex-col items-center justify-center min-h-48">
                 {isAnimating && currentResult !== null ? (
                   drawAnimation === "scratch" ? (
-                    <ScratchCard result={currentResult} onDone={handleAnimationDone} />
+                    <GachaCard result={currentResult} onDone={handleAnimationDone} />
                   ) : drawAnimation === "envelope" ? (
                     <EnvelopeCard result={currentResult} onDone={handleAnimationDone} />
                   ) : (
