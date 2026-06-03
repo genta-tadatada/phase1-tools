@@ -260,42 +260,49 @@ export function GroupTool() {
 
               {/* Split mode */}
               <div className="space-y-3">
-                <p className="text-sm font-medium">分け方を選択</p>
+                <p className="text-sm font-bold">🔀 分け方を選択</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => setSplitMode("byGroupCount")}
+                    className={`p-3 rounded-xl border-2 text-left transition-all ${
+                      splitMode === "byGroupCount"
+                        ? "border-violet-400 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/20"
+                        : "border-border bg-card hover:bg-muted"
+                    }`}
+                  >
+                    <span className="text-xl">🏢</span>
+                    <p className="text-xs font-bold mt-1">グループ数で分ける</p>
+                    <p className="text-xs text-muted-foreground">○グループに振り分け</p>
+                  </button>
+                  <button
+                    onClick={() => setSplitMode("byMemberCount")}
+                    className={`p-3 rounded-xl border-2 text-left transition-all ${
+                      splitMode === "byMemberCount"
+                        ? "border-violet-400 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/20"
+                        : "border-border bg-card hover:bg-muted"
+                    }`}
+                  >
+                    <span className="text-xl">👥</span>
+                    <p className="text-xs font-bold mt-1">人数で分ける</p>
+                    <p className="text-xs text-muted-foreground">1グループ○人ずつ</p>
+                  </button>
+                </div>
                 <div className="space-y-2">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="radio"
-                      checked={splitMode === "byGroupCount"}
-                      onChange={() => setSplitMode("byGroupCount")}
-                      className="accent-[var(--accent)]"
-                    />
-                    <span className="text-sm">グループ数で分ける</span>
-                  </label>
                   {splitMode === "byGroupCount" && (
-                    <div className="ml-6 flex items-center gap-2">
+                    <div className="flex items-center gap-2 bg-muted/50 rounded-xl px-3 py-2">
                       <input
                         type="number"
                         min={2}
                         max={Math.max(2, members.length)}
                         value={groupCount}
                         onChange={(e) => setGroupCount(Math.max(2, Math.min(members.length || 2, parseInt(e.target.value) || 2)))}
-                        className="w-16 rounded-lg border border-border bg-card px-2 py-1 text-sm text-center focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        className="w-16 rounded-lg border border-border bg-background px-2 py-1 text-sm text-center focus:outline-none focus:ring-2 focus:ring-primary/50"
                       />
                       <span className="text-sm text-muted-foreground">グループに分ける</span>
                     </div>
                   )}
-
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="radio"
-                      checked={splitMode === "byMemberCount"}
-                      onChange={() => setSplitMode("byMemberCount")}
-                      className="accent-[var(--accent)]"
-                    />
-                    <span className="text-sm">人数で分ける</span>
-                  </label>
                   {splitMode === "byMemberCount" && (
-                    <div className="ml-6 flex items-center gap-2">
+                    <div className="flex items-center gap-2 bg-muted/50 rounded-xl px-3 py-2">
                       <span className="text-sm text-muted-foreground">1グループ</span>
                       <input
                         type="number"
@@ -303,7 +310,7 @@ export function GroupTool() {
                         max={Math.max(1, members.length - 1)}
                         value={memberCount}
                         onChange={(e) => setMemberCount(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="w-16 rounded-lg border border-border bg-card px-2 py-1 text-sm text-center focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        className="w-16 rounded-lg border border-border bg-background px-2 py-1 text-sm text-center focus:outline-none focus:ring-2 focus:ring-primary/50"
                       />
                       <span className="text-sm text-muted-foreground">人</span>
                     </div>

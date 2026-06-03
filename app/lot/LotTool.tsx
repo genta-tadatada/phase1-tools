@@ -411,6 +411,15 @@ export function LotTool() {
               transition={{ duration: 0.2 }}
               className="space-y-5"
             >
+              {/* ヘッダービジュアル */}
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/20 border border-amber-200/60 dark:border-amber-700/30">
+                <span className="text-4xl">🎲</span>
+                <div>
+                  <p className="text-sm font-bold text-amber-700 dark:text-amber-300">くじ引き</p>
+                  <p className="text-xs text-amber-600/70 dark:text-amber-400/70 mt-0.5">設定してくじを引こう！ガチャ演出で結果を発表。</p>
+                </div>
+              </div>
+
               {/* Mode tabs */}
               <div className="flex rounded-xl border border-border bg-muted/50 p-1 gap-1">
                 {(["custom", "number"] as LotMode[]).map((m) => (

@@ -441,8 +441,21 @@ export function AmidaTool() {
               transition={{ duration: 0.2 }}
               className="space-y-4"
             >
+              {/* ヘッダービジュアル */}
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/20 border border-violet-200/60 dark:border-violet-700/30">
+                <span className="text-4xl">🎋</span>
+                <div>
+                  <p className="text-sm font-bold text-violet-700 dark:text-violet-300">あみだくじ</p>
+                  <p className="text-xs text-violet-600/70 dark:text-violet-400/70 mt-0.5">参加者を入力してあみだを生成。一人ずつ線を辿ろう！</p>
+                </div>
+              </div>
+
               {/* Entry table */}
               <div className="space-y-2">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-sm">👥</span>
+                  <span className="text-sm font-bold">参加者と結果を入力</span>
+                </div>
                 <div className="grid grid-cols-[1fr_1fr_32px] gap-2 text-xs text-muted-foreground px-1">
                   <span>参加者名</span><span>結果（任意）</span><span />
                 </div>
@@ -499,7 +512,7 @@ export function AmidaTool() {
 
               {/* Speed setting */}
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs text-muted-foreground">速度:</span>
+                <span className="text-xs text-muted-foreground">⏱ 辿る速度:</span>
                 {(["slow", "normal", "fast"] as TraceSpeed[]).map((s) => (
                   <button
                     key={s}
