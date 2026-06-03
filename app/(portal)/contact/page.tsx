@@ -19,7 +19,7 @@ export default function ContactPage() {
       <header className="p-header">
         <div className="p-header-inner md">
           <Link href="/" className="p-logo">
-            <TadatadaLogo title="お問い合わせ" titleStyle={{ color: "#34d399", fontWeight: 900, letterSpacing: "0.04em" }} />
+            <TadatadaLogo title="お問い合わせ" titleStyle={{ color: "#8b5cf6", fontWeight: 900, letterSpacing: "0.04em" }} />
           </Link>
           <GlobalMenu activeSection={null} />
         </div>
