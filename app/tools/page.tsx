@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import "../(portal)/portal.css";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
 import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
@@ -35,20 +36,42 @@ const TOOLS: Tool[] = [
   { href: "/tournament",    icon: "/assets/icon-tournament.png",    name: "トーナメント表",       desc: "参加者入力で自動ブラケット",    cat: "play" },
 ];
 
-const catIconBg: Record<string, string> = {
-  calc: "linear-gradient(160deg,#d1fae5,#a7f3d0)",
-  text: "linear-gradient(160deg,#fce7f3,#fbcfe8)",
-  play: "linear-gradient(160deg,#fbcfe8,#ddd6fe,#a7f3d0)",
-};
-const catHoverBorder: Record<string, string> = {
-  calc: "#6ee7b7",
-  text: "#f9a8d4",
-  play: "#f9a8d4",
-};
-const catHoverShadow: Record<string, string> = {
-  calc: "rgba(110,231,183,0.18)",
-  text: "rgba(249,168,212,0.2)",
-  play: "rgba(249,168,212,0.22)",
+const CAT_STYLE: Record<Cat, {
+  iconGrad: string; iconShadow: string; cardBg: string; dot: string;
+  filterActive: string; filterShadow: string;
+}> = {
+  calc: {
+    iconGrad: "linear-gradient(135deg,#6ee7b7,#38bdf8)",
+    iconShadow: "0 6px 18px -6px rgba(110,231,183,0.7)",
+    cardBg: "linear-gradient(160deg,#ecfdf5,#e0f2fe)",
+    dot: "#6ee7b7",
+    filterActive: "linear-gradient(135deg,#6ee7b7,#38bdf8)",
+    filterShadow: "0 4px 14px -4px rgba(110,231,183,0.6)",
+  },
+  text: {
+    iconGrad: "linear-gradient(135deg,#f9a8d4,#f472b6)",
+    iconShadow: "0 6px 18px -6px rgba(249,168,212,0.7)",
+    cardBg: "linear-gradient(160deg,#fdf2f8,#fce7f3)",
+    dot: "#f9a8d4",
+    filterActive: "linear-gradient(135deg,#f9a8d4,#e879f9)",
+    filterShadow: "0 4px 14px -4px rgba(249,168,212,0.6)",
+  },
+  play: {
+    iconGrad: "linear-gradient(135deg,#c4b5fd,#f9a8d4)",
+    iconShadow: "0 6px 18px -6px rgba(196,181,253,0.7)",
+    cardBg: "linear-gradient(160deg,#f5f3ff,#fdf2f8)",
+    dot: "#c4b5fd",
+    filterActive: "linear-gradient(135deg,#a78bfa,#f9a8d4)",
+    filterShadow: "0 4px 14px -4px rgba(196,181,253,0.6)",
+  },
+  all: {
+    iconGrad: "linear-gradient(135deg,#7dd3fc,#c4b5fd)",
+    iconShadow: "0 6px 18px -6px rgba(125,211,252,0.6)",
+    cardBg: "linear-gradient(160deg,#f0f9ff,#f5f3ff)",
+    dot: "#7dd3fc",
+    filterActive: "linear-gradient(135deg,#7dd3fc,#a78bfa)",
+    filterShadow: "0 4px 14px -4px rgba(125,211,252,0.5)",
+  },
 };
 
 const FILTERS: { cat: Cat; label: string }[] = [
@@ -58,174 +81,249 @@ const FILTERS: { cat: Cat; label: string }[] = [
   { cat: "play", label: "抽選" },
 ];
 
+const MotionLink = motion(Link);
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 16, scale: 0.97 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0, scale: 1,
+    transition: { delay: i * 0.04, duration: 0.35, ease: "easeOut" as const },
+  }),
+};
+
+function ToolCard({ tool, index }: { tool: Tool; index: number }) {
+  const st = CAT_STYLE[tool.cat];
+  return (
+    <MotionLink
+      href={tool.href}
+      custom={index}
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+      whileHover={{ y: -4, transition: { duration: 0.2, ease: "easeOut" } }}
+      whileTap={{ scale: 0.97 }}
+      className="group relative flex flex-col gap-3 p-4 rounded-2xl overflow-hidden"
+      style={{
+        background: st.cardBg,
+        border: "1.5px solid rgba(255,255,255,0.8)",
+        boxShadow: "0 2px 12px -4px rgba(180,140,200,0.15)",
+        textDecoration: "none",
+        color: "inherit",
+      }}
+      onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.currentTarget.style.boxShadow = `0 8px 28px -8px rgba(180,140,200,0.28), ${st.iconShadow}`;
+        e.currentTarget.style.borderColor = "rgba(255,255,255,1)";
+      }}
+      onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
+        e.currentTarget.style.boxShadow = "0 2px 12px -4px rgba(180,140,200,0.15)";
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.8)";
+      }}
+    >
+      {/* シマーライン */}
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        style={{ background: "linear-gradient(110deg,transparent 40%,rgba(255,255,255,0.4) 55%,transparent 70%)", backgroundSize: "200% 100%", animation: "shimmer 1.2s ease-out" }}
+      />
+
+      {/* アイコン */}
+      <div
+        className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3"
+        style={{ background: st.iconGrad, boxShadow: "0 4px 12px -4px rgba(0,0,0,0.15)" }}
+      >
+        <Image src={tool.icon} alt="" width={46} height={46} style={{ objectFit: "contain", transform: "translateY(2px)" }} />
+      </div>
+
+      {/* テキスト */}
+      <div className="flex-1 min-w-0">
+        <div
+          className="font-black text-sm leading-snug mb-0.5 truncate"
+          style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", color: "var(--th-text)" }}
+        >
+          {tool.name}
+        </div>
+        <div
+          className="text-[11px] leading-relaxed"
+          style={{ color: "var(--th-text-muted)", fontFamily: "'M PLUS Rounded 1c', sans-serif",
+            display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+        >
+          {tool.desc}
+        </div>
+      </div>
+
+      {/* 矢印 */}
+      <div
+        className="absolute bottom-3 right-3 w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-1 group-hover:translate-x-0"
+        style={{ background: "rgba(255,255,255,0.85)", fontSize: 10, color: "var(--th-text-muted)" }}
+      >
+        →
+      </div>
+    </MotionLink>
+  );
+}
+
 export default function ToolsPage() {
   const [activeCat, setActiveCat] = useState<Cat>("all");
-
   const visible = TOOLS.filter((t) => activeCat === "all" || t.cat === activeCat);
 
   return (
-    <div className="portal-page">
+    <div className="portal-page min-h-screen">
       <style>{`
-        @keyframes twinkle {
-          0%,100%{transform:scale(1) rotate(0);opacity:.9}
-          50%{transform:scale(.5) rotate(30deg);opacity:.3}
+        @keyframes shimmer {
+          0%{background-position:200% 0}
+          100%{background-position:-200% 0}
         }
-        @keyframes toolCardHover {}
-        .tool-card { transition: all 0.22s cubic-bezier(0.4,0,0.2,1); }
-        .tool-card:hover { transform: translateY(-3px); }
-        .tool-card:hover .tool-icon-inner { transform: rotate(-4deg) scale(1.05); }
-        .tool-icon-inner { transition: transform 0.22s ease; }
-        .sparkle-anim { animation: twinkle 2.6s ease-in-out infinite; }
+        @keyframes floatA {
+          0%,100%{transform:translateY(0) rotate(0deg)}
+          50%{transform:translateY(-12px) rotate(3deg)}
+        }
+        @keyframes floatB {
+          0%,100%{transform:translateY(0) rotate(0deg)}
+          50%{transform:translateY(-8px) rotate(-2deg)}
+        }
+        .float-a { animation: floatA 5s ease-in-out infinite; }
+        .float-b { animation: floatB 7s ease-in-out 1s infinite; }
+        .float-c { animation: floatA 6s ease-in-out 2.5s infinite; }
+        .dark .portal-page .p-header { background: var(--th-bg) !important; }
+        .tool-filter-bar { background: rgba(255,255,255,0.82); }
+        .dark .tool-filter-bar { background: rgba(15,16,26,0.88); }
       `}</style>
 
-      {/* ヘッダー */}
+      {/* ─── ヘッダー ─── */}
       <header className="p-header">
         <div className="p-header-inner md">
           <Link href="/" className="p-logo">
             <TadatadaLogo titleNode={
-              <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:11, letterSpacing:"0.02em", color:"var(--th-text)" }}>
-                タダ<span style={{ color:"#0ea5e9" }}>tools</span><span style={{ color:"#f9a8d4" }}>.</span>
+              <span style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 900, fontSize: 11, letterSpacing: "0.02em", color: "var(--th-text)" }}>
+                タダ<span style={{ color: "#0ea5e9" }}>tools</span><span style={{ color: "#f9a8d4" }}>.</span>
               </span>
             } />
           </Link>
-          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <DarkModeToggle />
             <GlobalMenu activeSection="tools" />
           </div>
         </div>
       </header>
 
-      {/* ヒーロー */}
-      <section style={{ position:"relative", padding:"48px 0 16px", overflow:"hidden" }}>
+      {/* ─── ヒーロー ─── */}
+      <section className="relative overflow-hidden" style={{ padding: "60px 0 36px" }}>
+        {/* 装飾blob */}
+        <img src="/uploads/kawaii-blob-pink.svg"     alt="" aria-hidden className="float-a absolute -top-20 -right-10 w-64 opacity-35 pointer-events-none select-none" />
+        <img src="/uploads/kawaii-blob-lavender.svg" alt="" aria-hidden className="float-b absolute top-4 -left-16 w-56 opacity-30 pointer-events-none select-none" />
+        <img src="/uploads/kawaii-blob-mint.svg"     alt="" aria-hidden className="float-c absolute -bottom-4 right-1/3 w-44 opacity-20 pointer-events-none select-none" />
         {/* ドット背景 */}
-        <div style={{ position:"absolute", top:30, left:-60, width:200, height:200, backgroundImage:"radial-gradient(circle, #fbcfe8 1.5px, transparent 2px)", backgroundSize:"16px 16px", opacity:0.55, pointerEvents:"none" }} />
-        <div style={{ position:"absolute", bottom:-30, right:-60, width:240, height:240, background:"radial-gradient(circle at center, rgba(196,181,253,0.35), transparent 70%)", pointerEvents:"none" }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle,#f9a8d4 1px,transparent 1px)", backgroundSize: "28px 28px", opacity: 0.2 }} />
 
-        {/* スパークル */}
-        <span className="sparkle-anim" style={{ position:"absolute", top:80, left:"14%", width:14, height:14, background:"#f9a8d4", clipPath:"polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)" }} />
-        <span className="sparkle-anim" style={{ position:"absolute", top:140, right:"12%", width:10, height:10, background:"#c4b5fd", clipPath:"polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)", animationDelay:"0.6s" }} />
-        <span className="sparkle-anim" style={{ position:"absolute", bottom:90, left:"8%", width:12, height:12, background:"#6ee7b7", clipPath:"polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)", animationDelay:"1.2s" }} />
-        <span className="sparkle-anim" style={{ position:"absolute", top:50, right:"22%", width:9, height:9, background:"#fcd34d", clipPath:"polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)", animationDelay:"1.8s" }} />
+        <div className="relative max-w-3xl mx-auto px-6 text-center">
+          {/* バッジ */}
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest mb-7"
+            style={{ background: "rgba(237,233,254,0.85)", color: "#7c3aed", fontFamily: "Quicksand, sans-serif", border: "1.5px solid #ddd6fe", backdropFilter: "blur(8px)" }}
+          >
+            ✦ FREE TOOLS &nbsp;·&nbsp; {TOOLS.length} tools
+          </motion.div>
 
-        <div style={{ maxWidth:896, margin:"0 auto", padding:"0 24px", position:"relative" }}>
-          <div style={{ textAlign:"center", maxWidth:640, margin:"0 auto" }}>
-            <div style={{ display:"inline-flex", alignItems:"center", gap:8, padding:"6px 14px", background:"#ede9fe", color:"#8b5cf6", borderRadius:999, fontFamily:"Quicksand, sans-serif", fontWeight:700, fontSize:11, letterSpacing:"0.18em", marginBottom:24 }}>
-              ✦ FREE TOOLS &nbsp;·&nbsp; {TOOLS.length} tools
-            </div>
-            <h1 style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:"clamp(48px,8vw,80px)", lineHeight:1.1, letterSpacing:"0.02em", color:"var(--th-text)", marginBottom:24, position:"relative", display:"inline-block" }}>
-              <span style={{ position:"relative", display:"inline-block" }}>
-                タダ
-                <span style={{ position:"absolute", left:"-2%", right:"-2%", bottom:6, height:10, background:"#fbcfe8", borderRadius:6, zIndex:-1, transform:"skewX(-8deg)" }} />
-              </span>
-              <span style={{ color:"#0ea5e9" }}>tools</span>
-              <span style={{ color:"#f9a8d4" }}>.</span>
-            </h1>
-            <p style={{ fontSize:16, color:"var(--th-text-muted)", lineHeight:1.85, marginBottom:0 }}>
-              日常で使える無料Webツール集。<br />
-              広告控えめ、使いたいものだけを。
-            </p>
-          </div>
+          {/* メインタイトル */}
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.1 }}
+            style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 900, fontSize: "clamp(52px,11vw,88px)", lineHeight: 1.05, letterSpacing: "0.01em", marginBottom: 20, display: "block" }}
+          >
+            <span className="relative inline-block" style={{ color: "var(--th-text)" }}>
+              タダ
+              <span className="absolute rounded-full" style={{ left: "-2%", right: "-2%", bottom: 6, height: 10, background: "#fbcfe8", opacity: 0.8, transform: "skewX(-8deg)", zIndex: -1 }} />
+            </span>
+            <span style={{ color: "#0ea5e9" }}>tools</span>
+            <span style={{ color: "#f9a8d4" }}>.</span>
+          </motion.h1>
+
+          {/* サブコピー */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.22 }}
+            style={{ fontSize: 15, color: "var(--th-text-muted)", fontFamily: "'M PLUS Rounded 1c', sans-serif", lineHeight: 1.9, marginBottom: 0 }}
+          >
+            日常で使える無料Webツール集。<br />広告控えめ、使いたいものだけを。
+          </motion.p>
         </div>
       </section>
 
-      {/* ツール一覧 */}
-      <main style={{ padding:"8px 0 80px", position:"relative" }}>
-        <div style={{ maxWidth:896, margin:"0 auto", padding:"0 24px", position:"relative" }}>
+      {/* ─── フィルタータブ ─── */}
+      <div
+        className="tool-filter-bar sticky z-30 flex justify-center gap-2 flex-wrap px-4 py-3"
+        style={{ top: 57, backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)", borderBottom: "1px solid rgba(241,236,243,0.9)" }}
+      >
+        {FILTERS.map((f) => {
+          const st = CAT_STYLE[f.cat];
+          const isActive = activeCat === f.cat;
+          return (
+            <motion.button
+              key={f.cat}
+              type="button"
+              onClick={() => setActiveCat(f.cat)}
+              whileTap={{ scale: 0.94 }}
+              className="relative flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-bold transition-colors duration-200"
+              style={{
+                fontFamily: "'M PLUS Rounded 1c', sans-serif",
+                background: isActive ? st.filterActive : "rgba(255,255,255,0.65)",
+                color: isActive ? "#fff" : "var(--th-text-muted)",
+                border: isActive ? "1.5px solid transparent" : "1.5px solid rgba(241,236,243,0.9)",
+                boxShadow: isActive ? st.filterShadow : "none",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              {f.cat !== "all" && (
+                <span className="inline-block w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: isActive ? "rgba(255,255,255,0.7)" : st.dot }} />
+              )}
+              {f.label}
+              {f.cat === "all" && (
+                <span style={{ fontFamily: "Quicksand, sans-serif", fontWeight: 800, fontSize: 10, opacity: 0.7, marginLeft: 2 }}>{TOOLS.length}</span>
+              )}
+            </motion.button>
+          );
+        })}
+      </div>
 
-          {/* フィルターチップ */}
-          <div style={{ display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center", marginBottom:20 }}>
-            {FILTERS.map((f) => (
-              <button
-                key={f.cat}
-                type="button"
-                onClick={() => setActiveCat(f.cat)}
-                style={{
-                  fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:700, fontSize:13,
-                  padding:"8px 16px", borderRadius:999,
-                  background: activeCat === f.cat ? "var(--th-text)" : "var(--ibtn-bg)",
-                  border: activeCat === f.cat ? "2px solid var(--th-text)" : "2px solid var(--th-border)",
-                  color: activeCat === f.cat ? "var(--ibtn-bg)" : "var(--th-text-muted)",
-                  cursor:"pointer", transition:"all 0.22s ease",
-                  display:"inline-flex", alignItems:"center", gap:6,
-                }}
-              >
-                {f.cat !== "all" && (
-                  <span style={{
-                    width:8, height:8, borderRadius:"50%", display:"inline-block",
-                    background: f.cat === "calc" ? "#6ee7b7" : f.cat === "text" ? "#f9a8d4" : "linear-gradient(135deg,#f9a8d4,#c4b5fd,#6ee7b7)",
-                  }} />
-                )}
-                {f.label}
-                {f.cat === "all" && (
-                  <span style={{ fontFamily:"Quicksand, sans-serif", fontWeight:800, opacity:0.7, marginLeft:2 }}>{TOOLS.length}</span>
-                )}
-              </button>
+      {/* ─── ツールグリッド ─── */}
+      <main style={{ padding: "20px 0 80px" }}>
+        <div style={{ maxWidth: 880, margin: "0 auto", padding: "0 20px" }}>
+          <motion.div
+            key={activeCat}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.18 }}
+            style={{
+              display: "grid",
+              gap: 12,
+              gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))",
+            }}
+          >
+            {visible.map((tool, i) => (
+              <ToolCard key={tool.href} tool={tool} index={i} />
             ))}
-          </div>
-
-          {/* ツールグリッド */}
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:10 }}
-            className="tools-grid">
-            <style>{`
-              @media(max-width:880px){.tools-grid{grid-template-columns:repeat(3,1fr)!important}}
-              @media(max-width:600px){.tools-grid{grid-template-columns:repeat(2,1fr)!important}}
-              @media(max-width:380px){.tools-grid{grid-template-columns:1fr!important}}
-            `}</style>
-
-            {visible.map((tool) => (
-              <Link
-                key={tool.href}
-                href={tool.href}
-                className="tool-card"
-                style={{
-                  display:"block", textDecoration:"none", color:"inherit",
-                  padding:"16px 14px 38px", background:"var(--card)",
-                  border:"2px solid var(--th-border)", borderRadius:18,
-                  cursor:"pointer", overflow:"hidden", minHeight:132,
-                  position:"relative",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = catHoverBorder[tool.cat];
-                  e.currentTarget.style.boxShadow = `0 0 0 4px ${catHoverShadow[tool.cat]}, 0 12px 28px -10px rgba(180,140,200,0.32)`;
-                  const arrow = e.currentTarget.querySelector<HTMLElement>(".tool-arrow");
-                  if (arrow) arrow.style.opacity = "1";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = "var(--th-border)";
-                  e.currentTarget.style.boxShadow = "";
-                  const arrow = e.currentTarget.querySelector<HTMLElement>(".tool-arrow");
-                  if (arrow) arrow.style.opacity = "0";
-                }}
-              >
-                <div className="tool-icon-inner" style={{ position:"relative", width:68, height:68, borderRadius:14, display:"inline-flex", alignItems:"center", justifyContent:"center", marginBottom:12, background:catIconBg[tool.cat] }}>
-                  <Image src={tool.icon} alt="" width={58} height={58} style={{ objectFit:"contain", transform:"translateY(3px)" }} />
-                  <span style={{ position:"absolute", top:-3, right:-3, fontSize:10, color:"#fcd34d", opacity:0, transition:"all 0.22s ease" }} className="tool-sparkle">✦</span>
-                </div>
-                <div style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:13.5, color:"var(--th-text)", marginBottom:2, letterSpacing:"0.02em", lineHeight:1.35 }}>
-                  {tool.name}
-                </div>
-                <div style={{ fontSize:11, color:"var(--th-text-muted)", lineHeight:1.5, display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical", overflow:"hidden" }}>
-                  {tool.desc}
-                </div>
-                <span className="tool-arrow" style={{ position:"absolute", bottom:12, right:14, width:22, height:22, borderRadius:"50%", background:"var(--th-bg)", display:"inline-flex", alignItems:"center", justifyContent:"center", color:"var(--th-text-muted)", opacity:0, transition:"opacity 0.22s ease", fontSize:12 }}>
-                  →
-                </span>
-              </Link>
-            ))}
-          </div>
+          </motion.div>
         </div>
       </main>
 
-      {/* フッター */}
-      <footer style={{ borderTop:"1px solid var(--th-border)", padding:"36px 0 48px" }}>
-        <div style={{ maxWidth:896, margin:"0 auto", padding:"0 24px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:16, flexWrap:"wrap" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:10, fontSize:13, color:"var(--th-text)" }}>
-            <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900 }}>ただただ</span>
-            <span style={{ color:"var(--th-text-muted)" }}>—</span>
-            <span style={{ color:"var(--th-text-muted)" }}>タダtools</span>
+      {/* ─── フッター ─── */}
+      <footer style={{ borderTop: "1px solid var(--th-border)", padding: "28px 24px 40px" }}>
+        <div style={{ maxWidth: 880, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>
+            <Link href="/" style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 900, color: "var(--th-text)", textDecoration: "none" }}>
+              タダ<span style={{ color: "#0ea5e9" }}>tools</span><span style={{ color: "#f9a8d4" }}>.</span>
+            </Link>
+            <span style={{ color: "var(--th-border)" }}>—</span>
+            <Link href="/" style={{ color: "var(--th-text-muted)", textDecoration: "none", fontSize: 12 }}>ポータルへ</Link>
+            <span style={{ color: "var(--th-border)" }}>·</span>
+            <Link href="/privacy" style={{ color: "var(--th-text-muted)", textDecoration: "none", fontSize: 12 }}>プライバシー</Link>
           </div>
-          <span style={{ fontFamily:"Quicksand, sans-serif", fontWeight:600, fontSize:11, color:"var(--th-text-muted)", letterSpacing:"0.06em" }}>
-            Made with <span style={{ color:"#f9a8d4" }}>♥</span> 2026
+          <span style={{ fontFamily: "Quicksand, sans-serif", fontWeight: 600, fontSize: 11, color: "var(--th-text-muted)", letterSpacing: "0.06em" }}>
+            Made with <span style={{ color: "#f9a8d4" }}>♥</span> 2026 ただただ
           </span>
         </div>
       </footer>
