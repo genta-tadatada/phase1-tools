@@ -181,6 +181,24 @@
   border-bottom-color: var(--th-border) !important;
 }
 
+/* ツールページ共通：メインエリアに微細なドット背景 */
+.tool-main-bg {
+  background-image: radial-gradient(circle, oklch(0.7 0 0 / 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.dark .tool-main-bg {
+  background-image: radial-gradient(circle, oklch(1 0 0 / 0.04) 1px, transparent 1px);
+}
+
+/* ツールカードホバーグロー（共通） */
+.tool-card-glow {
+  transition: box-shadow 0.22s ease, transform 0.22s ease;
+}
+.tool-card-glow:hover {
+  box-shadow: 0 8px 32px -8px rgba(125,211,252,0.3);
+  transform: translateY(-2px);
+}
+
 @media print {
   header, footer, .ad-banner, .action-buttons { display: none !important; }
   .tournament-bracket {
