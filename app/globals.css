@@ -175,8 +175,30 @@
 }
 
 
-/* /tools ページのヘッダーダーク対応 */
-.dark .portal-page .p-header {
+/* ── /tools ページのみダークモード対応 ── */
+/* portal.css はダーク変数を持たないため、tools 専用クラス経由で上書きする */
+/* .portal-page 全体に当てるとポータルトップ/お知らせ等まで影響するため tools-dark-mode クラスで限定 */
+.dark .tools-dark-mode {
+  --p-bg:             oklch(0.145 0.014 237);
+  --p-bg-soft:        oklch(0.17  0.012 237);
+  --p-fg:             #e8e6f0;
+  --p-fg-muted:       #9a96a8;
+  --p-fg-faint:       #6b6779;
+  --p-border:         #252538;
+  --p-border-soft:    #1e1d2c;
+  --p-bg-card:        rgba(255,255,255,0.04);
+  --p-bg-tinted:      rgba(91,33,182,0.12);
+  --p-bg-tinted-pink: rgba(131,24,67,0.12);
+  --p-bg-tinted-mint: rgba(6,78,59,0.12);
+  --p-header-bg:      rgba(15,16,26,0.92);
+  --p-shadow-card:       0 4px 24px -8px rgba(0,0,0,0.5);
+  --p-shadow-card-hover: 0 12px 36px -12px rgba(0,0,0,0.7);
+  /* 変数の再定義だけだと .portal-page 側の background 宣言の解決に依存して
+     白が残るケースがあるため、背景・文字色を同じ高詳細度セレクタで直接上書きする */
+  background: var(--p-bg) !important;
+  color: var(--p-fg) !important;
+}
+.dark .tools-dark-mode .p-header {
   background: var(--th-bg) !important;
   border-bottom-color: var(--th-border) !important;
 }
@@ -197,6 +219,43 @@
 .tool-card-glow:hover {
   box-shadow: 0 8px 32px -8px rgba(125,211,252,0.3);
   transform: translateY(-2px);
+}
+
+/* ── /tools ページ カテゴリカード背景 CSS変数 ── */
+:root {
+  --cat-calc-card:    linear-gradient(160deg,#ecfdf5,#e0f2fe);
+  --cat-text-card:    linear-gradient(160deg,#fdf2f8,#fce7f3);
+  --cat-play-card:    linear-gradient(160deg,#f5f3ff,#fdf2f8);
+  --cat-all-card:     linear-gradient(160deg,#f0f9ff,#f5f3ff);
+  --tools-card-border:       rgba(255,255,255,0.80);
+  --tools-card-border-hover: rgba(255,255,255,1.00);
+  --tools-badge-bg:   rgba(237,233,254,0.88);
+  --tools-badge-color: #7c3aed;
+  --tools-badge-border: #ddd6fe;
+  --tools-filter-inactive-bg: rgba(255,255,255,0.65);
+  --tools-filter-inactive-color: var(--th-text-muted);
+  --tools-filter-inactive-border: rgba(241,236,243,0.9);
+  --tools-dot-opacity: 0.20;
+  --tools-arrow-bg: rgba(255,255,255,0.85);
+  --tools-title-underline: #fbcfe8;
+}
+
+.dark {
+  --cat-calc-card:    linear-gradient(160deg,rgba(6,78,59,0.4),rgba(12,74,110,0.35));
+  --cat-text-card:    linear-gradient(160deg,rgba(131,24,67,0.35),rgba(157,23,77,0.3));
+  --cat-play-card:    linear-gradient(160deg,rgba(91,33,182,0.35),rgba(131,24,67,0.3));
+  --cat-all-card:     linear-gradient(160deg,rgba(12,74,110,0.35),rgba(91,33,182,0.3));
+  --tools-card-border:       rgba(255,255,255,0.10);
+  --tools-card-border-hover: rgba(255,255,255,0.22);
+  --tools-badge-bg:   rgba(91,33,182,0.35);
+  --tools-badge-color: #c4b5fd;
+  --tools-badge-border: rgba(196,181,253,0.4);
+  --tools-filter-inactive-bg: rgba(255,255,255,0.07);
+  --tools-filter-inactive-color: var(--th-text-muted);
+  --tools-filter-inactive-border: rgba(255,255,255,0.10);
+  --tools-dot-opacity: 0.08;
+  --tools-arrow-bg: rgba(255,255,255,0.12);
+  --tools-title-underline: rgba(249,168,212,0.35);
 }
 
 @media print {

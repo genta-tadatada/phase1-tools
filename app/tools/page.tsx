@@ -43,7 +43,7 @@ const CAT_STYLE: Record<Cat, {
   calc: {
     iconGrad: "linear-gradient(135deg,#6ee7b7,#38bdf8)",
     iconShadow: "0 6px 18px -6px rgba(110,231,183,0.7)",
-    cardBg: "linear-gradient(160deg,#ecfdf5,#e0f2fe)",
+    cardBg: "var(--cat-calc-card)",
     dot: "#6ee7b7",
     filterActive: "linear-gradient(135deg,#6ee7b7,#38bdf8)",
     filterShadow: "0 4px 14px -4px rgba(110,231,183,0.6)",
@@ -51,7 +51,7 @@ const CAT_STYLE: Record<Cat, {
   text: {
     iconGrad: "linear-gradient(135deg,#f9a8d4,#f472b6)",
     iconShadow: "0 6px 18px -6px rgba(249,168,212,0.7)",
-    cardBg: "linear-gradient(160deg,#fdf2f8,#fce7f3)",
+    cardBg: "var(--cat-text-card)",
     dot: "#f9a8d4",
     filterActive: "linear-gradient(135deg,#f9a8d4,#e879f9)",
     filterShadow: "0 4px 14px -4px rgba(249,168,212,0.6)",
@@ -59,7 +59,7 @@ const CAT_STYLE: Record<Cat, {
   play: {
     iconGrad: "linear-gradient(135deg,#c4b5fd,#f9a8d4)",
     iconShadow: "0 6px 18px -6px rgba(196,181,253,0.7)",
-    cardBg: "linear-gradient(160deg,#f5f3ff,#fdf2f8)",
+    cardBg: "var(--cat-play-card)",
     dot: "#c4b5fd",
     filterActive: "linear-gradient(135deg,#a78bfa,#f9a8d4)",
     filterShadow: "0 4px 14px -4px rgba(196,181,253,0.6)",
@@ -67,7 +67,7 @@ const CAT_STYLE: Record<Cat, {
   all: {
     iconGrad: "linear-gradient(135deg,#7dd3fc,#c4b5fd)",
     iconShadow: "0 6px 18px -6px rgba(125,211,252,0.6)",
-    cardBg: "linear-gradient(160deg,#f0f9ff,#f5f3ff)",
+    cardBg: "var(--cat-all-card)",
     dot: "#7dd3fc",
     filterActive: "linear-gradient(135deg,#7dd3fc,#a78bfa)",
     filterShadow: "0 4px 14px -4px rgba(125,211,252,0.5)",
@@ -105,18 +105,18 @@ function ToolCard({ tool, index }: { tool: Tool; index: number }) {
       className="group relative flex flex-col gap-3 p-4 rounded-2xl overflow-hidden"
       style={{
         background: st.cardBg,
-        border: "1.5px solid rgba(255,255,255,0.8)",
+        border: "1.5px solid var(--tools-card-border)",
         boxShadow: "0 2px 12px -4px rgba(180,140,200,0.15)",
         textDecoration: "none",
         color: "inherit",
       }}
       onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {
         e.currentTarget.style.boxShadow = `0 8px 28px -8px rgba(180,140,200,0.28), ${st.iconShadow}`;
-        e.currentTarget.style.borderColor = "rgba(255,255,255,1)";
+        e.currentTarget.style.borderColor = "var(--tools-card-border-hover)";
       }}
       onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
         e.currentTarget.style.boxShadow = "0 2px 12px -4px rgba(180,140,200,0.15)";
-        e.currentTarget.style.borderColor = "rgba(255,255,255,0.8)";
+        e.currentTarget.style.borderColor = "var(--tools-card-border)";
       }}
     >
       {/* シマーライン */}
@@ -153,7 +153,7 @@ function ToolCard({ tool, index }: { tool: Tool; index: number }) {
       {/* 矢印 */}
       <div
         className="absolute bottom-3 right-3 w-5 h-5 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 translate-x-1 group-hover:translate-x-0"
-        style={{ background: "rgba(255,255,255,0.85)", fontSize: 10, color: "var(--th-text-muted)" }}
+        style={{ background: "var(--tools-arrow-bg)", fontSize: 10, color: "var(--th-text-muted)" }}
       >
         →
       </div>
@@ -166,7 +166,7 @@ export default function ToolsPage() {
   const visible = TOOLS.filter((t) => activeCat === "all" || t.cat === activeCat);
 
   return (
-    <div className="portal-page min-h-screen">
+    <div className="portal-page tools-dark-mode min-h-screen">
       <style>{`
         @keyframes shimmer {
           0%{background-position:200% 0}
@@ -183,9 +183,12 @@ export default function ToolsPage() {
         .float-a { animation: floatA 5s ease-in-out infinite; }
         .float-b { animation: floatB 7s ease-in-out 1s infinite; }
         .float-c { animation: floatA 6s ease-in-out 2.5s infinite; }
-        .dark .portal-page .p-header { background: var(--th-bg) !important; }
+        .dark .tools-dark-mode .p-header { background: var(--th-bg) !important; }
         .tool-filter-bar { background: rgba(255,255,255,0.82); }
         .dark .tool-filter-bar { background: rgba(15,16,26,0.88); }
+        @media (max-width: 480px) {
+          .tools-filter-btn { flex: 1 1 calc(50% - 4px); justify-content: center; }
+        }
       `}</style>
 
       {/* ─── ヘッダー ─── */}
@@ -212,7 +215,7 @@ export default function ToolsPage() {
         <img src="/uploads/kawaii-blob-lavender.svg" alt="" aria-hidden className="float-b absolute top-4 -left-16 w-56 opacity-30 pointer-events-none select-none" />
         <img src="/uploads/kawaii-blob-mint.svg"     alt="" aria-hidden className="float-c absolute -bottom-4 right-1/3 w-44 opacity-20 pointer-events-none select-none" />
         {/* ドット背景 */}
-        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle,#f9a8d4 1px,transparent 1px)", backgroundSize: "28px 28px", opacity: 0.2 }} />
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle,var(--th-text-muted) 1px,transparent 1px)", backgroundSize: "28px 28px", opacity: "var(--tools-dot-opacity)" }} />
 
         <div className="relative max-w-3xl mx-auto px-6 text-center">
           {/* バッジ */}
@@ -221,7 +224,7 @@ export default function ToolsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest mb-7"
-            style={{ background: "rgba(237,233,254,0.85)", color: "#7c3aed", fontFamily: "Quicksand, sans-serif", border: "1.5px solid #ddd6fe", backdropFilter: "blur(8px)" }}
+            style={{ background: "var(--tools-badge-bg)", color: "var(--tools-badge-color)", fontFamily: "Quicksand, sans-serif", border: "1.5px solid var(--tools-badge-border)", backdropFilter: "blur(8px)" }}
           >
             ✦ FREE TOOLS &nbsp;·&nbsp; {TOOLS.length} tools
           </motion.div>
@@ -235,7 +238,7 @@ export default function ToolsPage() {
           >
             <span className="relative inline-block" style={{ color: "var(--th-text)" }}>
               タダ
-              <span className="absolute rounded-full" style={{ left: "-2%", right: "-2%", bottom: 6, height: 10, background: "#fbcfe8", opacity: 0.8, transform: "skewX(-8deg)", zIndex: -1 }} />
+              <span className="absolute rounded-full" style={{ left: "-2%", right: "-2%", bottom: 6, height: 10, background: "var(--tools-title-underline)", opacity: 0.9, transform: "skewX(-8deg)", zIndex: -1 }} />
             </span>
             <span style={{ color: "#0ea5e9" }}>tools</span>
             <span style={{ color: "#f9a8d4" }}>.</span>
@@ -267,12 +270,12 @@ export default function ToolsPage() {
               type="button"
               onClick={() => setActiveCat(f.cat)}
               whileTap={{ scale: 0.94 }}
-              className="relative flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-bold transition-colors duration-200"
+              className="tools-filter-btn relative flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-bold transition-colors duration-200"
               style={{
                 fontFamily: "'M PLUS Rounded 1c', sans-serif",
-                background: isActive ? st.filterActive : "rgba(255,255,255,0.65)",
-                color: isActive ? "#fff" : "var(--th-text-muted)",
-                border: isActive ? "1.5px solid transparent" : "1.5px solid rgba(241,236,243,0.9)",
+                background: isActive ? st.filterActive : "var(--tools-filter-inactive-bg)",
+                color: isActive ? "#fff" : "var(--tools-filter-inactive-color)",
+                border: isActive ? "1.5px solid transparent" : "1.5px solid var(--tools-filter-inactive-border)",
                 boxShadow: isActive ? st.filterShadow : "none",
                 backdropFilter: "blur(8px)",
               }}
