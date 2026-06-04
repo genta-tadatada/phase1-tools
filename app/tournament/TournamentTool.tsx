@@ -31,6 +31,8 @@ interface Tournament {
   winnerId: string | null;
   createdAt: number;
   seededMode: boolean;
+  name: string;
+  twoSided: boolean;
 }
 
 const STORAGE_KEY = "phase1-tournament-last";
@@ -78,7 +80,7 @@ function seededBracketOrder(slots: number): number[] {
 }
 
 // ---- トーナメント初期化 ----
-function buildTournament(names: string[], mode: "seeded" | "random"): Tournament {
+function buildTournament(names: string[], mode: "seeded" | "random", tournamentName = ""): Tournament {
   const slots = calcTotalSlots(names.length);
   const totalRounds = Math.log2(slots);
 
@@ -132,6 +134,8 @@ function buildTournament(names: string[], mode: "seeded" | "random"): Tournament
   const initialTournament: Tournament = {
     participants, matches, totalRounds, winnerId: null,
     createdAt: Date.now(), seededMode: mode === "seeded",
+    name: tournamentName,
+    twoSided: names.length > 32,
   };
   return processAllByes(initialTournament);
 }
@@ -302,7 +306,8 @@ function generateSVGBracket(tournament: Tournament, style: SvgStyleKey = "offici
   s += `<rect width="${svgW}" height="${svgH}" fill="${style === "kawaii" ? "url(#bgGrad)" : st.bg}"/>`;
 
   // タイトル
-  s += `<text x="${svgW / 2}" y="${PAD + 18}" text-anchor="middle" font-size="18" font-family="${st.fontFamily}" fill="${st.accent}" font-weight="700" letter-spacing="${style === "official" ? 2 : 0}">${esc(st.title)}</text>`;
+  const titleText = tournament.name ? tournament.name : st.title;
+  s += `<text x="${svgW / 2}" y="${PAD + 18}" text-anchor="middle" font-size="18" font-family="${st.fontFamily}" fill="${st.accent}" font-weight="700" letter-spacing="${style === "official" ? 2 : 0}">${esc(titleText)}</text>`;
 
   // kawaii装飾（角に絵文字）
   if (style === "kawaii" && st.decorations) {
@@ -381,40 +386,35 @@ function generateSVGBracket(tournament: Tournament, style: SvgStyleKey = "offici
 }
 
 // ---- HTMLブラケット用コネクター線 ----
+const MATCH_H_C = 65;
+const COL_W_C   = 112;
+const COL_GAP_C = 20;
+const UNIT_H_C  = MATCH_H_C + 13; // MATCH_H + gap-base
+
 function BracketConnectors({ totalRounds, matchesPerRound }: { totalRounds: number; matchesPerRound: number[] }) {
-  const MATCH_H = 65;
-  const COL_W = 112; // match card width
-  const COL_GAP = 20; // gap-5
+  const spacing = (r: number) => Math.pow(2, r) * UNIT_H_C - UNIT_H_C;
+  const topPad  = (r: number) => r > 0 ? (Math.pow(2, r) - 1) * UNIT_H_C / 2 : 0;
+  const matchCY = (r: number, mi: number) => topPad(r) + mi * (MATCH_H_C + spacing(r)) + MATCH_H_C / 2;
+  const svgH = topPad(0) + matchesPerRound[0] * (MATCH_H_C + spacing(0)) - spacing(0) + MATCH_H_C;
 
   return (
     <>
       {Array.from({ length: totalRounds - 1 }, (_, ri) => {
-        const spacing = (r: number) => Math.pow(2, r) * 78 - 78;
-        const topPad = (r: number) => (r > 0 ? (Math.pow(2, r) - 1) * 78 / 2 : 0);
-        const matchCenterY = (r: number, mi: number) =>
-          topPad(r) + mi * (MATCH_H + spacing(r)) + MATCH_H / 2;
-
         const matchCount = matchesPerRound[ri];
-        const leftX = (COL_W + COL_GAP) * ri + COL_W; // right edge of round ri
-        const svgH = topPad(0) + matchesPerRound[0] * (MATCH_H + spacing(0)) - spacing(0) + MATCH_H;
-
+        const leftX = (COL_W_C + COL_GAP_C) * ri + COL_W_C;
         return (
-          <svg
-            key={ri}
-            className="absolute pointer-events-none"
-            style={{ left: leftX, top: 28, width: COL_GAP, height: svgH }}
-          >
+          <svg key={ri} className="absolute pointer-events-none" style={{ left: leftX, top: 28, width: COL_GAP_C, height: svgH }}>
             {Array.from({ length: matchCount }, (_, mi) => {
-              const cy = matchCenterY(ri, mi);
-              const nextCy = matchCenterY(ri + 1, Math.floor(mi / 2));
-              const midX = COL_GAP / 2;
+              const cy     = matchCY(ri, mi);
+              const nextCy = matchCY(ri + 1, Math.floor(mi / 2));
+              const midX   = COL_GAP_C / 2;
               return (
                 <g key={mi}>
                   <line x1={0} y1={cy} x2={midX} y2={cy} stroke="#cbd5e1" strokeWidth={1.5} />
                   {mi % 2 === 0 && mi + 1 < matchCount && (
                     <>
-                      <line x1={midX} y1={cy} x2={midX} y2={matchCenterY(ri, mi + 1)} stroke="#cbd5e1" strokeWidth={1.5} />
-                      <line x1={midX} y1={nextCy} x2={COL_GAP} y2={nextCy} stroke="#cbd5e1" strokeWidth={1.5} />
+                      <line x1={midX} y1={cy}     x2={midX}      y2={matchCY(ri, mi + 1)} stroke="#cbd5e1" strokeWidth={1.5} />
+                      <line x1={midX} y1={nextCy} x2={COL_GAP_C} y2={nextCy}              stroke="#cbd5e1" strokeWidth={1.5} />
                     </>
                   )}
                 </g>
@@ -424,6 +424,184 @@ function BracketConnectors({ totalRounds, matchesPerRound }: { totalRounds: numb
         );
       })}
     </>
+  );
+}
+
+// ---- 双方向ブラケット（33人以上）用コンポーネント ----
+function TwoSidedBracket({
+  tournament,
+  onSelectWinner,
+}: {
+  tournament: Tournament;
+  onSelectWinner: (round: number, matchIndex: number, winnerId: string) => void;
+}) {
+  const { matches, totalRounds, participants } = tournament;
+  const halfRounds = totalRounds - 1; // 決勝前のラウンド数
+
+  // 各ラウンドを左半分・右半分に分割（matches[r] の前半が左、後半が右）
+  const leftMatchesByRound  = matches.slice(0, halfRounds).map((r) => r.slice(0, r.length / 2));
+  const rightMatchesByRound = matches.slice(0, halfRounds).map((r) => r.slice(r.length / 2));
+  const finalMatch = matches[totalRounds - 1][0];
+
+  // 右側の表示列は「内側（決勝隣）→外側」の順（インデックス逆）
+  // rightColumns[0] = halfRounds-1 ラウンド（試合数最少）
+  // rightColumns[halfRounds-1] = ラウンド0（試合数最多）
+  const rightColumns = [...rightMatchesByRound].reverse();
+
+  // Y座標計算（両側共通）
+  // depth = 0 が最外側（試合数最多）、depth = halfRounds-1 が最内側（試合数最少）
+  const spacing = (depth: number) => Math.pow(2, depth) * UNIT_H_C - UNIT_H_C;
+  const topPad  = (depth: number) => depth > 0 ? (Math.pow(2, depth) - 1) * UNIT_H_C / 2 : 0;
+  const matchCY = (depth: number, mi: number) => topPad(depth) + mi * (MATCH_H_C + spacing(depth)) + MATCH_H_C / 2;
+
+  const maxDepth = halfRounds - 1; // 最外側（試合数最多）の depth
+  const svgH = topPad(0) + Math.pow(2, maxDepth) * (MATCH_H_C + spacing(maxDepth)) - spacing(maxDepth) + MATCH_H_C;
+
+  const totalWidth = (2 * halfRounds + 1) * (COL_W_C + COL_GAP_C);
+
+  return (
+    <div className="relative" style={{ minWidth: totalWidth, height: svgH + 28 }}>
+      {/* ── 左側コネクター ── */}
+      {Array.from({ length: halfRounds - 1 }, (_, ri) => {
+        const matchCount = leftMatchesByRound[ri].length;
+        const depth0 = maxDepth - ri;       // ri=0 は最外側（depth最大）
+        const depth1 = maxDepth - (ri + 1);
+        const leftX = (COL_W_C + COL_GAP_C) * ri + COL_W_C;
+        return (
+          <svg key={`lc-${ri}`} className="absolute pointer-events-none" style={{ left: leftX, top: 28, width: COL_GAP_C, height: svgH }}>
+            {Array.from({ length: matchCount }, (_, mi) => {
+              const cy     = matchCY(depth0, mi);
+              const nextCy = matchCY(depth1, Math.floor(mi / 2));
+              const midX   = COL_GAP_C / 2;
+              return (
+                <g key={mi}>
+                  <line x1={0} y1={cy} x2={midX} y2={cy} stroke="#cbd5e1" strokeWidth={1.5} />
+                  {mi % 2 === 0 && mi + 1 < matchCount && (
+                    <>
+                      <line x1={midX} y1={cy}     x2={midX}      y2={matchCY(depth0, mi + 1)} stroke="#cbd5e1" strokeWidth={1.5} />
+                      <line x1={midX} y1={nextCy} x2={COL_GAP_C} y2={nextCy}                  stroke="#cbd5e1" strokeWidth={1.5} />
+                    </>
+                  )}
+                </g>
+              );
+            })}
+          </svg>
+        );
+      })}
+
+      {/* ── 左側→決勝コネクター ── */}
+      {(() => {
+        const leftLastColX = (COL_W_C + COL_GAP_C) * (halfRounds - 1) + COL_W_C;
+        const cy = matchCY(0, 0); // 左最内側は試合1つ
+        return (
+          <svg key="lf" className="absolute pointer-events-none" style={{ left: leftLastColX, top: 28, width: COL_GAP_C, height: svgH }}>
+            <line x1={0} y1={cy} x2={COL_GAP_C} y2={cy} stroke="#cbd5e1" strokeWidth={1.5} />
+          </svg>
+        );
+      })()}
+
+      {/* ── 右側→決勝コネクター ── */}
+      {(() => {
+        const rightFirstColLeft = (COL_W_C + COL_GAP_C) * halfRounds + COL_W_C;
+        const cy = matchCY(0, 0); // 右最内側も試合1つ
+        return (
+          <svg key="rf" className="absolute pointer-events-none" style={{ left: rightFirstColLeft, top: 28, width: COL_GAP_C, height: svgH }}>
+            <line x1={0} y1={cy} x2={COL_GAP_C} y2={cy} stroke="#cbd5e1" strokeWidth={1.5} />
+          </svg>
+        );
+      })()}
+
+      {/* ── 右側コネクター（内→外、左向きに線が広がる） ── */}
+      {Array.from({ length: halfRounds - 1 }, (_, ci) => {
+        // ci=0: rightColumns[0](内側) と rightColumns[1] の間
+        const innerDepth = ci;       // 内側列の depth (0が最内)
+        const outerDepth = ci + 1;
+        const matchCount = rightColumns[ci + 1].length; // 外側の試合数（多い方）
+        // 右側列の left 座標: 決勝列の右端から外に向かう
+        const finalColLeft = halfRounds * (COL_W_C + COL_GAP_C);
+        const innerColLeft = finalColLeft + COL_W_C + COL_GAP_C + ci * (COL_W_C + COL_GAP_C);
+        // コネクターSVGは innerCol と outerCol の間（innerCol の右端から）
+        const svgLeft = innerColLeft + COL_W_C;
+        return (
+          <svg key={`rc-${ci}`} className="absolute pointer-events-none" style={{ left: svgLeft, top: 28, width: COL_GAP_C, height: svgH }}>
+            {Array.from({ length: matchCount }, (_, mi) => {
+              const cy     = matchCY(outerDepth, mi);
+              const nextCy = matchCY(innerDepth, Math.floor(mi / 2));
+              const midX   = COL_GAP_C / 2;
+              return (
+                <g key={mi}>
+                  <line x1={COL_GAP_C} y1={cy} x2={midX} y2={cy} stroke="#cbd5e1" strokeWidth={1.5} />
+                  {mi % 2 === 0 && mi + 1 < matchCount && (
+                    <>
+                      <line x1={midX} y1={cy}     x2={midX} y2={matchCY(outerDepth, mi + 1)} stroke="#cbd5e1" strokeWidth={1.5} />
+                      <line x1={midX} y1={nextCy} x2={0}     y2={nextCy}                      stroke="#cbd5e1" strokeWidth={1.5} />
+                    </>
+                  )}
+                </g>
+              );
+            })}
+          </svg>
+        );
+      })}
+
+      {/* ── マッチカード列 ── */}
+      <div className="absolute top-0 left-0 flex" style={{ gap: 0 }}>
+        {/* 左側列（外→内） */}
+        {leftMatchesByRound.map((roundMatches, ri) => {
+          const depth = maxDepth - ri;
+          const sp   = spacing(depth);
+          const tp   = topPad(depth);
+          return (
+            <div key={`l-${ri}`} className="flex flex-col shrink-0 relative z-10" style={{ width: COL_W_C, marginRight: COL_GAP_C }}>
+              <div className="text-xs font-bold text-muted-foreground mb-2 text-center bg-muted/50 rounded-lg py-1 px-2">
+                {getRoundName(ri, totalRounds)}
+              </div>
+              <div className="flex flex-col" style={{ gap: `${sp}px`, paddingTop: `${tp}px` }}>
+                {roundMatches.map((match) => (
+                  <MatchCard key={match.id} match={match} participants={participants} onSelectWinner={onSelectWinner} roundIndex={ri} totalRounds={totalRounds} />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* 決勝列 */}
+        {(() => {
+          const finalDepth = 0;
+          const tp = topPad(finalDepth);
+          return (
+            <div key="final" className="flex flex-col shrink-0 relative z-10" style={{ width: COL_W_C, marginRight: COL_GAP_C }}>
+              <div className="text-xs font-bold text-[var(--accent)] mb-2 text-center bg-[var(--accent)]/10 rounded-lg py-1 px-2 border border-[var(--accent)]/30">
+                決勝
+              </div>
+              <div style={{ paddingTop: `${tp}px` }}>
+                <MatchCard match={finalMatch} participants={participants} onSelectWinner={onSelectWinner} roundIndex={totalRounds - 1} totalRounds={totalRounds} />
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* 右側列（内→外） */}
+        {rightColumns.map((colMatches, ci) => {
+          const depth = ci; // 内側から外側へ
+          const sp   = spacing(depth);
+          const tp   = topPad(depth);
+          const origRoundIdx = halfRounds - 1 - ci; // 元のラウンドインデックス（ラベル用）
+          return (
+            <div key={`r-${ci}`} className="flex flex-col shrink-0 relative z-10" style={{ width: COL_W_C, marginRight: ci < halfRounds - 1 ? COL_GAP_C : 0 }}>
+              <div className="text-xs font-bold text-muted-foreground mb-2 text-center bg-muted/50 rounded-lg py-1 px-2">
+                {getRoundName(origRoundIdx, totalRounds)}
+              </div>
+              <div className="flex flex-col" style={{ gap: `${sp}px`, paddingTop: `${tp}px` }}>
+                {colMatches.map((match) => (
+                  <MatchCard key={match.id} match={match} participants={participants} onSelectWinner={onSelectWinner} roundIndex={origRoundIdx} totalRounds={totalRounds} />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -520,14 +698,15 @@ function MatchCard({
 }
 
 // ---- セットアップ画面 ----
-function SetupScreen({ onStart }: { onStart: (names: string[], mode: "seeded" | "random") => void }) {
+function SetupScreen({ onStart }: { onStart: (names: string[], mode: "seeded" | "random", tournamentName: string) => void }) {
   const [input, setInput] = useState("");
   const [mode, setMode] = useState<"seeded" | "random">("seeded");
+  const [tournamentName, setTournamentName] = useState("");
 
   const names = input.split("\n").map((s) => s.trim()).filter(Boolean);
   const count = names.length;
   const isPowerOf2 = count > 0 && (count & (count - 1)) === 0;
-  const canStart = count >= 4 && count <= 32;
+  const canStart = count >= 4 && count <= 64;
 
   return (
     <div className="flex flex-col gap-5">
@@ -539,6 +718,19 @@ function SetupScreen({ onStart }: { onStart: (names: string[], mode: "seeded" | 
           <p className="text-sm font-bold text-amber-700 dark:text-amber-300">トーナメント表</p>
           <p className="text-xs text-amber-600/70 dark:text-amber-400/70 mt-0.5">参加者を入力してトーナメントを作成！シード設定もできる。</p>
         </div>
+      </div>
+      {/* トーナメント名 */}
+      <div>
+        <label className="text-sm font-medium text-muted-foreground block mb-2">
+          トーナメント名（任意）
+        </label>
+        <input
+          type="text"
+          className="w-full h-10 px-3 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 placeholder:text-muted-foreground"
+          placeholder="例: 社内卓球大会 2025"
+          value={tournamentName}
+          onChange={(e) => setTournamentName(e.target.value)}
+        />
       </div>
       <div>
         <label className="text-sm font-medium text-muted-foreground block mb-2">
@@ -552,13 +744,16 @@ function SetupScreen({ onStart }: { onStart: (names: string[], mode: "seeded" | 
         />
         <div className="mt-1.5 flex items-center gap-2 flex-wrap">
           <span className="text-sm text-muted-foreground">{count}人入力</span>
-          {count > 0 && !isPowerOf2 && count <= 32 && (
+          {count > 0 && !isPowerOf2 && count <= 64 && (
             <span className="text-xs text-amber-500">
               ⚠ {calcTotalSlots(count)}人枠でBye補完します
             </span>
           )}
-          {count > 32 && (
-            <span className="text-xs text-destructive">32人以内で入力してください</span>
+          {count > 32 && count <= 64 && (
+            <span className="text-xs text-sky-500">33人以上は双方向ブラケットで表示されます</span>
+          )}
+          {count > 64 && (
+            <span className="text-xs text-destructive">64人以内で入力してください</span>
           )}
           {count < 4 && count > 0 && (
             <span className="text-xs text-destructive">4人以上必要です</span>
@@ -597,7 +792,7 @@ function SetupScreen({ onStart }: { onStart: (names: string[], mode: "seeded" | 
       </div>
 
       <Button
-        onClick={() => onStart(names, mode)}
+        onClick={() => onStart(names, mode, tournamentName)}
         disabled={!canStart}
         className="h-12 text-base hover:opacity-90"
         style={{ backgroundColor: "var(--accent)", color: "var(--accent-foreground)" }}
@@ -700,6 +895,11 @@ function TournamentView({
         )}
       </AnimatePresence>
 
+      {/* トーナメント名 */}
+      {tournament.name && (
+        <p className="text-center text-base font-bold text-[var(--accent)]">{tournament.name}</p>
+      )}
+
       {/* シード表示ラベル */}
       {tournament.seededMode && (
         <p className="text-xs text-muted-foreground text-center">
@@ -709,49 +909,50 @@ function TournamentView({
 
       {/* ブラケット */}
       <div className="overflow-x-auto tournament-bracket pb-2">
-        <div
-          className="flex gap-5 items-start relative"
-          style={{ minWidth: tournament.totalRounds * 120 }}
-        >
-          <BracketConnectors
-            totalRounds={tournament.totalRounds}
-            matchesPerRound={tournament.matches.map((m) => m.length)}
-          />
-          {tournament.matches.map((roundMatches, ri) => {
-            const spacing = Math.pow(2, ri) * (65 + 13) - 65 - 13;
-            const topPad = ri > 0 ? (Math.pow(2, ri) - 1) * (65 + 13) / 2 : 0;
+        {tournament.twoSided ? (
+          <TwoSidedBracket tournament={tournament} onSelectWinner={onSelectWinner} />
+        ) : (
+          <div
+            className="flex gap-5 items-start relative"
+            style={{ minWidth: tournament.totalRounds * 120 }}
+          >
+            <BracketConnectors
+              totalRounds={tournament.totalRounds}
+              matchesPerRound={tournament.matches.map((m) => m.length)}
+            />
+            {tournament.matches.map((roundMatches, ri) => {
+              const sp = Math.pow(2, ri) * UNIT_H_C - UNIT_H_C;
+              const tp = ri > 0 ? (Math.pow(2, ri) - 1) * UNIT_H_C / 2 : 0;
 
-            return (
-              <motion.div
-                key={ri}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: ri * 0.08, duration: 0.2 }}
-                className="flex flex-col shrink-0 relative z-10"
-                style={{ minWidth: 112 }}
-              >
-                <div className="text-xs font-bold text-muted-foreground mb-2 text-center bg-muted/50 rounded-lg py-1 px-2">
-                  {getRoundName(ri, tournament.totalRounds)}
-                </div>
-                <div
-                  className="flex flex-col"
-                  style={{ gap: `${spacing}px`, paddingTop: `${topPad}px` }}
+              return (
+                <motion.div
+                  key={ri}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: ri * 0.08, duration: 0.2 }}
+                  className="flex flex-col shrink-0 relative z-10"
+                  style={{ minWidth: 112 }}
                 >
-                  {roundMatches.map((match) => (
-                    <MatchCard
-                      key={match.id}
-                      match={match}
-                      participants={tournament.participants}
-                      onSelectWinner={onSelectWinner}
-                      roundIndex={ri}
-                      totalRounds={tournament.totalRounds}
-                    />
-                  ))}
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
+                  <div className="text-xs font-bold text-muted-foreground mb-2 text-center bg-muted/50 rounded-lg py-1 px-2">
+                    {getRoundName(ri, tournament.totalRounds)}
+                  </div>
+                  <div className="flex flex-col" style={{ gap: `${sp}px`, paddingTop: `${tp}px` }}>
+                    {roundMatches.map((match) => (
+                      <MatchCard
+                        key={match.id}
+                        match={match}
+                        participants={tournament.participants}
+                        onSelectWinner={onSelectWinner}
+                        roundIndex={ri}
+                        totalRounds={tournament.totalRounds}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* SVGデザイン選択 */}
@@ -860,10 +1061,10 @@ export function TournamentTool() {
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
 
-  const handleStart = useCallback((names: string[], mode: "seeded" | "random") => {
+  const handleStart = useCallback((names: string[], mode: "seeded" | "random", tournamentName: string) => {
     namesRef.current = names;
     modeRef.current = mode;
-    const t = buildTournament(names, mode);
+    const t = buildTournament(names, mode, tournamentName);
     setTournament(t);
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(t)); } catch { /* ignore */ }
   }, []);
@@ -882,7 +1083,7 @@ export function TournamentTool() {
     if (namesRef.current.length === 0 && tournament) {
       namesRef.current = tournament.participants.filter((p) => !p.isBye).map((p) => p.name);
     }
-    const t = buildTournament(namesRef.current, modeRef.current);
+    const t = buildTournament(namesRef.current, modeRef.current, tournament?.name ?? "");
     setTournament(t);
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(t)); } catch { /* ignore */ }
   }, [tournament]);

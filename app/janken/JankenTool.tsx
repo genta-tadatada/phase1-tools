@@ -37,6 +37,8 @@ const HANDS: Hand[] = ["rock", "scissors", "paper"];
 
 const JANKEN_WORDS  = ["じゃん", "けん", "ポン！"] as const;
 const JANKEN_COLORS = ["from-rose-400 to-pink-400", "from-amber-400 to-yellow-400", "from-violet-400 to-purple-400"];
+const AIKO_WORDS    = ["あい", "こで", "しょ！"] as const;
+const AIKO_COLORS   = ["from-sky-400 to-cyan-400", "from-violet-400 to-purple-400", "from-rose-400 to-pink-400"];
 
 const HAND_THEME: Record<Hand, {
   bg: string; activeBg: string; border: string; grad: string; glow: string;
@@ -133,6 +135,9 @@ export function JankenTool() {
   // CPUモード用：選択中の手を即時表示
   const [pickedHand, setPickedHand] = useState<Hand | null>(null);
   const [pendingCpuHand, setPendingCpuHand] = useState<Hand | null>(null);
+  const [isAikoRound, setIsAikoRound] = useState(false);
+  const [activeWords, setActiveWords] = useState<readonly string[]>(JANKEN_WORDS);
+  const [activeColors, setActiveColors] = useState<readonly string[]>(JANKEN_COLORS);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -163,7 +168,11 @@ export function JankenTool() {
 
   const clearTimer = () => { if (timerRef.current) clearTimeout(timerRef.current); };
 
-  const startCountdown = useCallback((pendingPlayers: Player[]) => {
+  const startCountdown = useCallback((pendingPlayers: Player[], isAiko = false) => {
+    const words  = isAiko ? AIKO_WORDS  : JANKEN_WORDS;
+    const colors = isAiko ? AIKO_COLORS : JANKEN_COLORS;
+    setActiveWords(words);
+    setActiveColors(colors);
     setPhase("countdown");
     setCountdownStep(0);
     const stepMs = settings.countdownSpeed === "fast" ? 400 : 650;
@@ -193,6 +202,7 @@ export function JankenTool() {
   const handleCpuPick = useCallback((hand: Hand) => {
     const meResult = players.find((p) => p.id === "player")?.result;
     if (phase !== "setup" && !(phase === "result" && meResult === "draw")) return;
+    const isAiko = phase === "result" && meResult === "draw";
     const cpuHand = randomHand();
     setPickedHand(hand);
     setPendingCpuHand(cpuHand);
@@ -200,7 +210,7 @@ export function JankenTool() {
     startCountdown([
       { id: "player", name: "あなた", hand, result: r },
       { id: "cpu",    name: "CPU",    hand: cpuHand, result: judgeResult(cpuHand, hand) },
-    ]);
+    ], isAiko);
   }, [phase, players, startCountdown]);
 
   const handleMpPick = useCallback((hand: Hand) => {
@@ -216,9 +226,10 @@ export function JankenTool() {
         ...p,
         result: isDraw ? ("draw" as Result) : winners.includes(p.id) ? ("win" as Result) : ("lose" as Result),
       }));
-      startCountdown(final);
+      startCountdown(final, isAikoRound);
+      setIsAikoRound(false);
     }
-  }, [phase, players, mpPlayers, mpCurrentIdx, startCountdown]);
+  }, [phase, players, mpPlayers, mpCurrentIdx, startCountdown, isAikoRound]);
 
   const startMpGame = () => {
     if (mpPlayers.length < 2) return;
@@ -235,6 +246,9 @@ export function JankenTool() {
     setMpCurrentIdx(0);
     setPickedHand(null);
     setPendingCpuHand(null);
+    setIsAikoRound(false);
+    setActiveWords(JANKEN_WORDS);
+    setActiveColors(JANKEN_COLORS);
     if (mode === "cpu") {
       setPlayers([
         { id: "player", name: "あなた", hand: null, result: null },
@@ -358,14 +372,14 @@ export function JankenTool() {
                     className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
                   >
                     <div className="flex items-end justify-center gap-1 sm:gap-3 flex-wrap">
-                      {JANKEN_WORDS.map((word, i) =>
+                      {activeWords.map((word, i) =>
                         countdownStep >= i ? (
                           <motion.span
                             key={i}
                             initial={{ scale: 0.3, opacity: 0, y: 30 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             transition={{ type: "spring", stiffness: 420, damping: 16 }}
-                            className={`text-6xl sm:text-7xl font-black bg-gradient-to-r ${JANKEN_COLORS[i]} bg-clip-text text-transparent drop-shadow-sm`}
+                            className={`text-6xl sm:text-7xl font-black bg-gradient-to-r ${activeColors[i]} bg-clip-text text-transparent drop-shadow-sm`}
                           >
                             {word}
                           </motion.span>
@@ -577,7 +591,11 @@ export function JankenTool() {
             </div>
             <motion.button
               whileTap={{ scale: 0.97 }}
-              onClick={() => { setPhase("setup"); setMpCurrentIdx(0); }}
+              onClick={() => {
+                setIsAikoRound(players[0]?.result === "draw");
+                setPhase("setup");
+                setMpCurrentIdx(0);
+              }}
               className="w-full h-12 rounded-xl border border-border bg-card hover:bg-muted text-sm font-semibold transition-colors"
             >
               もう一度
