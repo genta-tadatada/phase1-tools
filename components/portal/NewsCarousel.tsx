@@ -84,13 +84,18 @@ export function NewsCarousel({ items }: { items: NewsItem[] }) {
               >
                 <div style={{
                   height: "100%",
-                  background: "#fff",
-                  border: `2px solid ${isActive ? "#ddd6fe" : "#f1ecf3"}`,
+                  background: isActive
+                    ? "linear-gradient(160deg,#fdf9ff 0%,#fff 100%)"
+                    : "#fff",
+                  border: `2px solid ${isActive ? "#c4b5fd" : "#f1ecf3"}`,
                   borderRadius: 22,
                   overflow: "hidden",
-                  boxShadow: isActive ? "0 16px 40px -12px rgba(120,80,140,0.3)" : "0 8px 28px -12px rgba(120,80,140,0.18)",
+                  boxShadow: isActive
+                    ? "0 20px 48px -16px rgba(120,80,140,0.35), 0 0 0 4px rgba(196,181,253,0.12)"
+                    : "0 8px 28px -12px rgba(120,80,140,0.18)",
                   display: "flex",
                   flexDirection: "column",
+                  transition: "box-shadow 0.3s ease, border-color 0.3s ease",
                 }}>
                   <div style={{ height: 150, background: item.image && !item.imageContain ? "#fff" : bannerGradient(item.banner.grad), position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     {item.image ? (
@@ -159,15 +164,16 @@ function arrowStyle(side: "left" | "right"): React.CSSProperties {
     width: 44,
     height: 44,
     borderRadius: "50%",
-    background: "#fff",
-    border: "2px solid #f1ecf3",
-    color: "#1f1d2b",
+    background: "linear-gradient(160deg,#ffffff,#fdf9ff)",
+    border: "2px solid #e8e4f0",
+    color: "#6b6779",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    boxShadow: "0 6px 18px -6px rgba(120,80,140,0.2)",
-    fontSize: 18,
-    fontWeight: 700,
+    boxShadow: "0 6px 20px -8px rgba(120,80,140,0.28)",
+    fontSize: 16,
+    fontWeight: 900,
+    transition: "all 0.2s ease",
   };
 }

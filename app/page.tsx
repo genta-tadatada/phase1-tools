@@ -30,9 +30,11 @@ export default function PortalPage() {
       {/* HERO */}
       <section className="p-hero">
         <img src="/uploads/kawaii-blob-pink.svg" alt="" aria-hidden="true"
-          style={{ position: "absolute", top: -40, right: "5%", width: 320, opacity: 0.35, pointerEvents: "none", zIndex: 0 }} />
+          style={{ position: "absolute", top: -50, right: "4%", width: 340, opacity: 0.4, pointerEvents: "none", zIndex: 0, animation: "p-float 6s ease-in-out infinite" }} />
         <img src="/uploads/kawaii-blob-mint.svg" alt="" aria-hidden="true"
-          style={{ position: "absolute", bottom: 60, left: -60, width: 260, opacity: 0.3, pointerEvents: "none", zIndex: 0 }} />
+          style={{ position: "absolute", bottom: 60, left: -60, width: 280, opacity: 0.3, pointerEvents: "none", zIndex: 0, animation: "p-float 8s ease-in-out 1.5s infinite" }} />
+        <img src="/uploads/kawaii-blob-lavender.svg" alt="" aria-hidden="true"
+          style={{ position: "absolute", top: "30%", left: "8%", width: 180, opacity: 0.18, pointerEvents: "none", zIndex: 0, animation: "p-float 7s ease-in-out 0.8s infinite" }} />
 
         <div className="p-container">
           <div className="p-hero-inner">
@@ -43,7 +45,8 @@ export default function PortalPage() {
               </h1>
               <p className="p-hero-sub">
                 便利なツールや楽しいコンテンツを、<br />
-                タダで、いますぐ。
+                タダで、いますぐ。<br />
+                <span style={{ fontSize: "0.88em", opacity: 0.8 }}>ログイン不要・広告控えめ・完全無料。</span>
               </p>
               <Link href="#services" className="p-cta-primary">
                 <span className="p-spark">✦</span>
@@ -197,28 +200,28 @@ export default function PortalPage() {
           <div className="p-feat-grid">
             <div className="p-feat-card">
               <div className="p-feat-icon i-1">
-                <Image src="/uploads/kawaii-check-circle.svg" alt="" width={32} height={32} />
+                <Image src="/uploads/kawaii-check-circle.svg" alt="" width={40} height={40} className="blend" />
               </div>
               <div className="p-feat-name">だれでも、すぐに</div>
               <p className="p-feat-desc">難しい設定は一切なし。<br />開いてそのまま使えます。</p>
             </div>
             <div className="p-feat-card">
-              <div className="p-feat-icon i-2">
-                <Image src="/uploads/kawaii-padlock.svg" alt="" width={52} height={52} style={{ width: 52, height: 52, objectFit: "contain" }} />
+              <div className="p-feat-icon i-2 has-img">
+                <Image src="/uploads/kawaii-padlock.svg" alt="" width={52} height={52} className="blend" style={{ objectFit: "contain" }} />
               </div>
               <div className="p-feat-name">ログイン不要</div>
               <p className="p-feat-desc">アカウント作成なしで<br />すべての機能が使えます。</p>
             </div>
             <div className="p-feat-card">
-              <div className="p-feat-icon i-3">
-                <Image src="/uploads/kawaii-tag-free.svg" alt="" width={52} height={52} style={{ width: 52, height: 52, objectFit: "contain" }} />
+              <div className="p-feat-icon i-3 has-img">
+                <Image src="/uploads/kawaii-tag-free.svg" alt="" width={52} height={52} className="blend" style={{ objectFit: "contain" }} />
               </div>
               <div className="p-feat-name">すべて無料</div>
               <p className="p-feat-desc">隠れた課金は一切なし。<br />ずっとタダで使えます。</p>
             </div>
             <div className="p-feat-card">
-              <div className="p-feat-icon i-4">
-                <Image src="/uploads/kawaii-desktop-screen.svg" alt="" width={52} height={52} style={{ width: 52, height: 52, objectFit: "contain" }} />
+              <div className="p-feat-icon i-4 has-img">
+                <Image src="/uploads/kawaii-desktop-screen.svg" alt="" width={52} height={52} className="blend" style={{ objectFit: "contain" }} />
               </div>
               <div className="p-feat-name">広告は控えめに</div>
               <p className="p-feat-desc">ツール使用中は広告を非表示。<br />使うことだけに集中できます。</p>

@@ -1,3 +1,37 @@
+<!-- BEGIN:quality-reference -->
+# 品質基準と実装クイックリファレンス
+
+## 品質フロア（これを下回らない）
+
+| 基準 | 参照ファイル | 確認ポイント |
+|-----|-----------|------------|
+| UI・状態管理・全体品質 | `app/counter/CounterTool.tsx` | 最完成度。新ツールの品質最低ライン |
+| アニメーション・ビジュアル | `app/amida/AmidaTool.tsx` | kawaii系アニメのベスト |
+
+**新ツール実装前・実装後に必ず目視確認する。「CounterToolと同じクオリティか？」を自問する。**
+
+## 実装時に参照するファイル（絶対パス）
+
+| 用途 | ファイル |
+|-----|---------|
+| デザインシステム（色・フォント・余白） | `C:\MY SSD\webdev\.secretary\design\design-system.md` |
+| Phase1テーマ・ブランドカラー | `C:\MY SSD\webdev\.secretary\design\phase1-theme.md` |
+| 素材カタログ（使える素材の逆引き） | `C:\MY SSD\webdev\.secretary\design\asset-catalog.md` |
+| 既存コンポーネント一覧 | `C:\MY SSD\webdev\.secretary\design\phase1-components.md` |
+| ツール仕様書 | `C:\MY SSD\webdev\.secretary\design\{tool-slug}-spec.md` |
+
+## 素材の使い方（生成前に在庫確認）
+
+`public/assets/icon-{tool}.png` — 14ツール分のアイコン。新ツールのヒーローに使う。
+`public/uploads/kawaii-blob-{pink/lavender/mint/blue}.svg` — ヒーロー背景装飾。`opacity-20`で使う。
+`public/uploads/kawaii-dots-*.svg` — サブ背景パターン。
+70本超のSVGあり。**画像生成を依頼する前に `asset-catalog.md` を確認する。**
+
+## モバイル確認
+
+実装完了の判定は**375px幅で確認してから**。PCで綺麗でもスマホが崩れていれば未完成。
+<!-- END:quality-reference -->
+
 <!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 
@@ -7,16 +41,25 @@ This version has breaking changes — APIs, conventions, and file structure may 
 <!-- BEGIN:model-usage-rules -->
 # Model selection policy
 
-Use **Opus** when:
-- Starting a new tool (read spec → decide implementation approach)
-- A UI/UX decision has multiple valid options and quality matters
-- Debugging a non-obvious bug (hypothesis generation)
-- Any task where the cost of a wrong decision exceeds the cost of Opus
+Decide in one question: **"Is there a decision to make, or just work to execute?"**
 
-Use **Sonnet** (default) for everything else:
-- Routine implementation following a clear spec
-- File edits, refactoring, formatting
-- Build/test commands
+- **A decision to make** (which approach? is this design good? why is this bug happening?) → **Opus**
+- **Work to execute** (a clear spec/instruction already says what to do) → **Sonnet**
+
+### Sonnet is enough for (don't reach for Opus):
+- Implementing a tool that already has a `{tool}-spec.md` to follow
+- File edits, refactoring, renaming, formatting
+- Build / type-check / test commands and fixing the errors they report
+- Applying a fix whose cause is already understood
+- SEO meta, sitemap, copy tweaks following an existing pattern
+
+### Switch up to Opus when:
+- Starting a new tool with no spec, or the spec leaves the approach open
+- A UI/UX choice has multiple valid options and quality matters
+- Debugging a non-obvious bug (need hypothesis generation)
+- The cost of a wrong decision exceeds the cost of Opus
+
+If you started on Sonnet and hit a real decision point, stop and `/model opus` rather than guessing.
 
 Switch with: `/model opus` or `/model sonnet`
 <!-- END:model-usage-rules -->
