@@ -64,7 +64,7 @@ export default function ContactPage() {
                 X（旧Twitter）のDMでも受け付けています。
               </p>
               <a
-                href="https://x.com/tadatada_tools"
+                href="https://x.com/info_tadatada"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="contact-x-link"
@@ -79,7 +79,7 @@ export default function ContactPage() {
                 <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" aria-hidden="true">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
-                @tadatada_tools に DM
+                @info_tadatada に DM
               </a>
             </div>
           </div>
