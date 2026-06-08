@@ -170,12 +170,13 @@ export default function PortalPage() {
               </div>
               <div className="p-service-name">ただただ一問一答</div>
               <p className="p-service-desc">知識を楽しくインプット＆チェック！スキマ時間にサクッと学べます。</p>
-              <span className="p-status-badge soon-lav">
+              <span className="p-status-badge dev-lav">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                  <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1.5"/>
-                  <path d="M6 3V6.5L8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  <circle cx="2.5" cy="6" r="1.5" fill="currentColor"/>
+                  <circle cx="6" cy="6" r="1.5" fill="currentColor"/>
+                  <circle cx="9.5" cy="6" r="1.5" fill="currentColor"/>
                 </svg>
-                もうすぐ公開
+                開発中
               </span>
             </div>
             <div className="p-service-card pink" aria-disabled="true" style={{ cursor: "default", pointerEvents: "none" }}>
@@ -188,8 +189,9 @@ export default function PortalPage() {
               <p className="p-service-desc">カジュアルに遊べるゲームをお届け！ひとりでも、みんなでも楽しめます。</p>
               <span className="p-status-badge dev-pink">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                  <path d="M2 4L5.5 7.5L10 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 1.5" strokeDashoffset="0"/>
-                  <rect x="1" y="1" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+                  <circle cx="2.5" cy="6" r="1.5" fill="currentColor"/>
+                  <circle cx="6" cy="6" r="1.5" fill="currentColor"/>
+                  <circle cx="9.5" cy="6" r="1.5" fill="currentColor"/>
                 </svg>
                 開発中
               </span>
@@ -229,7 +231,7 @@ export default function PortalPage() {
                 <Image src="/uploads/kawaii-padlock.svg" alt="" width={52} height={52} className="blend" style={{ objectFit: "contain" }} />
               </div>
               <div className="p-feat-name">ログイン不要</div>
-              <p className="p-feat-desc">アカウント作成なしで<br />すべての機能が使えます。</p>
+              <p className="p-feat-desc">アカウント作成なしで、<br />すぐに使い始められます。</p>
             </div>
             <div className="p-feat-card">
               <div className="p-feat-icon i-3 has-img">
