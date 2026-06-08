@@ -27,8 +27,7 @@ export const metadata: Metadata = {
   description: "便利なツール・一問一答クイズ・ブラウザゲームを、タダで、いますぐ。ログイン不要・広告控えめ・完全無料。",
   manifest: "/manifest.json",
   icons: {
-    icon: [{ url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" }],
-    apple: "/icons/icon-512.png",
+    icon: [],
   },
   metadataBase: new URL("https://tadatada.net"),
   alternates: {
