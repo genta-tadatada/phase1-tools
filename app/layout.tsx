@@ -30,6 +30,10 @@ export const metadata: Metadata = {
     icon: "/icons/icon-192.png",
     apple: "/icons/icon-512.png",
   },
+  metadataBase: new URL("https://tadatada.net"),
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({
