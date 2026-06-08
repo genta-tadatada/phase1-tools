@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- SEO解説記事の汎用ヒーロー：開いた本＋虫眼鏡＋キラキラ -->
+  <!-- 背景のふわっと丸 -->
+  <ellipse cx="100" cy="116" rx="78" ry="58" fill="#fce7f3" opacity="0.5"/>
+
+  <!-- 開いた本 -->
+  <!-- 左ページ -->
+  <path d="M100 70 L52 60 Q44 78 48 132 L100 142 Z" fill="#ffffff"/>
+  <path d="M100 70 L52 60 Q44 78 48 132 L100 142 Z" fill="none" stroke="#c4b5fd" stroke-width="3"/>
+  <!-- 右ページ -->
+  <path d="M100 70 L148 60 Q156 78 152 132 L100 142 Z" fill="#ffffff"/>
+  <path d="M100 70 L148 60 Q156 78 152 132 L100 142 Z" fill="none" stroke="#c4b5fd" stroke-width="3"/>
+  <!-- 中央の綴じ -->
+  <line x1="100" y1="70" x2="100" y2="142" stroke="#c4b5fd" stroke-width="3"/>
+  <!-- 文字ライン -->
+  <g stroke="#fbcfe8" stroke-width="3" stroke-linecap="round">
+    <line x1="60" y1="82" x2="90" y2="86"/>
+    <line x1="58" y1="96" x2="90" y2="100"/>
+    <line x1="56" y1="110" x2="84" y2="113"/>
+    <line x1="110" y1="86" x2="140" y2="82"/>
+    <line x1="110" y1="100" x2="142" y2="96"/>
+  </g>
+
+  <!-- 虫眼鏡（SEO＝探す） -->
+  <circle cx="128" cy="118" r="24" fill="#a7f3d0" opacity="0.45"/>
+  <circle cx="128" cy="118" r="24" fill="none" stroke="#6ee7b7" stroke-width="6"/>
+  <line x1="146" y1="136" x2="164" y2="156" stroke="#6ee7b7" stroke-width="8" stroke-linecap="round"/>
+  <ellipse cx="120" cy="110" rx="7" ry="4" fill="#ffffff" opacity="0.7" transform="rotate(-30 120 110)"/>
+
+  <!-- キラキラ -->
+  <path d="M40 44 L43 53 L52 56 L43 59 L40 68 L37 59 L28 56 L37 53 Z" fill="#fde68a"/>
+  <path d="M158 40 L160.5 46 L167 48 L160.5 50 L158 56 L155.5 50 L149 48 L155.5 46 Z" fill="#f9a8d4"/>
+  <circle cx="44" cy="150" r="4" fill="#c4b5fd"/>
+</svg>

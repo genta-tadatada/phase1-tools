@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- 空っぽの箱（中身がない＝空状態） -->
+  <!-- 背景のふわっと丸 -->
+  <ellipse cx="100" cy="150" rx="62" ry="14" fill="#ede9fe"/>
+  <!-- 箱のフタ（開いている） -->
+  <path d="M50 78 L100 60 L150 78 L100 96 Z" fill="#ddd6fe"/>
+  <path d="M44 70 L72 50 L96 58 L68 78 Z" fill="#c4b5fd"/>
+  <path d="M156 70 L128 50 L104 58 L132 78 Z" fill="#c4b5fd"/>
+  <!-- 箱本体 -->
+  <path d="M60 88 L100 102 L100 156 L60 142 Z" fill="#c4b5fd"/>
+  <path d="M140 88 L100 102 L100 156 L140 142 Z" fill="#a78bda"/>
+  <path d="M60 88 L100 74 L140 88 L100 102 Z" fill="#ddd6fe"/>
+  <!-- 中の暗がり（空っぽ感） -->
+  <path d="M74 92 L100 102 L100 116 L74 106 Z" fill="#8b5cf6" opacity="0.35"/>
+  <path d="M126 92 L100 102 L100 116 L126 106 Z" fill="#8b5cf6" opacity="0.5"/>
+  <!-- かわいい困り顔 -->
+  <circle cx="86" cy="118" r="3.5" fill="#6b5b95"/>
+  <circle cx="114" cy="120" r="3.5" fill="#6b5b95"/>
+  <path d="M93 130 Q100 126 107 132" fill="none" stroke="#6b5b95" stroke-width="3" stroke-linecap="round"/>
+  <!-- 上に浮かぶ「？」風のキラ -->
+  <circle cx="100" cy="34" r="4" fill="#f9a8d4"/>
+  <circle cx="100" cy="46" r="2.5" fill="#fbcfe8"/>
+</svg>

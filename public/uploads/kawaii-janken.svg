@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- じゃんけんツール用：グー・チョキ・パーの3つの手 -->
+  <!-- 影 -->
+  <ellipse cx="100" cy="168" rx="70" ry="12" fill="#ede9fe" opacity="0.7"/>
+
+  <!-- グー（左・ピンク） -->
+  <g transform="rotate(-14 56 96)">
+    <rect x="34" y="80" width="48" height="40" rx="18" fill="#f9a8d4"/>
+    <circle cx="44" cy="78" r="9" fill="#f9a8d4"/>
+    <circle cx="58" cy="74" r="9" fill="#f9a8d4"/>
+    <circle cx="72" cy="78" r="9" fill="#f9a8d4"/>
+    <!-- 関節ライン -->
+    <line x1="46" y1="92" x2="46" y2="108" stroke="#ec7bb4" stroke-width="3" stroke-linecap="round"/>
+    <line x1="58" y1="90" x2="58" y2="108" stroke="#ec7bb4" stroke-width="3" stroke-linecap="round"/>
+    <line x1="70" y1="92" x2="70" y2="108" stroke="#ec7bb4" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- チョキ（中央上・ミント） -->
+  <g transform="translate(0 -8)">
+    <rect x="86" y="78" width="36" height="40" rx="16" fill="#6ee7b7"/>
+    <rect x="88" y="38" width="13" height="48" rx="6.5" fill="#6ee7b7" transform="rotate(-14 94 62)"/>
+    <rect x="107" y="38" width="13" height="48" rx="6.5" fill="#6ee7b7" transform="rotate(10 113 62)"/>
+  </g>
+
+  <!-- パー（右・ラベンダー） -->
+  <g transform="rotate(12 144 96)">
+    <rect x="120" y="78" width="46" height="42" rx="16" fill="#c4b5fd"/>
+    <rect x="122" y="44" width="11" height="44" rx="5.5" fill="#c4b5fd"/>
+    <rect x="135" y="40" width="11" height="48" rx="5.5" fill="#c4b5fd"/>
+    <rect x="148" y="44" width="11" height="44" rx="5.5" fill="#c4b5fd"/>
+    <rect x="158" y="58" width="11" height="34" rx="5.5" fill="#c4b5fd" transform="rotate(22 163 75)"/>
+  </g>
+
+  <!-- キラキラ -->
+  <path d="M100 24 L103 33 L112 36 L103 39 L100 48 L97 39 L88 36 L97 33 Z" fill="#fde68a"/>
+</svg>

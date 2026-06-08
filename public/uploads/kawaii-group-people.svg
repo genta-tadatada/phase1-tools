@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- グループ分けツール用：カラフルな仲間たち -->
+  <!-- 影 -->
+  <ellipse cx="100" cy="166" rx="72" ry="12" fill="#ede9fe" opacity="0.7"/>
+
+  <!-- 後列の2人（小さめ） -->
+  <!-- ミント -->
+  <circle cx="60" cy="78" r="18" fill="#a7f3d0"/>
+  <path d="M40 138 Q40 104 60 104 Q80 104 80 138 Z" fill="#6ee7b7"/>
+  <circle cx="54" cy="78" r="2.5" fill="#3f6f5b"/>
+  <circle cx="66" cy="78" r="2.5" fill="#3f6f5b"/>
+  <!-- イエロー -->
+  <circle cx="140" cy="78" r="18" fill="#fde68a"/>
+  <path d="M120 138 Q120 104 140 104 Q160 104 160 138 Z" fill="#fbd147"/>
+  <circle cx="134" cy="78" r="2.5" fill="#8a6d1f"/>
+  <circle cx="146" cy="78" r="2.5" fill="#8a6d1f"/>
+
+  <!-- 前列中央（大きめ・ピンク） -->
+  <circle cx="100" cy="92" r="24" fill="#fbcfe8"/>
+  <path d="M70 162 Q70 118 100 118 Q130 118 130 162 Z" fill="#f9a8d4"/>
+  <circle cx="92" cy="90" r="3.5" fill="#a8557f"/>
+  <circle cx="108" cy="90" r="3.5" fill="#a8557f"/>
+  <path d="M94 102 Q100 108 106 102" fill="none" stroke="#a8557f" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="84" cy="98" r="5" fill="#f6a6c8" opacity="0.7"/>
+  <circle cx="116" cy="98" r="5" fill="#f6a6c8" opacity="0.7"/>
+
+  <!-- ラベンダー（手前左寄り） -->
+  <circle cx="100" cy="92" r="0" fill="none"/>
+
+  <!-- 仕分けのキラ -->
+  <path d="M100 28 L103 37 L112 40 L103 43 L100 52 L97 43 L88 40 L97 37 Z" fill="#c4b5fd"/>
+  <circle cx="32" cy="56" r="4" fill="#f9a8d4"/>
+  <circle cx="168" cy="56" r="4" fill="#6ee7b7"/>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- くじ引きツール用：くじ箱＋飛び出すチケット -->
+  <!-- 影 -->
+  <ellipse cx="100" cy="170" rx="58" ry="11" fill="#fbcfe8" opacity="0.5"/>
+  <!-- 飛び出すチケット（当たり） -->
+  <g transform="rotate(-16 100 70)">
+    <rect x="74" y="40" width="52" height="40" rx="8" fill="#fde68a"/>
+    <!-- ミシン目の切れ込み -->
+    <circle cx="74" cy="60" r="5" fill="#ffffff"/>
+    <circle cx="126" cy="60" r="5" fill="#ffffff"/>
+    <!-- 当たりマーク（星） -->
+    <path d="M100 48 L103 57 L112 57 L105 63 L108 72 L100 66 L92 72 L95 63 L88 57 L97 57 Z" fill="#f9a8d4"/>
+  </g>
+  <!-- くじ箱本体 -->
+  <path d="M52 100 L148 100 L138 162 L62 162 Z" fill="#f9a8d4"/>
+  <path d="M52 100 L148 100 L145 116 L55 116 Z" fill="#ec7bb4"/>
+  <!-- 投入口 -->
+  <rect x="80" y="104" width="40" height="8" rx="4" fill="#ffffff" opacity="0.8"/>
+  <!-- 「LOT」風リボン帯 -->
+  <rect x="62" y="128" width="76" height="22" rx="6" fill="#ffffff" opacity="0.85"/>
+  <g stroke="#c4b5fd" stroke-width="4" stroke-linecap="round">
+    <line x1="74" y1="139" x2="90" y2="139"/>
+    <line x1="98" y1="139" x2="114" y2="139"/>
+    <line x1="120" y1="139" x2="126" y2="139"/>
+  </g>
+  <!-- 飛び散るキラ -->
+  <circle cx="40" cy="76" r="4" fill="#6ee7b7"/>
+  <path d="M160 86 L162.5 92 L169 94 L162.5 96 L160 102 L157.5 96 L151 94 L157.5 92 Z" fill="#c4b5fd"/>
+</svg>
