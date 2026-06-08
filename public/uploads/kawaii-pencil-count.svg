@@ -1,29 +1,105 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-  <!-- 文字数カウントツール用：原稿用紙＋鉛筆 -->
-  <!-- 紙（マス目つき） -->
-  <g transform="rotate(-6 92 104)">
-    <rect x="42" y="48" width="100" height="116" rx="10" fill="#ffffff"/>
-    <rect x="42" y="48" width="100" height="116" rx="10" fill="none" stroke="#fbcfe8" stroke-width="4"/>
-    <!-- マス目 -->
-    <g stroke="#fde68a" stroke-width="3" stroke-linecap="round">
-      <line x1="56" y1="72" x2="128" y2="72"/>
-      <line x1="56" y1="92" x2="128" y2="92"/>
-      <line x1="56" y1="112" x2="128" y2="112"/>
-      <line x1="56" y1="132" x2="108" y2="132"/>
+  <defs>
+    <!-- 原稿用紙：ミント系の立体グラデ（左上光源） -->
+    <linearGradient id="paperBody" x1="20%" y1="5%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="55%" stop-color="#e3fbf0"/>
+      <stop offset="100%" stop-color="#c4f3df"/>
+    </linearGradient>
+    <!-- 紙のフチ（ミント枠） -->
+    <linearGradient id="paperEdge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <!-- 鉛筆の軸：イエローの立体グラデ -->
+    <linearGradient id="pencilBody" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fff3c4"/>
+      <stop offset="40%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#f0b528"/>
+    </linearGradient>
+    <!-- 消しゴム金具帯 -->
+    <linearGradient id="pencilFerrule" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fbcfe8"/>
+      <stop offset="100%" stop-color="#f48fc4"/>
+    </linearGradient>
+    <!-- 消しゴム（ピンク） -->
+    <linearGradient id="pencilEraser" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fde8f4"/>
+      <stop offset="100%" stop-color="#f9a8d4"/>
+    </linearGradient>
+    <!-- 削り部の木 -->
+    <linearGradient id="pencilWood" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffe7c2"/>
+      <stop offset="100%" stop-color="#f3c98a"/>
+    </linearGradient>
+    <!-- 紙のつや帯 -->
+    <linearGradient id="paperSheen" x1="10%" y1="0%" x2="60%" y2="90%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.75"/>
+      <stop offset="45%" stop-color="#ffffff" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <!-- 接地シャドウ -->
+    <radialGradient id="pencilShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 接地のソフトシャドウ -->
+  <ellipse cx="98" cy="172" rx="60" ry="13" fill="url(#pencilShadow)"/>
+
+  <!-- 原稿用紙（少し傾けて立体感） -->
+  <g transform="rotate(-7 92 106)">
+    <!-- 紙の影 -->
+    <rect x="40" y="50" width="104" height="118" rx="12" fill="#a7f3d0" opacity="0.4" transform="translate(3 4)"/>
+    <!-- 紙本体 -->
+    <rect x="40" y="48" width="104" height="118" rx="12" fill="url(#paperBody)"/>
+    <rect x="40" y="48" width="104" height="118" rx="12" fill="none" stroke="url(#paperEdge)" stroke-width="4"/>
+    <!-- 上部のカウント点（123風） -->
+    <circle cx="58" cy="63" r="3.4" fill="#c4b5fd"/>
+    <circle cx="69" cy="63" r="3.4" fill="#6ee7b7"/>
+    <circle cx="80" cy="63" r="3.4" fill="#f9a8d4"/>
+    <!-- ちらほら文字（マス目ライン＋短い字） -->
+    <g stroke="#9be8c6" stroke-width="3.4" stroke-linecap="round">
+      <line x1="54" y1="82" x2="130" y2="82"/>
+      <line x1="54" y1="100" x2="130" y2="100"/>
+      <line x1="54" y1="118" x2="130" y2="118"/>
+      <line x1="54" y1="136" x2="106" y2="136"/>
     </g>
-    <!-- 数字「123」風の点（カウント表現） -->
-    <circle cx="62" cy="64" r="3" fill="#c4b5fd"/>
-    <circle cx="72" cy="64" r="3" fill="#6ee7b7"/>
-    <circle cx="82" cy="64" r="3" fill="#f9a8d4"/>
+    <g stroke="#34d399" stroke-width="4" stroke-linecap="round" opacity="0.9">
+      <line x1="58" y1="82" x2="66" y2="82"/>
+      <line x1="74" y1="82" x2="84" y2="82"/>
+      <line x1="58" y1="100" x2="70" y2="100"/>
+      <line x1="60" y1="118" x2="68" y2="118"/>
+      <line x1="78" y1="118" x2="90" y2="118"/>
+      <line x1="58" y1="136" x2="64" y2="136"/>
+    </g>
+    <!-- 紙のつや帯 -->
+    <rect x="40" y="48" width="104" height="118" rx="12" fill="url(#paperSheen)"/>
   </g>
-  <!-- 鉛筆（右下から斜め） -->
-  <g transform="rotate(40 140 130)">
-    <rect x="128" y="60" width="22" height="92" rx="6" fill="#fde68a"/>
-    <rect x="128" y="60" width="22" height="14" fill="#f9a8d4"/>
-    <path d="M128 152 L139 172 L150 152 Z" fill="#f6d8b0"/>
-    <path d="M133 162 L139 172 L145 162 Z" fill="#8b5cf6"/>
-    <line x1="139" y1="74" x2="139" y2="150" stroke="#fbbf3b" stroke-width="3" opacity="0.6"/>
+
+  <!-- 黄色鉛筆（右下から斜めに乗る） -->
+  <g transform="rotate(38 142 120)">
+    <!-- 軸の影 -->
+    <rect x="131" y="44" width="24" height="108" rx="8" fill="#34d399" opacity="0.22" transform="translate(3 3)"/>
+    <!-- 軸本体 -->
+    <rect x="131" y="56" width="24" height="96" rx="8" fill="url(#pencilBody)"/>
+    <!-- 軸の縦つや -->
+    <rect x="135" y="60" width="4.5" height="88" rx="2.2" fill="#ffffff" opacity="0.55"/>
+    <!-- 金具帯 -->
+    <rect x="131" y="50" width="24" height="10" fill="url(#pencilFerrule)"/>
+    <rect x="131" y="52" width="24" height="2" fill="#ffffff" opacity="0.5"/>
+    <!-- 消しゴム -->
+    <path d="M131 50 C131 44 134 41 143 41 C152 41 155 44 155 50 Z" fill="url(#pencilEraser)"/>
+    <!-- 削り部（木） -->
+    <path d="M131 152 L143 176 L155 152 Z" fill="url(#pencilWood)"/>
+    <!-- 芯 -->
+    <path d="M138 160 L143 176 L148 160 Z" fill="#8b5cf6"/>
+    <path d="M141 167 L143 176 L145 167 Z" fill="#6b4fc9"/>
   </g>
-  <!-- キラ -->
-  <path d="M40 36 L42.5 42 L49 44 L42.5 46 L40 52 L37.5 46 L31 44 L37.5 42 Z" fill="#c4b5fd"/>
+
+  <!-- きらめき -->
+  <path d="M44 38 C46 43 49 46 54 48 C49 50 46 53 44 58 C42 53 39 50 34 48 C39 46 42 43 44 38 Z" fill="#fde68a"/>
+  <path d="M168 70 C169.4 73.4 171.6 75.6 175 77 C171.6 78.4 169.4 80.6 168 84 C166.6 80.6 164.4 78.4 161 77 C164.4 75.6 166.6 73.4 168 70 Z" fill="#c4b5fd"/>
+  <circle cx="158" cy="44" r="3.4" fill="#f9a8d4"/>
 </svg>

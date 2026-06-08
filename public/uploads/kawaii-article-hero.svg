@@ -1,34 +1,96 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
-  <!-- SEO解説記事の汎用ヒーロー：開いた本＋虫眼鏡＋キラキラ -->
-  <!-- 背景のふわっと丸 -->
-  <ellipse cx="100" cy="116" rx="78" ry="58" fill="#fce7f3" opacity="0.5"/>
+  <defs>
+    <!-- 本の表紙：ラベンダーの立体グラデ -->
+    <linearGradient id="bookCover" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ddd6fe"/>
+      <stop offset="60%" stop-color="#c4b5fd"/>
+      <stop offset="100%" stop-color="#9d83e8"/>
+    </linearGradient>
+    <!-- 左ページ -->
+    <linearGradient id="pageL" x1="0%" y1="0%" x2="100%" y2="20%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f3eefe"/>
+    </linearGradient>
+    <!-- 右ページ -->
+    <linearGradient id="pageR" x1="100%" y1="0%" x2="0%" y2="20%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f3eefe"/>
+    </linearGradient>
+    <!-- 虫眼鏡レンズ：ミントのガラス -->
+    <radialGradient id="lensGlass" cx="35%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="45%" stop-color="#a7f3d0" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#6ee7b7" stop-opacity="0.5"/>
+    </radialGradient>
+    <!-- 虫眼鏡リング -->
+    <linearGradient id="lensRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <!-- 取っ手 -->
+    <linearGradient id="lensHandle" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#f0b528"/>
+    </linearGradient>
+    <!-- 本のつや帯 -->
+    <linearGradient id="bookSheen" x1="10%" y1="0%" x2="55%" y2="80%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <!-- 接地シャドウ -->
+    <radialGradient id="bookShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#9d83e8" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#9d83e8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 接地のソフトシャドウ -->
+  <ellipse cx="98" cy="162" rx="64" ry="13" fill="url(#bookShadow)"/>
 
   <!-- 開いた本 -->
+  <!-- 表紙の見えるフチ（本体の下） -->
+  <path d="M100 70 L46 58 C40 60 38 64 38 70 L40 134 C40 140 44 144 50 144 L100 152 Z" fill="url(#bookCover)"/>
+  <path d="M100 70 L154 58 C160 60 162 64 162 70 L160 134 C160 140 156 144 150 144 L100 152 Z" fill="url(#bookCover)"/>
+
   <!-- 左ページ -->
-  <path d="M100 70 L52 60 Q44 78 48 132 L100 142 Z" fill="#ffffff"/>
-  <path d="M100 70 L52 60 Q44 78 48 132 L100 142 Z" fill="none" stroke="#c4b5fd" stroke-width="3"/>
+  <path d="M100 66 L52 56 C46 66 44 90 47 128 L100 138 Z" fill="url(#pageL)" stroke="#d6cbf7" stroke-width="2"/>
   <!-- 右ページ -->
-  <path d="M100 70 L148 60 Q156 78 152 132 L100 142 Z" fill="#ffffff"/>
-  <path d="M100 70 L148 60 Q156 78 152 132 L100 142 Z" fill="none" stroke="#c4b5fd" stroke-width="3"/>
+  <path d="M100 66 L148 56 C154 66 156 90 153 128 L100 138 Z" fill="url(#pageR)" stroke="#d6cbf7" stroke-width="2"/>
   <!-- 中央の綴じ -->
-  <line x1="100" y1="70" x2="100" y2="142" stroke="#c4b5fd" stroke-width="3"/>
-  <!-- 文字ライン -->
-  <g stroke="#fbcfe8" stroke-width="3" stroke-linecap="round">
-    <line x1="60" y1="82" x2="90" y2="86"/>
-    <line x1="58" y1="96" x2="90" y2="100"/>
-    <line x1="56" y1="110" x2="84" y2="113"/>
-    <line x1="110" y1="86" x2="140" y2="82"/>
-    <line x1="110" y1="100" x2="142" y2="96"/>
+  <path d="M100 66 L100 138" stroke="#c4b5fd" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="100" cy="102" rx="3.5" ry="36" fill="#b6a3f0" opacity="0.25"/>
+
+  <!-- 文字ライン（左右） -->
+  <g stroke="#fbcfe8" stroke-width="3.2" stroke-linecap="round">
+    <line x1="60" y1="80" x2="90" y2="84"/>
+    <line x1="58" y1="94" x2="90" y2="98"/>
+    <line x1="56" y1="108" x2="84" y2="111"/>
+    <line x1="110" y1="84" x2="140" y2="80"/>
+    <line x1="110" y1="98" x2="142" y2="94"/>
+    <line x1="116" y1="112" x2="144" y2="108"/>
   </g>
 
-  <!-- 虫眼鏡（SEO＝探す） -->
-  <circle cx="128" cy="118" r="24" fill="#a7f3d0" opacity="0.45"/>
-  <circle cx="128" cy="118" r="24" fill="none" stroke="#6ee7b7" stroke-width="6"/>
-  <line x1="146" y1="136" x2="164" y2="156" stroke="#6ee7b7" stroke-width="8" stroke-linecap="round"/>
-  <ellipse cx="120" cy="110" rx="7" ry="4" fill="#ffffff" opacity="0.7" transform="rotate(-30 120 110)"/>
+  <!-- 本のつや帯（左ページ上） -->
+  <path d="M100 66 L52 56 C46 66 44 90 47 128 L100 138 Z" fill="url(#bookSheen)"/>
 
-  <!-- キラキラ -->
-  <path d="M40 44 L43 53 L52 56 L43 59 L40 68 L37 59 L28 56 L37 53 Z" fill="#fde68a"/>
-  <path d="M158 40 L160.5 46 L167 48 L160.5 50 L158 56 L155.5 50 L149 48 L155.5 46 Z" fill="#f9a8d4"/>
-  <circle cx="44" cy="150" r="4" fill="#c4b5fd"/>
+  <!-- 虫眼鏡（右下・本に重なる） -->
+  <g transform="rotate(8 130 116)">
+    <!-- 取っ手 -->
+    <rect x="124" y="132" width="11" height="32" rx="5.5" fill="url(#lensHandle)" transform="rotate(-42 130 148)"/>
+    <rect x="126" y="134" width="2.4" height="26" rx="1.2" fill="#ffffff" opacity="0.5" transform="rotate(-42 130 148)"/>
+    <!-- リング -->
+    <circle cx="124" cy="112" r="25" fill="none" stroke="url(#lensRing)" stroke-width="7"/>
+    <!-- ガラス -->
+    <circle cx="124" cy="112" r="21" fill="url(#lensGlass)"/>
+    <!-- レンズのつや -->
+    <ellipse cx="115" cy="103" rx="8" ry="4.5" fill="#ffffff" opacity="0.85" transform="rotate(-30 115 103)"/>
+    <circle cx="132" cy="120" r="3" fill="#ffffff" opacity="0.6"/>
+  </g>
+
+  <!-- きらきら（やわらかい配色） -->
+  <path d="M42 46 C44 51 47 54 52 56 C47 58 44 61 42 66 C40 61 37 58 32 56 C37 54 40 51 42 46 Z" fill="#fde68a"/>
+  <path d="M160 42 C161.6 45.5 164 47.8 167.5 49.4 C164 51 161.6 53.3 160 56.8 C158.4 53.3 156 51 152.5 49.4 C156 47.8 158.4 45.5 160 42 Z" fill="#f9a8d4"/>
+  <circle cx="46" cy="146" r="4" fill="#c4b5fd"/>
+  <circle cx="166" cy="120" r="3.4" fill="#a7f3d0"/>
 </svg>
