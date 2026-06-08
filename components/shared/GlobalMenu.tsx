@@ -261,8 +261,9 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                         </span>
                         <span style={{ flex:1 }}>{item.label}</span>
                         {item.soon && (
-                          <span style={{ fontFamily:"Quicksand, sans-serif", fontWeight:700, fontSize:10, letterSpacing:"0.06em", padding:"3px 8px", borderRadius:999, background:"#ede9fe", color:"#8b5cf6" }}>
-                            SOON
+                          <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:800, fontSize:10, letterSpacing:"0.02em", padding:"3px 9px", borderRadius:999, background:"#ede9fe", color:"#8b5cf6", display:"inline-flex", alignItems:"center", gap:4 }}>
+                            <svg width="10" height="4" viewBox="0 0 10 4" aria-hidden="true"><circle cx="1.5" cy="2" r="1.5" fill="currentColor"/><circle cx="5" cy="2" r="1.5" fill="currentColor"/><circle cx="8.5" cy="2" r="1.5" fill="currentColor"/></svg>
+                            開発中
                           </span>
                         )}
                       </Link>
@@ -300,8 +301,9 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                                   {child.label}
                                 </span>
                                 {child.soon && (
-                                  <span style={{ fontFamily:"Quicksand, sans-serif", fontWeight:700, fontSize:9, letterSpacing:"0.06em", padding:"2px 7px", borderRadius:999, background:"var(--drawer-border)", color:"var(--drawer-text-subtle)", marginLeft:8, flexShrink:0 }}>
-                                    SOON
+                                  <span style={{ fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:800, fontSize:9, letterSpacing:"0.02em", padding:"2px 7px", borderRadius:999, background:"#ede9fe", color:"#8b5cf6", marginLeft:8, flexShrink:0, display:"inline-flex", alignItems:"center", gap:3 }}>
+                                    <svg width="8" height="3" viewBox="0 0 8 3" aria-hidden="true"><circle cx="1" cy="1.5" r="1" fill="currentColor"/><circle cx="4" cy="1.5" r="1" fill="currentColor"/><circle cx="7" cy="1.5" r="1" fill="currentColor"/></svg>
+                                    開発中
                                   </span>
                                 )}
                               </Link>
