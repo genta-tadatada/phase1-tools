@@ -770,8 +770,17 @@
   box-shadow: 0 0 0 4px rgba(34,197,94,0.18);
   animation: p-pulse 1.8s infinite;
 }
-.portal-page .p-status-badge.soon-lav  { background: var(--p-lav-100); color: var(--p-lav-500); }
-.portal-page .p-status-badge.soon-pink { background: var(--p-pink-100); color: var(--p-pink-500); }
+.portal-page .p-status-badge.soon-lav  {
+  background: var(--p-lav-100);
+  color: var(--p-lav-500);
+  border: 1px solid var(--p-lav-200);
+}
+.portal-page .p-status-badge.dev-pink  {
+  background: var(--p-pink-100);
+  color: var(--p-pink-500);
+  border: 1px solid var(--p-pink-200);
+  opacity: 0.85;
+}
 
 /* Features */
 .portal-page .p-features {

@@ -170,7 +170,13 @@ export default function PortalPage() {
               </div>
               <div className="p-service-name">ただただ一問一答</div>
               <p className="p-service-desc">知識を楽しくインプット＆チェック！スキマ時間にサクッと学べます。</p>
-              <span className="p-status-badge soon-lav"><span>⏱</span>もうすぐ公開</span>
+              <span className="p-status-badge soon-lav">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <circle cx="6" cy="6" r="5" stroke="currentColor" strokeWidth="1.5"/>
+                  <path d="M6 3V6.5L8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+                もうすぐ公開
+              </span>
             </div>
             <div className="p-service-card pink" aria-disabled="true" style={{ cursor: "default", pointerEvents: "none" }}>
               <div className="p-service-mascot">
@@ -180,7 +186,13 @@ export default function PortalPage() {
               </div>
               <div className="p-service-name">ただタダgames</div>
               <p className="p-service-desc">カジュアルに遊べるゲームをお届け！ひとりでも、みんなでも楽しめます。</p>
-              <span className="p-status-badge soon-pink"><span>⏱</span>もうすぐ公開</span>
+              <span className="p-status-badge dev-pink">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M2 4L5.5 7.5L10 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="2 1.5" strokeDashoffset="0"/>
+                  <rect x="1" y="1" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+                </svg>
+                開発中
+              </span>
             </div>
           </div>
         </div>
