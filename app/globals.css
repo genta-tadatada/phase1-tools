@@ -229,9 +229,9 @@
   --cat-all-card:     linear-gradient(160deg,#f0f9ff,#f5f3ff);
   --tools-card-border:       rgba(255,255,255,0.80);
   --tools-card-border-hover: rgba(255,255,255,1.00);
-  --tools-badge-bg:   rgba(237,233,254,0.88);
-  --tools-badge-color: #7c3aed;
-  --tools-badge-border: #ddd6fe;
+  --tools-badge-bg:   linear-gradient(135deg, #fdf4fc 0%, #ede9fe 100%);
+  --tools-badge-color: #9333ea;
+  --tools-badge-border: rgba(196,181,253,0.45);
   --tools-filter-inactive-bg: rgba(255,255,255,0.65);
   --tools-filter-inactive-color: var(--th-text-muted);
   --tools-filter-inactive-border: rgba(241,236,243,0.9);
