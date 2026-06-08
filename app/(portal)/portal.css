@@ -409,9 +409,9 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 60%, #818cf8 100%);
+  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 50%, #818cf8 100%);
   color: #ffffff;
-  border: none;
+  border: 1.5px solid rgba(255,255,255,0.22);
   padding: 18px 34px 18px 28px;
   border-radius: var(--p-radius-pill);
   font-family: var(--p-font-jp);
@@ -420,17 +420,47 @@
   letter-spacing: 0.04em;
   cursor: pointer;
   text-decoration: none;
-  box-shadow: 0 8px 28px -8px rgba(125,211,252,0.65), 0 2px 8px rgba(129,140,248,0.2);
+  box-shadow:
+    0 8px 28px -8px rgba(125,211,252,0.65),
+    0 2px 8px rgba(129,140,248,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.28);
   transition: all 0.24s cubic-bezier(0.4,0,0.2,1);
   animation: p-fadeInUp 0.7s 0.28s cubic-bezier(0.25,0.46,0.45,0.94) both;
+  position: relative;
+  overflow: hidden;
+}
+.portal-page .p-cta-primary::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+  transition: left 0.55s ease;
+  pointer-events: none;
 }
 .portal-page .p-cta-primary:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 20px 40px -12px rgba(125,211,252,0.85), 0 4px 16px rgba(129,140,248,0.3);
+  box-shadow:
+    0 20px 40px -12px rgba(125,211,252,0.85),
+    0 4px 16px rgba(129,140,248,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.28);
 }
-.portal-page .p-cta-primary .p-arrow { margin-left: 4px; transition: transform 0.2s ease; }
-.portal-page .p-cta-primary:hover .p-arrow { transform: translateX(3px); }
+.portal-page .p-cta-primary:hover::before { left: 160%; }
 .portal-page .p-spark { color: #fef08a; filter: drop-shadow(0 0 6px rgba(252,211,77,0.8)); }
+.portal-page .p-spark-svg {
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,0.7));
+  animation: p-sparkPulse 2.4s ease-in-out infinite;
+}
+@keyframes p-sparkPulse {
+  0%, 100% { opacity: 0.85; transform: scale(1) rotate(0deg); }
+  50%       { opacity: 1;    transform: scale(1.2) rotate(18deg); }
+}
+.portal-page .p-arrow-svg {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.portal-page .p-cta-primary:hover .p-arrow-svg { transform: translateX(4px); }
 
 /* Hero art + mascots */
 .portal-page .p-hero-art {

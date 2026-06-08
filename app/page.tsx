@@ -49,9 +49,13 @@ export default function PortalPage() {
                 <span style={{ fontSize: "0.88em", opacity: 0.8 }}>ログイン不要・広告控えめ・完全無料。</span>
               </p>
               <Link href="#services" className="p-cta-primary">
-                <span className="p-spark">✦</span>
+                <svg className="p-spark-svg" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                  <path d="M6.5 0L7.9 5.1L13 6.5L7.9 7.9L6.5 13L5.1 7.9L0 6.5L5.1 5.1Z" fill="white"/>
+                </svg>
                 いますぐ使ってみる
-                <span className="p-arrow">→</span>
+                <svg className="p-arrow-svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M5.5 3L10.5 8L5.5 13" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </Link>
             </div>
 
@@ -261,9 +265,13 @@ export default function PortalPage() {
             <div className="p-cta-title">さあ、タダで、使ってみよう。</div>
             <p className="p-cta-sub">使う・学ぶ・遊ぶ、あなたの今日にひとつだけ。</p>
             <Link href="#services" className="p-cta-primary">
-              <span className="p-spark">✦</span>
+              <svg className="p-spark-svg" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+                <path d="M6.5 0L7.9 5.1L13 6.5L7.9 7.9L6.5 13L5.1 7.9L0 6.5L5.1 5.1Z" fill="white"/>
+              </svg>
               いますぐ使ってみる
-              <span className="p-arrow">→</span>
+              <svg className="p-arrow-svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M5.5 3L10.5 8L5.5 13" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </Link>
           </div>
         </div>
