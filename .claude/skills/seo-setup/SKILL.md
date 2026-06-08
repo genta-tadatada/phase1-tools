@@ -17,7 +17,7 @@ trigger: /seo-setup
 
 - **ツール名** より **悩み・状況クエリ** をdescriptionに優先する
 - description: 50〜120文字（Googleの表示範囲）
-- title: `[ツール名] | ただただツール`（layout.tsxのtemplateで自動補完）
+- title: `[ツール名] | ただただ`（layout.tsxのtemplateで自動補完）
 - OGP画像は現時点では設定しない（Phase1完成後に一括対応）
 
 ## 実行手順
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     // ターゲットユーザーが検索しそうなキーワード5〜10個
   ],
   openGraph: {
-    title: "[ツール名] | ただただツール",
+    title: "[ツール名] | ただただ",
     description: "[descriptionと同じ or 短縮版]",
     type: "website",
     url: "https://tadatada.net/[slug]",
@@ -111,8 +111,8 @@ export default function robots(): MetadataRoute.Robots {
 ```typescript
 export const metadata: Metadata = {
   title: {
-    default: "ただただツール",
-    template: "%s | ただただツール",
+    default: "ただただ",
+    template: "%s | ただただ",
   },
   description: "シンプルで使いやすい無料Webツール集",
 };
