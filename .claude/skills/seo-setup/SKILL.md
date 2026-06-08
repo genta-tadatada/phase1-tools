@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     title: "[ツール名] | ただただツール",
     description: "[descriptionと同じ or 短縮版]",
     type: "website",
-    url: "https://tadatada-tool.jp/[slug]",
+    url: "https://tadatada.net/[slug]",
   },
 };
 ```
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
 ```typescript
 import type { MetadataRoute } from "next";
 
-const BASE_URL = "https://tadatada-tool.jp";
+const BASE_URL = "https://tadatada.net";
 
 const TOOL_SLUGS = [
   "counter",
@@ -99,7 +99,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://tadatada-tool.jp/sitemap.xml",
+    sitemap: "https://tadatada.net/sitemap.xml",
   };
 }
 ```
@@ -126,6 +126,6 @@ export const metadata: Metadata = {
 
 ## 注意事項
 
-- ドメインは現在 `phase1-tools.pages.dev` だが、ファイル内は `tadatada-tool.jp` で記述する（取得後に一括変更しやすくするため）
+- ドメインは `tadatada.net`（取得済み・Cloudflare Pages接続済み）
 - sitemap.xml と robots.txt は `output: 'export'` の静的ビルドでも自動生成される（Next.js 16対応済み）
 - OGP画像（og:image）は設定しない（Phase1完成後に一括対応）

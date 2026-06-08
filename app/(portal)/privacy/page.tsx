@@ -158,7 +158,7 @@ export default function PrivacyPage() {
               </p>
             </section>
 
-            <p style={{ color: "#9a96a8", fontSize: "0.8rem" }}>制定日: 2026年5月28日</p>
+            <p style={{ color: "#9a96a8", fontSize: "0.8rem" }}>制定日: 2026年6月8日</p>
           </div>
         </div>
       </main>
