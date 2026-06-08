@@ -102,7 +102,7 @@ function ToolCard({ tool, index }: { tool: Tool; index: number }) {
       animate="visible"
       whileHover={{ y: -4, transition: { duration: 0.2, ease: "easeOut" } }}
       whileTap={{ scale: 0.97 }}
-      className="group relative flex flex-col gap-3 p-4 rounded-2xl overflow-hidden"
+      className="group relative flex flex-col gap-3 p-4 rounded-2xl overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
       style={{
         background: st.cardBg,
         border: "1.5px solid var(--tools-card-border)",
@@ -111,8 +111,8 @@ function ToolCard({ tool, index }: { tool: Tool; index: number }) {
         color: "inherit",
       }}
       onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {
-        e.currentTarget.style.boxShadow = `0 8px 28px -8px rgba(180,140,200,0.28), ${st.iconShadow}`;
-        e.currentTarget.style.borderColor = "var(--tools-card-border-hover)";
+        e.currentTarget.style.boxShadow = `0 8px 28px -8px rgba(180,140,200,0.28), ${st.iconShadow}, 0 0 0 3px rgba(14,165,233,0.1)`;
+        e.currentTarget.style.borderColor = "#0ea5e9";
       }}
       onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => {
         e.currentTarget.style.boxShadow = "0 2px 12px -4px rgba(180,140,200,0.15)";

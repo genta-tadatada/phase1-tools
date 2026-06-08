@@ -261,6 +261,22 @@
 }
 .portal-page .p-heart { color: var(--p-pink-300); margin: 0 4px; }
 
+/* ===== SOFT DIVIDER ===== */
+.portal-page .p-soft-divider {
+  height: 1px;
+  margin: 0 auto;
+  max-width: 640px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--p-lav-200) 20%,
+    var(--p-pink-200) 50%,
+    var(--p-mint-200) 80%,
+    transparent 100%
+  );
+  opacity: 0.7;
+}
+
 /* ===== WAVE DIVIDER ===== */
 .portal-page .p-wave {
   position: absolute;
@@ -304,9 +320,14 @@
   position: relative;
   padding: 80px 0 110px;
   overflow: hidden;
-  background: var(--p-bg);
-  /* 上部グラデーション光彩 */
-  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(196,181,253,0.14) 0%, transparent 70%);
+  background: linear-gradient(
+    160deg,
+    #fdf4fc 0%,
+    #faf0ff 30%,
+    #f3f0ff 55%,
+    #eef8f4 80%,
+    #f0faf7 100%
+  );
 }
 .portal-page .p-hero::before {
   content: "";
@@ -672,9 +693,9 @@
   position: relative;
   overflow: hidden;
 }
-.portal-page .p-service-card.live .p-service-mascot { background: var(--p-bg-card); }
-.portal-page .p-service-card.lav .p-service-mascot  { background: var(--p-bg-card); }
-.portal-page .p-service-card.pink .p-service-mascot { background: var(--p-bg-card); }
+.portal-page .p-service-card.live .p-service-mascot { background: linear-gradient(160deg, #f0fdf8 0%, #d1fae5 100%); }
+.portal-page .p-service-card.lav .p-service-mascot  { background: linear-gradient(160deg, #f8f6ff 0%, #ede9fe 100%); }
+.portal-page .p-service-card.pink .p-service-mascot { background: linear-gradient(160deg, #fef7fc 0%, #fce7f3 100%); }
 .portal-page .p-service-mascot::after {
   content: "";
   position: absolute;

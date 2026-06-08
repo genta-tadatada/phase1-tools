@@ -189,6 +189,9 @@ export default function PortalPage() {
         </div>
       </section>
 
+      {/* ソフト分割線 */}
+      <div className="p-soft-divider" aria-hidden="true" />
+
       {/* FEATURES */}
       <section className="p-features">
         <div className="p-container">
