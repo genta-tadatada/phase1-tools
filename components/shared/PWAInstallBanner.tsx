@@ -68,7 +68,8 @@ export function PWAInstallBanner() {
       aria-label="ホーム画面への追加を促すバナー"
     >
       <div className="flex items-center gap-2 min-w-0">
-        <span className="text-lg shrink-0" aria-hidden="true">🏠</span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/assets/kawaii-house.png" alt="" aria-hidden="true" className="shrink-0" style={{ width: 36, height: 36, objectFit: "contain" }} />
         <div className="text-sm leading-tight min-w-0" style={{ color: "#3d3550" }}>
           {showIOSHint ? (
             <>

@@ -221,27 +221,27 @@ export default function PortalPage() {
           <div className="p-feat-grid">
             <div className="p-feat-card">
               <div className="p-feat-icon i-1">
-                <Image src="/uploads/kawaii-check-circle.svg" alt="" width={40} height={40} className="blend" />
+                <Image src="/uploads/kawaii-sparkle-accent.svg" alt="" width={52} height={52} className="blend" style={{ objectFit: "contain" }} />
               </div>
               <div className="p-feat-name">だれでも、すぐに</div>
               <p className="p-feat-desc">難しい設定は一切なし。<br />開いてそのまま使えます。</p>
             </div>
             <div className="p-feat-card">
-              <div className="p-feat-icon i-2 has-img">
+              <div className="p-feat-icon i-2">
                 <Image src="/uploads/kawaii-padlock.svg" alt="" width={52} height={52} className="blend" style={{ objectFit: "contain" }} />
               </div>
               <div className="p-feat-name">ログイン不要</div>
               <p className="p-feat-desc">アカウント作成なしで、<br />すぐに使い始められます。</p>
             </div>
             <div className="p-feat-card">
-              <div className="p-feat-icon i-3 has-img">
+              <div className="p-feat-icon i-3">
                 <Image src="/uploads/kawaii-tag-free.svg" alt="" width={52} height={52} className="blend" style={{ objectFit: "contain" }} />
               </div>
               <div className="p-feat-name">すべて無料</div>
               <p className="p-feat-desc">隠れた課金は一切なし。<br />ずっとタダで使えます。</p>
             </div>
             <div className="p-feat-card">
-              <div className="p-feat-icon i-4 has-img">
+              <div className="p-feat-icon i-4">
                 <Image src="/uploads/kawaii-desktop-screen.svg" alt="" width={52} height={52} className="blend" style={{ objectFit: "contain" }} />
               </div>
               <div className="p-feat-name">広告は控えめに</div>
