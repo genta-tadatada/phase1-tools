@@ -20,20 +20,20 @@ interface Tool {
 }
 
 const TOOLS: Tool[] = [
-  { href: "/counter",       icon: "/assets/icon-counter.png",       name: "マルチカウンター",    desc: "複数項目を同時にカウント",      cat: "calc" },
-  { href: "/stopwatch",     icon: "/assets/icon-stopwatch.png",     name: "多列ストップウォッチ", desc: "ラップ計測対応・1/100秒精度",   cat: "calc" },
-  { href: "/timer",         icon: "/assets/icon-timer.png",         name: "タイマー",            desc: "カウントダウン・アラーム付き",  cat: "calc" },
-  { href: "/bpm",           icon: "/assets/icon-bpm.png",           name: "BPMメトロノーム",     desc: "40〜240 BPM・拍子設定可",      cat: "calc" },
-  { href: "/calculator",    icon: "/assets/icon-calculator.png",    name: "履歴付き電卓",        desc: "計算履歴表示・税込割引特化",    cat: "calc" },
-  { href: "/word-count",    icon: "/assets/icon-word-count.png",    name: "文字数カウント",       desc: "文字・単語・行数を瞬時に集計",  cat: "text" },
-  { href: "/random-number", icon: "/assets/icon-random-number.png", name: "ランダム数字",         desc: "範囲指定・重複なし対応",        cat: "play" },
-  { href: "/dice",          icon: "/assets/icon-dice.png",          name: "サイコロ",             desc: "最大10個まで同時に振れる",      cat: "play" },
-  { href: "/roulette",      icon: "/assets/icon-roulette.png",      name: "ルーレット",           desc: "選択肢を入れて回すだけ",        cat: "play" },
-  { href: "/janken",        icon: "/assets/icon-janken.png",        name: "じゃんけん",            desc: "CPU対戦・多人数モード対応",     cat: "play" },
-  { href: "/lot",           icon: "/assets/icon-lot.png",           name: "くじ引き",             desc: "名前リストから公平に抽選",      cat: "play" },
-  { href: "/group",         icon: "/assets/icon-group.png",         name: "グループ分け",         desc: "均等グループを自動生成",        cat: "play" },
-  { href: "/amida",         icon: "/assets/icon-amida.png",         name: "あみだくじ",           desc: "自動生成あみだくじ",            cat: "play" },
-  { href: "/tournament",    icon: "/assets/icon-tournament.png",    name: "トーナメント表",       desc: "参加者入力で自動ブラケット",    cat: "play" },
+  { href: "/tools/counter",       icon: "/assets/icon-counter.png",       name: "マルチカウンター",    desc: "複数項目を同時にカウント",      cat: "calc" },
+  { href: "/tools/stopwatch",     icon: "/assets/icon-stopwatch.png",     name: "多列ストップウォッチ", desc: "ラップ計測対応・1/100秒精度",   cat: "calc" },
+  { href: "/tools/timer",         icon: "/assets/icon-timer.png",         name: "タイマー",            desc: "カウントダウン・アラーム付き",  cat: "calc" },
+  { href: "/tools/bpm",           icon: "/assets/icon-bpm.png",           name: "BPMメトロノーム",     desc: "40〜240 BPM・拍子設定可",      cat: "calc" },
+  { href: "/tools/calculator",    icon: "/assets/icon-calculator.png",    name: "履歴付き電卓",        desc: "計算履歴表示・税込割引特化",    cat: "calc" },
+  { href: "/tools/word-count",    icon: "/assets/icon-word-count.png",    name: "文字数カウント",       desc: "文字・単語・行数を瞬時に集計",  cat: "text" },
+  { href: "/tools/random-number", icon: "/assets/icon-random-number.png", name: "ランダム数字",         desc: "範囲指定・重複なし対応",        cat: "play" },
+  { href: "/tools/dice",          icon: "/assets/icon-dice.png",          name: "サイコロ",             desc: "最大10個まで同時に振れる",      cat: "play" },
+  { href: "/tools/roulette",      icon: "/assets/icon-roulette.png",      name: "ルーレット",           desc: "選択肢を入れて回すだけ",        cat: "play" },
+  { href: "/tools/janken",        icon: "/assets/icon-janken.png",        name: "じゃんけん",            desc: "CPU対戦・多人数モード対応",     cat: "play" },
+  { href: "/tools/lot",           icon: "/assets/icon-lot.png",           name: "くじ引き",             desc: "名前リストから公平に抽選",      cat: "play" },
+  { href: "/tools/group",         icon: "/assets/icon-group.png",         name: "グループ分け",         desc: "均等グループを自動生成",        cat: "play" },
+  { href: "/tools/amida",         icon: "/assets/icon-amida.png",         name: "あみだくじ",           desc: "自動生成あみだくじ",            cat: "play" },
+  { href: "/tools/tournament",    icon: "/assets/icon-tournament.png",    name: "トーナメント表",       desc: "参加者入力で自動ブラケット",    cat: "play" },
 ];
 
 const CAT_STYLE: Record<Cat, {

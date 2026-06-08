@@ -44,7 +44,7 @@ export const NEWS_DATA: NewsItem[] = [
     body: "タダtoolsに履歴付き電卓を公開しました。\n\n計算過程を履歴として残しながら操作できます。三角関数（sin/cos/tan）・対数（log/ln）・メモリ機能（M+/M−/MR/MC）・べき乗・階乗など、数学で使う関数も搭載。税込計算・割引計算から本格的な数式処理まで対応します。\n\n計算履歴はCSVダウンロードやコピーにも対応しています。",
     banner: { grad: ["#ede9fe", "#ddd6fe", "#c4b5fd"], icon: "🧮" },
     image: "/uploads/news-tools.png",
-    toolPath: "/calculator",
+    toolPath: "/tools/calculator",
   },
   {
     id: "007",
@@ -55,7 +55,7 @@ export const NEWS_DATA: NewsItem[] = [
     body: "タダtoolsにBPMメトロノームを公開しました。\n\nBPMを指定してリズムを刻めるメトロノームです。楽器の練習・ダンスの振り付け確認・リズム感のトレーニングなどにご活用ください。",
     banner: { grad: ["#ede9fe", "#c4b5fd", "#a78bfa"], icon: "🎵" },
     image: "/uploads/news-tools.png",
-    toolPath: "/bpm",
+    toolPath: "/tools/bpm",
   },
   {
     id: "006",
@@ -66,7 +66,7 @@ export const NEWS_DATA: NewsItem[] = [
     body: "タダtoolsにカウントダウンタイマーを公開しました。\n\n時間を指定してカウントダウン。終了時にアラームでお知らせします。料理・勉強・休憩管理などにどうぞ。",
     banner: { grad: ["#d1fae5", "#6ee7b7", "#a7f3d0"], icon: "⏲" },
     image: "/uploads/news-tools.png",
-    toolPath: "/timer",
+    toolPath: "/tools/timer",
   },
   {
     id: "005",
@@ -77,7 +77,7 @@ export const NEWS_DATA: NewsItem[] = [
     body: "タダtoolsにストップウォッチを公開しました。\n\nシンプルな操作でラップタイムを記録しながら計測できます。スポーツの練習・作業の時間管理・タイムアタックなどにご活用ください。",
     banner: { grad: ["#e0f2fe", "#7dd3fc", "#c4b5fd"], icon: "⏱" },
     image: "/uploads/news-tools.png",
-    toolPath: "/stopwatch",
+    toolPath: "/tools/stopwatch",
   },
   {
     id: "004",
@@ -88,7 +88,7 @@ export const NEWS_DATA: NewsItem[] = [
     body: "タダtoolsにマルチカウンターを公開しました。\n\n複数のカウンターを同時に管理できるツールです。ショートカットキーでの素早い操作・CSV出力に対応。スポーツの審判・在庫の種類別カウント・イベントの入場者管理などにご活用ください。",
     banner: { grad: ["#fef3c7", "#fcd34d", "#f9a8d4"], icon: "🔢" },
     image: "/uploads/news-tools.png",
-    toolPath: "/counter",
+    toolPath: "/tools/counter",
   },
   {
     id: "003",

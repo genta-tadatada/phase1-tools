@@ -1,2 +1,18 @@
 https://tadatada-main.pages.dev/* https://tadatada.net/:splat 301
 https://www.tadatada.net/* https://tadatada.net/:splat 301
+
+/counter        /tools/counter        301
+/stopwatch      /tools/stopwatch      301
+/timer          /tools/timer          301
+/bpm            /tools/bpm            301
+/calculator     /tools/calculator     301
+/word-count     /tools/word-count     301
+/random-number  /tools/random-number  301
+/dice           /tools/dice           301
+/roulette       /tools/roulette       301
+/janken         /tools/janken         301
+/lot            /tools/lot            301
+/group          /tools/group          301
+/amida          /tools/amida          301
+/tournament     /tools/tournament     301
+/pomodoro       /tools/pomodoro       301

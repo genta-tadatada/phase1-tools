@@ -4,24 +4,22 @@ import { useState } from "react";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
-const TOOLS_BASE = "https://tadatools.pages.dev";
-
 const TOOLS = [
-  { href: TOOLS_BASE + "/counter",       label: "マルチカウンター" },
-  { href: TOOLS_BASE + "/stopwatch",     label: "多列ストップウォッチ" },
-  { href: TOOLS_BASE + "/timer",         label: "タイマー" },
-  { href: TOOLS_BASE + "/bpm",           label: "BPMメトロノーム" },
-  { href: TOOLS_BASE + "/calculator",    label: "履歴付き電卓" },
-  { href: TOOLS_BASE + "/random-number", label: "ランダム数字" },
-  { href: TOOLS_BASE + "/dice",          label: "サイコロ" },
-  { href: TOOLS_BASE + "/roulette",      label: "ルーレット" },
-  { href: TOOLS_BASE + "/word-count",    label: "文字数カウント" },
-  { href: TOOLS_BASE + "/janken",        label: "じゃんけん" },
-  { href: TOOLS_BASE + "/lot",           label: "くじ引き" },
-  { href: TOOLS_BASE + "/group",         label: "グループ分け" },
-  { href: TOOLS_BASE + "/amida",         label: "あみだくじ" },
-  { href: TOOLS_BASE + "/tournament",    label: "トーナメント表" },
-  { href: TOOLS_BASE + "/pomodoro",      label: "ポモドーロタイマー", soon: true },
+  { href: "/tools/counter",       label: "マルチカウンター" },
+  { href: "/tools/stopwatch",     label: "多列ストップウォッチ" },
+  { href: "/tools/timer",         label: "タイマー" },
+  { href: "/tools/bpm",           label: "BPMメトロノーム" },
+  { href: "/tools/calculator",    label: "履歴付き電卓" },
+  { href: "/tools/random-number", label: "ランダム数字" },
+  { href: "/tools/dice",          label: "サイコロ" },
+  { href: "/tools/roulette",      label: "ルーレット" },
+  { href: "/tools/word-count",    label: "文字数カウント" },
+  { href: "/tools/janken",        label: "じゃんけん" },
+  { href: "/tools/lot",           label: "くじ引き" },
+  { href: "/tools/group",         label: "グループ分け" },
+  { href: "/tools/amida",         label: "あみだくじ" },
+  { href: "/tools/tournament",    label: "トーナメント表" },
+  { href: "/tools/pomodoro",      label: "ポモドーロタイマー", soon: true },
 ];
 
 interface NavItem {
@@ -35,7 +33,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { href: "/portal", icon: "🏠", label: "ホーム" },
   { href: "/news",   icon: "📢", label: "お知らせ" },
-  { href: TOOLS_BASE, icon: "🧰", label: "タダtools", children: TOOLS },
+  { href: "/tools", icon: "🧰", label: "タダtools", children: TOOLS },
   { href: "#", icon: "📖", label: "ただただ一問一答", soon: true,
     children: [
       { href: "#", label: "地理", soon: true },

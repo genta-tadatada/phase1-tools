@@ -12,20 +12,20 @@ interface GlobalMenuProps {
 }
 
 const TOOLS = [
-  { href: "/counter",       label: "マルチカウンター" },
-  { href: "/stopwatch",     label: "多列ストップウォッチ" },
-  { href: "/timer",         label: "タイマー" },
-  { href: "/bpm",           label: "BPMメトロノーム" },
-  { href: "/calculator",    label: "履歴付き電卓" },
-  { href: "/word-count",    label: "文字数カウント" },
-  { href: "/random-number", label: "ランダム数字" },
-  { href: "/dice",          label: "サイコロ" },
-  { href: "/roulette",      label: "ルーレット" },
-  { href: "/janken",        label: "じゃんけん" },
-  { href: "/lot",           label: "くじ引き" },
-  { href: "/group",         label: "グループ分け" },
-  { href: "/amida",         label: "あみだくじ" },
-  { href: "/tournament",    label: "トーナメント表" },
+  { href: "/tools/counter",       label: "マルチカウンター" },
+  { href: "/tools/stopwatch",     label: "多列ストップウォッチ" },
+  { href: "/tools/timer",         label: "タイマー" },
+  { href: "/tools/bpm",           label: "BPMメトロノーム" },
+  { href: "/tools/calculator",    label: "履歴付き電卓" },
+  { href: "/tools/word-count",    label: "文字数カウント" },
+  { href: "/tools/random-number", label: "ランダム数字" },
+  { href: "/tools/dice",          label: "サイコロ" },
+  { href: "/tools/roulette",      label: "ルーレット" },
+  { href: "/tools/janken",        label: "じゃんけん" },
+  { href: "/tools/lot",           label: "くじ引き" },
+  { href: "/tools/group",         label: "グループ分け" },
+  { href: "/tools/amida",         label: "あみだくじ" },
+  { href: "/tools/tournament",    label: "トーナメント表" },
 ];
 
 interface NavItem {
