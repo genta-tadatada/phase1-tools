@@ -23,7 +23,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "TADATADA — すべて、タダで。いますぐ、使える。",
+  title: "ただただ — すべて、タダで。いますぐ、使える。",
   description: "便利なツール・一問一答クイズ・ブラウザゲームを、タダで、いますぐ。ログイン不要・広告控えめ・完全無料。",
   manifest: "/manifest.json",
   icons: {

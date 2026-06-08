@@ -14,8 +14,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const item = NEWS_DATA.find((n) => n.id === id);
-  if (!item) return { title: "記事が見つかりません — TADATADA" };
-  return { title: `${item.title} — TADATADA`, description: item.summary };
+  if (!item) return { title: "記事が見つかりません — ただただ" };
+  return { title: `${item.title} — ただただ`, description: item.summary };
 }
 
 function catClass(cat: string) {

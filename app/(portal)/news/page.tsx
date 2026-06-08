@@ -6,8 +6,8 @@ import { NewsListClient } from "@/components/portal/NewsListClient";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
 
 export const metadata: Metadata = {
-  title: "お知らせ — TADATADA",
-  description: "TADATADAのアップデート・リリース情報をお届けします。",
+  title: "お知らせ — ただただ",
+  description: "ただただのアップデート・リリース情報をお届けします。",
 };
 
 export default function NewsPage() {
