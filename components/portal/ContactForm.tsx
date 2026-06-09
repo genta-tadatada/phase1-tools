@@ -25,7 +25,7 @@ export function ContactForm() {
         </p>
         <p style={{ fontSize: "0.8rem", color: "#4ade80", lineHeight: 1.6 }}>
           メッセージを受け取りました。ありがとうございます。<br />
-          返信をお約束するものではありませんが、できる限り対応します。
+          返信はできませんが、内容はすべて確認しています。
         </p>
       </div>
     );
