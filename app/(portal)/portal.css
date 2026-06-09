@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800;900&family=Quicksand:wght@500;600;700;800&display=swap');
-
 /* ================================================================
    TADATADA Portal — Design System
    All styles scoped to .portal-page to avoid conflicts with tools
@@ -54,8 +52,8 @@
   --p-radius-lg: 28px;
   --p-radius-pill: 999px;
 
-  --p-font-jp: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", system-ui, sans-serif;
-  --p-font-en: "Quicksand", "Inter", system-ui, sans-serif;
+  --p-font-jp: var(--font-m-plus-rounded), "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", system-ui, sans-serif;
+  --p-font-en: var(--font-quicksand), "Quicksand", "Inter", system-ui, sans-serif;
 
   font-family: var(--p-font-jp);
   font-weight: 500;
