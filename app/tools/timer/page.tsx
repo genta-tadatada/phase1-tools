@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { TimerTool } from "./TimerTool";
 
+const TOOL_NAME = "タイマー";
+const TITLE = "無料タイマー｜ポモドーロ対応のシンプルタイマー - ただただ";
+const DESCRIPTION =
+  "作業や勉強に集中できる無料タイマー。ポモドーロ・テクニックにも対応し、25分集中＋休憩のサイクルを自動管理。インストール不要でスマホからもすぐ使えます。";
+
 export const metadata: Metadata = {
-  title: "タイマー・ポモドーロタイマー | 無料・登録不要",
-  description:
-    "ブラウザですぐ使えるカウントダウンタイマー＆ポモドーロタイマー。1分・5分・25分などプリセットで即スタート。タブを閉じても正確に動作・通知対応・広告控えめ・完全無料。",
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: [
     "タイマー オンライン 無料",
     "カウントダウンタイマー ブラウザ",
@@ -15,13 +19,54 @@ export const metadata: Metadata = {
     "勉強 タイマー ブラウザ",
     "集中 タイマー 無料",
   ],
+  alternates: {
+    canonical: "/tools/timer",
+  },
   openGraph: {
-    title: "タイマー・ポモドーロタイマー | タダtools",
-    description: "1分・5分・25分プリセット即スタート。ポモドーロ対応。タブを閉じても止まらない。",
+    url: "https://tadatada.net/tools/timer",
+    title: TITLE,
+    description: DESCRIPTION,
     type: "website",
+    images: [
+      {
+        url: "/assets/icon-timer.png",
+        width: 512,
+        height: 512,
+        alt: `${TOOL_NAME} | ただただ`,
+      },
+    ],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: TOOL_NAME,
+  url: "https://tadatada.net/tools/timer",
+  description: DESCRIPTION,
+  applicationCategory: "UtilityApplication",
+  operatingSystem: "Web Browser",
+  inLanguage: "ja",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "JPY",
+  },
+  provider: {
+    "@type": "Organization",
+    name: "ただただ",
+    url: "https://tadatada.net",
   },
 };
 
 export default function TimerPage() {
-  return <TimerTool />;
+  return (
+    <>
+      <TimerTool />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+    </>
+  );
 }

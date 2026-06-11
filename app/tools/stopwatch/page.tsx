@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { StopwatchTool } from "./StopwatchTool";
 
+const TOOL_NAME = "多列ストップウォッチ";
+const TITLE = "無料ストップウォッチ｜複数同時に計測できる多列タイマー - ただただ";
+const DESCRIPTION =
+  "複数のタイムを同時に計測できる無料ストップウォッチ。スポーツ・実験・作業時間の比較計測に最適。インストール不要でスマホからもPCからもすぐ使えます。";
+
 export const metadata: Metadata = {
-  title: "多列ストップウォッチ",
-  description:
-    "複数のストップウォッチを同時に動かせる無料ツール。最大5個・一斉スタート/ストップ・ラップ記録・CSVエクスポート対応。部活動のタイム計測・研究・スポーツ指導に。",
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: [
     "ストップウォッチ 無料 オンライン",
     "マルチ ストップウォッチ",
@@ -12,14 +16,54 @@ export const metadata: Metadata = {
     "部活 タイム計測",
     "複数 ストップウォッチ 同時",
   ],
+  alternates: {
+    canonical: "/tools/stopwatch",
+  },
   openGraph: {
-    title: "多列ストップウォッチ | タダtools",
-    description:
-      "最大5個のストップウォッチを同時起動。ラップ記録・CSVエクスポート対応。",
+    url: "https://tadatada.net/tools/stopwatch",
+    title: TITLE,
+    description: DESCRIPTION,
     type: "website",
+    images: [
+      {
+        url: "/assets/icon-stopwatch.png",
+        width: 512,
+        height: 512,
+        alt: `${TOOL_NAME} | ただただ`,
+      },
+    ],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: TOOL_NAME,
+  url: "https://tadatada.net/tools/stopwatch",
+  description: DESCRIPTION,
+  applicationCategory: "UtilityApplication",
+  operatingSystem: "Web Browser",
+  inLanguage: "ja",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "JPY",
+  },
+  provider: {
+    "@type": "Organization",
+    name: "ただただ",
+    url: "https://tadatada.net",
   },
 };
 
 export default function StopwatchPage() {
-  return <StopwatchTool />;
+  return (
+    <>
+      <StopwatchTool />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+    </>
+  );
 }

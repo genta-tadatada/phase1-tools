@@ -344,6 +344,7 @@ export function RandomNumberTool() {
             <button
               onClick={() => setCount((c) => Math.max(1, c - 1))}
               className="w-8 h-8 rounded-md border border-border bg-card flex items-center justify-center text-sm hover:bg-muted transition-colors"
+              aria-label="生成する個数を減らす"
             >
               −
             </button>
@@ -351,6 +352,7 @@ export function RandomNumberTool() {
             <button
               onClick={() => setCount((c) => Math.min(10, c + 1))}
               className="w-8 h-8 rounded-md border border-border bg-card flex items-center justify-center text-sm hover:bg-muted transition-colors"
+              aria-label="生成する個数を増やす"
             >
               ＋
             </button>

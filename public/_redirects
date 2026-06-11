@@ -1,6 +1,8 @@
 https://tadatada-main.pages.dev/* https://tadatada.net/:splat 301
 https://www.tadatada.net/* https://tadatada.net/:splat 301
 
+/portal         /                     301
+
 /counter        /tools/counter        301
 /stopwatch      /tools/stopwatch      301
 /timer          /tools/timer          301

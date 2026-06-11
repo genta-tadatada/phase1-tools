@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { GroupTool } from "./GroupTool";
 
+const TOOL_NAME = "グループ分け";
+const TITLE = "無料グループ分け｜名前を入れて自動でチーム分け - ただただ";
+const DESCRIPTION =
+  "メンバーの名前を入れるだけで自動的にグループ分けできる無料ツール。班分け・チーム分け・席替えに便利。インストール不要でスマホからもすぐ使えます。";
+
 export const metadata: Metadata = {
-  title: "グループ分け",
-  description:
-    "メンバーをランダムにグループ分けする無料ツール。グループ数・1グループの人数を指定できる。教員・研修・部活動に。URLで結果を共有可能。登録不要。",
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: [
     "グループ分け アプリ 無料",
     "ランダム グループ",
@@ -12,13 +16,54 @@ export const metadata: Metadata = {
     "班分け ツール",
     "グループ分け 学校 無料",
   ],
+  alternates: {
+    canonical: "/tools/group",
+  },
   openGraph: {
-    title: "グループ分け | タダtools",
-    description: "ランダムグループ分け無料ツール。URLで結果を共有。",
+    url: "https://tadatada.net/tools/group",
+    title: TITLE,
+    description: DESCRIPTION,
     type: "website",
+    images: [
+      {
+        url: "/assets/icon-group.png",
+        width: 512,
+        height: 512,
+        alt: `${TOOL_NAME} | ただただ`,
+      },
+    ],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: TOOL_NAME,
+  url: "https://tadatada.net/tools/group",
+  description: DESCRIPTION,
+  applicationCategory: "UtilityApplication",
+  operatingSystem: "Web Browser",
+  inLanguage: "ja",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "JPY",
+  },
+  provider: {
+    "@type": "Organization",
+    name: "ただただ",
+    url: "https://tadatada.net",
   },
 };
 
 export default function GroupPage() {
-  return <GroupTool />;
+  return (
+    <>
+      <GroupTool />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+    </>
+  );
 }

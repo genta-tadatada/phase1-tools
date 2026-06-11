@@ -8,8 +8,19 @@ import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import "./(portal)/portal.css";
 
 export const metadata: Metadata = {
-  title: "ただただ — すべて、タダで。いますぐ、使える。",
-  description: "便利なツール・一問一答クイズ・ブラウザゲームを、タダで、いますぐ。ログイン不要・広告控えめ・完全無料。",
+  title: "ただただ（タダtools）｜無料で使える便利ツール集",
+  description:
+    "カウンター・タイマー・サイコロ・あみだくじなど、無料で使える便利ツールを集めたサイト「ただただ」。インストール不要でスマホからもPCからもすぐ使えます。",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    url: "https://tadatada.net/",
+    title: "ただただ（タダtools）｜無料で使える便利ツール集",
+    description:
+      "カウンター・タイマー・サイコロ・あみだくじなど、無料で使える便利ツールを集めたサイト「ただただ」。インストール不要でスマホからもPCからもすぐ使えます。",
+    type: "website",
+  },
 };
 
 export default function PortalPage() {

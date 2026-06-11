@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { TournamentTool } from "./TournamentTool";
 
+const TOOL_NAME = "トーナメント表";
+const TITLE = "無料トーナメント表メーカー｜対戦表をかんたん作成 - ただただ";
+const DESCRIPTION =
+  "参加者を入れるだけで対戦表が完成する無料のトーナメント表メーカー。大会・ゲーム・スポーツの組み合わせ作成に。インストール不要でスマホからもすぐ使えます。";
+
 export const metadata: Metadata = {
-  title: "トーナメント表作成",
-  description:
-    "無料でトーナメント表を作成・共有。登録不要でURLをシェアできる。4〜32人対応・ランダム抽選・印刷対応。部活・社内大会・ゲーム大会に。",
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: [
     "トーナメント表 無料 作成",
     "組み合わせ 抽選",
@@ -12,13 +16,54 @@ export const metadata: Metadata = {
     "登録不要 トーナメント",
     "ブラケット 無料",
   ],
+  alternates: {
+    canonical: "/tools/tournament",
+  },
   openGraph: {
-    title: "トーナメント表作成 | タダtools",
-    description: "4〜32人対応・URLシェア・印刷対応の無料トーナメント表作成ツール",
+    url: "https://tadatada.net/tools/tournament",
+    title: TITLE,
+    description: DESCRIPTION,
     type: "website",
+    images: [
+      {
+        url: "/assets/icon-tournament.png",
+        width: 512,
+        height: 512,
+        alt: `${TOOL_NAME} | ただただ`,
+      },
+    ],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: TOOL_NAME,
+  url: "https://tadatada.net/tools/tournament",
+  description: DESCRIPTION,
+  applicationCategory: "UtilityApplication",
+  operatingSystem: "Web Browser",
+  inLanguage: "ja",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "JPY",
+  },
+  provider: {
+    "@type": "Organization",
+    name: "ただただ",
+    url: "https://tadatada.net",
   },
 };
 
 export default function TournamentPage() {
-  return <TournamentTool />;
+  return (
+    <>
+      <TournamentTool />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+    </>
+  );
 }

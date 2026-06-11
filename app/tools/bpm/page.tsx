@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { BpmTool } from "./BpmTool";
 
+const TOOL_NAME = "BPMメトロノーム";
+const TITLE = "無料メトロノーム｜タップでBPMを測れるオンラインメトロノーム - ただただ";
+const DESCRIPTION =
+  "テンポを刻む無料オンラインメトロノーム。タップでBPMを測定でき、楽器練習やリズム確認に便利。アプリ不要でスマホからもPCからもブラウザですぐ使えます。";
+
 export const metadata: Metadata = {
-  title: "メトロノーム | タダtools",
-  description:
-    "無料のオンラインメトロノーム。BPM設定・タップテンポ精度±1BPM・拍子設定対応。演奏中は広告非表示・ログイン不要。音楽練習・合唱・ダンス振付・吹奏楽・ピアノ練習のテンポ確認に。ダークモード対応。",
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: [
     "メトロノーム 無料",
     "オンライン メトロノーム",
@@ -15,8 +19,54 @@ export const metadata: Metadata = {
     "練習 テンポ",
     "拍子 設定",
   ],
+  alternates: {
+    canonical: "/tools/bpm",
+  },
+  openGraph: {
+    url: "https://tadatada.net/tools/bpm",
+    title: TITLE,
+    description: DESCRIPTION,
+    type: "website",
+    images: [
+      {
+        url: "/assets/icon-bpm.png",
+        width: 512,
+        height: 512,
+        alt: `${TOOL_NAME} | ただただ`,
+      },
+    ],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: TOOL_NAME,
+  url: "https://tadatada.net/tools/bpm",
+  description: DESCRIPTION,
+  applicationCategory: "UtilityApplication",
+  operatingSystem: "Web Browser",
+  inLanguage: "ja",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "JPY",
+  },
+  provider: {
+    "@type": "Organization",
+    name: "ただただ",
+    url: "https://tadatada.net",
+  },
 };
 
 export default function BpmPage() {
-  return <BpmTool />;
+  return (
+    <>
+      <BpmTool />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+    </>
+  );
 }

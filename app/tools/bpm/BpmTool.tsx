@@ -429,6 +429,7 @@ export function BpmTool() {
             value={bpm}
             onChange={(e) => setBpm(Number(e.target.value))}
             className="flex-1 accent-[var(--accent)]"
+            aria-label="BPMを調整"
           />
           <span className="text-xs text-muted-foreground tabular-nums w-7">{MAX_BPM}</span>
         </div>
@@ -456,6 +457,7 @@ export function BpmTool() {
             value={timeSignature}
             onChange={(e) => setTimeSignature(e.target.value as TimeSignature)}
             className="h-9 px-2 rounded-md border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-accent/50"
+            aria-label="拍子を選択"
           >
             {TIME_SIGNATURES.map((ts) => (
               <option key={ts} value={ts}>

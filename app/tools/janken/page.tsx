@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { JankenTool } from "./JankenTool";
 
+const TOOL_NAME = "じゃんけん";
+const TITLE = "無料じゃんけん｜ひとりでも遊べるオンラインじゃんけん - ただただ";
+const DESCRIPTION =
+  "相手がいなくても遊べる無料のオンラインじゃんけん。順番決めや勝負ごとの判定にぴったり。インストール不要でスマホからもPCからもブラウザですぐ遊べます。";
+
 export const metadata: Metadata = {
-  title: "じゃんけん | タダtools",
-  description:
-    "スマホで遊べる無料じゃんけんアプリ。1人対CPU・2〜6人の多人数対戦に対応。登録不要・広告最小限。カウントダウン演出でリアルなじゃんけん体験。",
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: [
     "じゃんけん アプリ 無料",
     "オンライン じゃんけん",
@@ -12,8 +16,54 @@ export const metadata: Metadata = {
     "ランダム じゃんけん",
     "じゃんけん 決定",
   ],
+  alternates: {
+    canonical: "/tools/janken",
+  },
+  openGraph: {
+    url: "https://tadatada.net/tools/janken",
+    title: TITLE,
+    description: DESCRIPTION,
+    type: "website",
+    images: [
+      {
+        url: "/assets/icon-janken.png",
+        width: 512,
+        height: 512,
+        alt: `${TOOL_NAME} | ただただ`,
+      },
+    ],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: TOOL_NAME,
+  url: "https://tadatada.net/tools/janken",
+  description: DESCRIPTION,
+  applicationCategory: "UtilityApplication",
+  operatingSystem: "Web Browser",
+  inLanguage: "ja",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "JPY",
+  },
+  provider: {
+    "@type": "Organization",
+    name: "ただただ",
+    url: "https://tadatada.net",
+  },
 };
 
 export default function JankenPage() {
-  return <JankenTool />;
+  return (
+    <>
+      <JankenTool />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+    </>
+  );
 }

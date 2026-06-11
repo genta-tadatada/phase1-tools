@@ -1211,11 +1211,13 @@ export function TimerTool() {
                       <button
                         onClick={() => savePomSettings({ ...pomSettings, [key]: Math.max(min, pomSettings[key] - 1) })}
                         className="w-7 h-7 rounded-md border border-border flex items-center justify-center hover:bg-muted transition-colors text-sm"
+                        aria-label={`${label}を減らす`}
                       >−</button>
                       <span className="w-10 text-center tabular-nums font-semibold text-sm">{pomSettings[key]}{unit}</span>
                       <button
                         onClick={() => savePomSettings({ ...pomSettings, [key]: Math.min(max, pomSettings[key] + 1) })}
                         className="w-7 h-7 rounded-md border border-border flex items-center justify-center hover:bg-muted transition-colors text-sm"
+                        aria-label={`${label}を増やす`}
                       >＋</button>
                     </div>
                   </div>

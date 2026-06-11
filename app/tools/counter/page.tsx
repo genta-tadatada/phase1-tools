@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { CounterTool } from "./CounterTool";
 
+const TOOL_NAME = "マルチカウンター";
+const TITLE = "無料カウンターアプリ｜複数を同時に数える多機能カウンター - ただただ";
+const DESCRIPTION =
+  "複数のカウントを同時に管理できる無料カウンターアプリ。在庫数え・人数カウント・読書記録などに。インストール不要、スマホでもPCでもブラウザですぐ使えます。";
+
 export const metadata: Metadata = {
-  title: "マルチカウンター",
-  description:
-    "複数の項目を同時にカウントできる無料Webツール。登録不要・広告最小限。審査員の点数カウント・在庫確認・筋トレセット数・研究観察に。ダークモード・URLシェア・履歴記録対応。",
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: [
     "マルチカウンター",
     "多列カウンター",
@@ -19,13 +23,54 @@ export const metadata: Metadata = {
     "カウンター 共有 URL",
     "カウンター ダークモード",
   ],
+  alternates: {
+    canonical: "/tools/counter",
+  },
   openGraph: {
-    title: "マルチカウンター | タダtools",
-    description: "複数の項目を同時にカウントできる無料Webツール",
+    url: "https://tadatada.net/tools/counter",
+    title: TITLE,
+    description: DESCRIPTION,
     type: "website",
+    images: [
+      {
+        url: "/assets/icon-counter.png",
+        width: 512,
+        height: 512,
+        alt: `${TOOL_NAME} | ただただ`,
+      },
+    ],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: TOOL_NAME,
+  url: "https://tadatada.net/tools/counter",
+  description: DESCRIPTION,
+  applicationCategory: "UtilityApplication",
+  operatingSystem: "Web Browser",
+  inLanguage: "ja",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "JPY",
+  },
+  provider: {
+    "@type": "Organization",
+    name: "ただただ",
+    url: "https://tadatada.net",
   },
 };
 
 export default function CounterPage() {
-  return <CounterTool />;
+  return (
+    <>
+      <CounterTool />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+    </>
+  );
 }

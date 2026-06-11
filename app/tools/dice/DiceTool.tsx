@@ -247,6 +247,7 @@ export function DiceTool() {
             whileTap={{ scale: 0.9 }}
             onClick={() => setDiceCount((c) => Math.max(1, c - 1))}
             className="w-9 h-9 rounded-full border border-border bg-card flex items-center justify-center text-lg font-semibold hover:bg-muted transition-colors"
+            aria-label="サイコロの個数を減らす"
           >
             −
           </motion.button>
@@ -255,6 +256,7 @@ export function DiceTool() {
             whileTap={{ scale: 0.9 }}
             onClick={() => setDiceCount((c) => Math.min(10, c + 1))}
             className="w-9 h-9 rounded-full border border-border bg-card flex items-center justify-center text-lg font-semibold hover:bg-muted transition-colors"
+            aria-label="サイコロの個数を増やす"
           >
             ＋
           </motion.button>

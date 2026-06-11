@@ -19,7 +19,7 @@ const TOOL_SLUGS = [
   "group",
   "amida",
   "tournament",
-  "pomodoro",
+  // "pomodoro" はリダイレクト専用ページのため sitemap から除外
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

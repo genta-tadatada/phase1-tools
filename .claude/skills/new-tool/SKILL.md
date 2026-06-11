@@ -31,7 +31,7 @@ trigger: /new-tool
 
 ### Step 3: ページファイルの生成
 
-`app/[slug]/page.tsx` を以下のテンプレートで生成する:
+`app/tools/[slug]/page.tsx` を以下のテンプレートで生成する:
 
 ```typescript
 import type { Metadata } from "next";
@@ -54,12 +54,12 @@ export default function [PascalCaseName]Page() {
 }
 ```
 
-### Step 4: HamburgerMenu への追加
+### Step 4: GlobalMenu への追加
 
-`components/tool-layout/HamburgerMenu.tsx` の `TOOLS` 配列に追加する:
+`components/shared/GlobalMenu.tsx` の `TOOLS` 配列に追加する:
 
 ```typescript
-{ name: "[ツール名]", href: "/[slug]", description: "[1行説明]" },
+{ name: "[ツール名]", href: "/tools/[slug]", description: "[1行説明]" },
 ```
 
 ### Step 5: 完了報告
@@ -69,6 +69,6 @@ export default function [PascalCaseName]Page() {
 
 ## 注意事項
 
-- `app/[slug]/` ディレクトリが既に存在する場合は上書きしない（確認を取る）
+- `app/tools/[slug]/` ディレクトリが既に存在する場合は上書きしない（確認を取る）
 - HamburgerMenu の TOOLS 配列の順序は仕様書の実装順位に合わせる
 - metadata の description は50〜120文字で検索クエリを意識した文章にする
