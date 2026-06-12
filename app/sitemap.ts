@@ -43,6 +43,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     })),
     {
+      url: `${BASE_URL}/quiz`,
+      lastModified: new Date("2026-06-12"),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/games`,
+      lastModified: new Date("2026-06-12"),
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
       url: `${BASE_URL}/news`,
       lastModified: new Date("2026-06-12"),
       changeFrequency: "weekly",

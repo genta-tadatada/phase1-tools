@@ -50,7 +50,7 @@ const NAV: NavItem[] = [
     section: "tools", children: TOOLS, iconScale: 1.2,
   },
   {
-    href: "#",        iconImg: "/assets/kawaii-book.png",     iconBg: "#ede9fe", label: "ただただ一問一答",
+    href: "/quiz",    iconImg: "/assets/kawaii-book.png",     iconBg: "#ede9fe", label: "ただただ一問一答",
     soon: true,       section: "quiz",  iconScale: 1.2,
     children: [
       { href: "#", label: "地理", soon: true },
@@ -62,7 +62,7 @@ const NAV: NavItem[] = [
     ],
   },
   {
-    href: "#",        iconImg: "/assets/kawaii-controller.png", iconBg: "#fce7f3", label: "ただタダgames",
+    href: "/games",   iconImg: "/assets/kawaii-controller.png", iconBg: "#fce7f3", label: "ただタダgames",
     soon: true,       section: "games", iconScale: 1.2,
     children: [
       { href: "#", label: "高校サッカー育成シミュレーション", soon: true },
