@@ -118,7 +118,7 @@ export default async function NewsDetailPage({ params }: Props) {
       <footer className="p-footer" style={{ background: "#ffffff" }}>
         <div className="p-footer-inner">
           <div>© 2026 ただただ。 <span className="p-heart">♥</span> All rights reserved.</div>
-          <Link href="/portal" style={{ color: "inherit", textDecoration: "none" }}>トップへ戻る →</Link>
+          <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>トップへ戻る →</Link>
         </div>
       </footer>
     </>
