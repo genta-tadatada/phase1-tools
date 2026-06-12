@@ -44,7 +44,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     {
       url: `${BASE_URL}/news`,
-      lastModified: new Date("2026-06-08"),
+      lastModified: new Date("2026-06-12"),
       changeFrequency: "weekly",
       priority: 0.7,
     },
