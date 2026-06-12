@@ -259,11 +259,6 @@ export default function PrivacyPage() {
                     <td style={TD_STYLE}>Google LLC</td>
                     <td style={TD_STYLE}>広告配信（導入予定）</td>
                   </tr>
-                  <tr>
-                    <td style={TD_STYLE}>楽天アフィリエイト</td>
-                    <td style={TD_STYLE}>楽天グループ株式会社</td>
-                    <td style={TD_STYLE}>アフィリエイト広告（将来予定）</td>
-                  </tr>
                 </tbody>
               </table>
               <p style={P_STYLE}>
@@ -329,18 +324,10 @@ export default function PrivacyPage() {
                 {" "}をご確認ください。
               </p>
 
-              <h3 style={H3_STYLE}>Amazonアソシエイト・プログラム</h3>
+              <h3 style={H3_STYLE}>Amazonアソシエイト・プログラム（導入予定）</h3>
               <p style={P_STYLE}>
-                当サイトは、Amazon.co.jp を宣伝しリンクすることによってサイトが紹介料を獲得できる手段を提供することを目的に設定された
-                アフィリエイトプログラムである、Amazonアソシエイト・プログラムの参加者です。
-              </p>
-              <p style={P_STYLE}>
-                <strong>Amazonのアソシエイトとして、ただただは適格販売により収入を得ています。</strong>
-              </p>
-
-              <h3 style={H3_STYLE}>楽天アフィリエイト（将来予定）</h3>
-              <p style={P_STYLE}>
-                当サイトでは、楽天グループ株式会社が提供する「楽天アフィリエイト」の利用を予定しています。
+                当サイトでは、Amazonアソシエイト・プログラムへの参加を予定しています。
+                参加承認後は、Amazon.co.jp へのリンクを経由した適格販売により収入を得ることがあります。
                 導入後は、本ポリシーを更新のうえ当サイトでお知らせします。
               </p>
 
@@ -422,7 +409,7 @@ export default function PrivacyPage() {
 
             <p style={{ color: "#9a96a8", fontSize: "0.8rem" }}>
               制定日: 2026年6月8日<br />
-              最終改定日: 2026年6月12日
+              最終改定日: 2026年6月13日
             </p>
           </div>
         </div>
