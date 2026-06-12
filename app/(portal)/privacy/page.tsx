@@ -6,6 +6,9 @@ import { GlobalMenu } from "@/components/shared/GlobalMenu";
 export const metadata: Metadata = {
   title: "プライバシーポリシー | タダtools",
   robots: { index: true, follow: true },
+  alternates: {
+    canonical: "/privacy",
+  },
 };
 
 const SECTION_STYLE: React.CSSProperties = {
@@ -16,12 +19,48 @@ const H2_STYLE: React.CSSProperties = {
   fontWeight: 800, fontSize: "0.95rem", color: "#1f1d2b", letterSpacing: "0.02em",
 };
 
+const H3_STYLE: React.CSSProperties = {
+  fontWeight: 700, fontSize: "0.875rem", color: "#1f1d2b", letterSpacing: "0.02em", marginTop: "0.4rem",
+};
+
 const P_STYLE: React.CSSProperties = {
   fontSize: "0.875rem", lineHeight: 1.8, color: "#5a5666",
 };
 
+const UL_STYLE: React.CSSProperties = {
+  fontSize: "0.875rem", lineHeight: 1.8, color: "#5a5666",
+  paddingLeft: "1.2rem", listStyleType: "disc",
+  display: "flex", flexDirection: "column", gap: "0.4rem",
+};
+
+const OL_STYLE: React.CSSProperties = {
+  fontSize: "0.875rem", lineHeight: 1.8, color: "#5a5666",
+  paddingLeft: "1.4rem", listStyleType: "decimal",
+  display: "flex", flexDirection: "column", gap: "0.2rem",
+};
+
+const TABLE_STYLE: React.CSSProperties = {
+  fontSize: "0.85rem", lineHeight: 1.7, color: "#5a5666",
+  borderCollapse: "collapse", width: "100%",
+};
+
+const TH_STYLE: React.CSSProperties = {
+  textAlign: "left", fontWeight: 700, color: "#1f1d2b",
+  padding: "0.45rem 0.6rem", borderBottom: "2px solid #f1ecf3",
+  whiteSpace: "nowrap",
+};
+
+const TD_STYLE: React.CSSProperties = {
+  padding: "0.45rem 0.6rem", borderBottom: "1px dashed #f1ecf3",
+  verticalAlign: "top",
+};
+
 const DIVIDER: React.CSSProperties = {
   borderTop: "1px dashed #f1ecf3",
+};
+
+const LINK_STYLE: React.CSSProperties = {
+  color: "#8b5cf6", textDecoration: "underline",
 };
 
 export default function PrivacyPage() {
@@ -62,17 +101,95 @@ export default function PrivacyPage() {
           <div className="p-form-card" style={{ padding: "40px 36px", display: "flex", flexDirection: "column", gap: "2rem" }}>
 
             <section style={SECTION_STYLE}>
-              <h2 style={H2_STYLE}>収集する情報について</h2>
+              <h2 style={H2_STYLE}>1. 基本情報</h2>
               <p style={P_STYLE}>
-                当サイトでは、アカウント機能（準備中）においてのみ情報を取得します。
-                ツールの利用・閲覧・お問い合わせにあたって、個人情報を収集することはありません。
+                ただただ（TADATADA。以下「当サイト」）は、個人で運営する無料のウェブツール・コンテンツサイトです。
+                当サイトをご利用いただくすべての方（以下「ユーザー」）の個人情報・プライバシーを尊重し、
+                以下のとおりプライバシーポリシー（以下「本ポリシー」）を定めます。
+              </p>
+              <table style={TABLE_STYLE}>
+                <tbody>
+                  <tr>
+                    <th style={TH_STYLE} scope="row">サイト名</th>
+                    <td style={TD_STYLE}>ただただ（TADATADA）</td>
+                  </tr>
+                  <tr>
+                    <th style={TH_STYLE} scope="row">URL</th>
+                    <td style={TD_STYLE}>https://tadatada.net</td>
+                  </tr>
+                  <tr>
+                    <th style={TH_STYLE} scope="row">運営者</th>
+                    <td style={TD_STYLE}>個人運営（氏名・住所は非開示）</td>
+                  </tr>
+                  <tr>
+                    <th style={TH_STYLE} scope="row">連絡先</th>
+                    <td style={TD_STYLE}>genta0215suzuki@gmail.com</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p style={P_STYLE}>
+                本ポリシーは、当サイト（https://tadatada.net 配下のすべてのページ）におけるユーザーの情報の取り扱いについて適用されます。
+                当サイトからリンクする外部サイトについては、本ポリシーの適用範囲外です。
+              </p>
+              <p style={P_STYLE}>
+                当サイトは日本国内のユーザーを主な対象とした日本語サービスであり、
+                日本の個人情報の保護に関する法律（個人情報保護法）および電気通信事業法その他関連法令を遵守します。
               </p>
             </section>
 
             <div style={DIVIDER} />
 
             <section style={SECTION_STYLE}>
-              <h2 style={H2_STYLE}>アカウント登録について（Google ログイン）</h2>
+              <h2 style={H2_STYLE}>2. 収集する情報</h2>
+              <p style={P_STYLE}>
+                当サイトでは、ツールやコンテンツの基本的な利用にあたって、
+                氏名・住所・電話番号などの個人を直接特定する情報を取得することはありません。
+                ただし、サイトの運営・改善のため、以下の情報を自動的に取得する場合があります。
+              </p>
+              <ul style={UL_STYLE}>
+                <li>
+                  <strong>ローカルストレージ（LocalStorage）</strong>：ブラウザに保存されるデータ。
+                  カウンターの値・タイマー設定・電卓の計算履歴など、ツールの状態保存に使用します。
+                  このデータは利用者のブラウザ内にのみ保存され、当サイトのサーバーを含む外部のいかなる場所にも送信されません。
+                  削除はブラウザの「サイトデータ（キャッシュ・Cookie）を削除」から行えます。
+                </li>
+                <li>
+                  <strong>Cookie（クッキー）</strong>：ブラウザに保存される小さなデータ。
+                  アクセス解析・広告配信のために使用されます
+                  （ツールの設定保存にはLocalStorageを使用しており、Cookieは使用しません）。
+                </li>
+                <li>
+                  <strong>アクセスログ</strong>：IPアドレス、ブラウザの種類、リファラー（参照元ページ）、閲覧日時、閲覧ページなどの情報。
+                  サーバーやアクセス解析サービスにより自動的に記録されます。
+                </li>
+              </ul>
+              <p style={P_STYLE}>これらの情報は、単体で特定の個人を識別するものではありません。</p>
+
+              <h3 style={H3_STYLE}>お問い合わせフォームからの入力情報</h3>
+              <p style={P_STYLE}>
+                当サイトのお問い合わせフォームに入力された情報は、Discord（Discord Inc.）のサービスを経由して運営者へ通知されます。
+                お問い合わせの際にユーザーが入力した以下の情報を取得します。
+              </p>
+              <ul style={UL_STYLE}>
+                <li>お問い合わせカテゴリ（選択式）</li>
+                <li>お問い合わせ内容（本文）</li>
+                <li>任意でご入力いただいた連絡先（メールアドレス等）</li>
+              </ul>
+              <p style={P_STYLE}>
+                入力された情報は Discord Inc. のサーバーを経由して運営者へ送信されます。
+                取得した情報はお問い合わせへの返信・対応のためにのみ使用し、ユーザーの同意なく他の目的で利用することはありません。
+                Discord のプライバシーポリシーについては{" "}
+                <a href="https://discord.com/privacy" target="_blank" rel="noopener noreferrer" style={LINK_STYLE}>
+                  Discord Privacy Policy
+                </a>
+                {" "}をご確認ください。
+              </p>
+            </section>
+
+            <div style={DIVIDER} />
+
+            <section style={SECTION_STYLE}>
+              <h2 style={H2_STYLE}>3. アカウント登録について（準備中・Google ログイン）</h2>
               <p style={P_STYLE}>
                 アカウント機能は現在準備中です。導入後は Google アカウントによるログインが可能になります。
               </p>
@@ -89,49 +206,89 @@ export default function PrivacyPage() {
             <div style={DIVIDER} />
 
             <section style={SECTION_STYLE}>
-              <h2 style={H2_STYLE}>お問い合わせについて</h2>
+              <h2 style={H2_STYLE}>4. 利用目的</h2>
+              <p style={P_STYLE}>当サイトが取得した情報は、以下の目的で利用します。</p>
+              <ol style={OL_STYLE}>
+                <li>ツール・コンテンツの提供および動作（設定の保存など）のため</li>
+                <li>サイトの利用状況の把握・分析、品質およびユーザー体験の改善のため</li>
+                <li>広告の配信・表示のため</li>
+                <li>お問い合わせへの対応・連絡のため</li>
+                <li>利用規約に違反する行為や不正アクセスなどへの対応のため</li>
+              </ol>
+              <p style={P_STYLE}>取得した情報を、上記の利用目的の範囲を超えて利用することはありません。</p>
+            </section>
+
+            <div style={DIVIDER} />
+
+            <section style={SECTION_STYLE}>
+              <h2 style={H2_STYLE}>5. 第三者提供</h2>
               <p style={P_STYLE}>
-                お問い合わせは X（旧 Twitter）のDMにて受け付けています。
-                氏名・メールアドレスなどの個人情報をお伝えいただく必要はありません。
-                いただいたメッセージはお問い合わせへの対応のみに使用します。
+                当サイトは、法令に基づく場合を除き、ユーザーの個人情報を第三者に提供・販売することはありません。
+              </p>
+              <p style={P_STYLE}>
+                ただし、お問い合わせ対応のために以下の外部サービスを利用しています。
+                また、アクセス解析・広告配信のための外部サービスを今後導入する予定です。
+                これらのサービスにおける情報の取り扱いは、各社のプライバシーポリシーに従います。
+              </p>
+              <table style={TABLE_STYLE}>
+                <thead>
+                  <tr>
+                    <th style={TH_STYLE} scope="col">サービス</th>
+                    <th style={TH_STYLE} scope="col">提供事業者</th>
+                    <th style={TH_STYLE} scope="col">用途</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style={TD_STYLE}>Discord</td>
+                    <td style={TD_STYLE}>Discord Inc.</td>
+                    <td style={TD_STYLE}>お問い合わせフォーム（利用中）</td>
+                  </tr>
+                  <tr>
+                    <td style={TD_STYLE}>Google アナリティクス（GA4）</td>
+                    <td style={TD_STYLE}>Google LLC</td>
+                    <td style={TD_STYLE}>アクセス解析（導入予定）</td>
+                  </tr>
+                  <tr>
+                    <td style={TD_STYLE}>忍者AdMax</td>
+                    <td style={TD_STYLE}>株式会社サムライファクトリー</td>
+                    <td style={TD_STYLE}>広告配信（導入予定）</td>
+                  </tr>
+                  <tr>
+                    <td style={TD_STYLE}>Google AdSense</td>
+                    <td style={TD_STYLE}>Google LLC</td>
+                    <td style={TD_STYLE}>広告配信（将来予定）</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p style={P_STYLE}>
+                アクセス解析・広告配信サービスの導入時には、本ポリシーを更新のうえ当サイトでお知らせします。
               </p>
             </section>
 
             <div style={DIVIDER} />
 
             <section style={SECTION_STYLE}>
-              <h2 style={H2_STYLE}>アクセス解析について</h2>
+              <h2 style={H2_STYLE}>6. Cookie・オプトアウト</h2>
               <p style={P_STYLE}>
-                当サイトでは Google Analytics（GA4）を使用してアクセス解析を行っています。
-                Google Analytics はトラフィックデータの収集のために Cookie を使用しています。
-                このデータは匿名で収集されており、個人を特定するものではありません。
-                Cookie を無効にすることで収集を拒否できます。詳細は{" "}
-                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#8b5cf6", textDecoration: "underline" }}>
-                  Google のプライバシーポリシー
-                </a>
-                {" "}をご覧ください。
+                当サイトでは、アクセス解析・広告配信・ツールの設定保存などのために Cookie および LocalStorage を使用することがあります。
+                ユーザーは、ブラウザの設定により Cookie の使用を無効化したり、保存済みの Cookie を削除したりすることができます。
+                ただし、Cookie を無効にした場合、一部の機能が正常に動作しないことがあります。
+              </p>
+              <ul style={UL_STYLE}>
+                <li>
+                  <strong>ブラウザ設定</strong>：お使いのブラウザの設定画面から、Cookie の受け入れ可否を個別に設定できます。
+                </li>
+              </ul>
+              <p style={P_STYLE}>
+                アクセス解析・広告配信サービスの導入後は、各サービスのオプトアウト（収集拒否）方法を本ページに追記します。
               </p>
             </section>
 
             <div style={DIVIDER} />
 
             <section style={SECTION_STYLE}>
-              <h2 style={H2_STYLE}>広告について</h2>
-              <p style={P_STYLE}>
-                当サイトでは、広告配信サービスを利用しています。現在は{" "}
-                <strong>忍者AdMax（株式会社忍者）</strong>
-                {" "}による広告を掲載しています。また、今後 Google AdSense による広告掲載を予定しています。
-              </p>
-              <p style={P_STYLE}>
-                広告配信事業者は Cookie を使用して、ユーザーの興味に応じた広告を表示することがあります。
-                Cookie の使用を無効にする方法については、お使いのブラウザの設定をご確認ください。
-              </p>
-            </section>
-
-            <div style={DIVIDER} />
-
-            <section style={SECTION_STYLE}>
-              <h2 style={H2_STYLE}>免責事項</h2>
+              <h2 style={H2_STYLE}>7. 免責事項</h2>
               <p style={P_STYLE}>
                 当サイトの情報は正確性を期しておりますが、内容の正確性・完全性・有用性等についていかなる保証も行いません。
                 当サイトの利用により生じた損害については責任を負いかねます。
@@ -141,24 +298,37 @@ export default function PrivacyPage() {
             <div style={DIVIDER} />
 
             <section style={SECTION_STYLE}>
-              <h2 style={H2_STYLE}>プライバシーポリシーの変更について</h2>
+              <h2 style={H2_STYLE}>8. お問い合わせ窓口</h2>
               <p style={P_STYLE}>
-                本ポリシーの内容は、法令の改正やサービス内容の変更にともない、予告なく変更することがあります。
-                変更後のポリシーは当ページに掲載した時点で効力を生じるものとします。
+                本ポリシーに関するお問い合わせ、ご自身の情報の取り扱いに関するご請求は、以下の窓口までご連絡ください。
+              </p>
+              <ul style={UL_STYLE}>
+                <li>メールアドレス：genta0215suzuki@gmail.com</li>
+                <li>
+                  お問い合わせフォーム：
+                  <Link href="/contact" style={LINK_STYLE}>当サイトのお問い合わせページ</Link>
+                </li>
+              </ul>
+              <p style={P_STYLE}>
+                運営者は個人であり、氏名・住所は公開しておりません。ご連絡はメールまたはお問い合わせフォームにてお願いいたします。
               </p>
             </section>
 
             <div style={DIVIDER} />
 
             <section style={SECTION_STYLE}>
-              <h2 style={H2_STYLE}>運営者情報</h2>
+              <h2 style={H2_STYLE}>9. 改定について</h2>
               <p style={P_STYLE}>
-                サイト名: ただただ（タダtools）<br />
-                お問い合わせ: <Link href="/contact" style={{ color: "#8b5cf6", textDecoration: "underline" }}>お問い合わせページ</Link>
+                当サイトは、法令の改正やサービス内容の変更にともない、本ポリシーを予告なく変更することがあります。
+                変更後の本ポリシーは、当ページに掲載した時点から効力を生じるものとします。
+                重要な変更を行う場合は、当サイト上でお知らせします。
               </p>
             </section>
 
-            <p style={{ color: "#9a96a8", fontSize: "0.8rem" }}>制定日: 2026年6月8日</p>
+            <p style={{ color: "#9a96a8", fontSize: "0.8rem" }}>
+              制定日: 2026年6月8日<br />
+              最終改定日: 2026年6月12日
+            </p>
           </div>
         </div>
       </main>
