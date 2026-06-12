@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import { NEWS_DATA, formatDate, bannerGradient } from "@/lib/news-data";
-import { PortalSiteNav } from "@/components/portal/PortalSiteNav";
+import { GlobalMenu } from "@/components/shared/GlobalMenu";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -47,7 +47,7 @@ export default async function NewsDetailPage({ params }: Props) {
             <span className="p-sep">/</span>
             <span className="p-crumb current">#{item.id}</span>
           </div>
-          <PortalSiteNav currentPath="/news" />
+          <GlobalMenu activeSection={null} />
         </div>
       </header>
 
