@@ -328,7 +328,13 @@ export default function PortalPage() {
 
       {/* FOOTER */}
       <footer className="p-footer">
-        © 2026 ただただ。 <span className="p-heart">♥</span> All rights reserved.
+        <div className="p-footer-inner">
+          <div>© 2026 ただただ。 <span className="p-heart">♥</span> All rights reserved.</div>
+          <div style={{ display: "flex", gap: 16 }}>
+            <Link href="/privacy" style={{ color: "inherit", textDecoration: "none" }}>プライバシーポリシー</Link>
+            <Link href="/contact" style={{ color: "inherit", textDecoration: "none" }}>お問い合わせ</Link>
+          </div>
+        </div>
       </footer>
     </div>
   );

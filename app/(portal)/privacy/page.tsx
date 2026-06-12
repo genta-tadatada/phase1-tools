@@ -4,7 +4,7 @@ import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
 
 export const metadata: Metadata = {
-  title: "プライバシーポリシー | タダtools",
+  title: "プライバシーポリシー | ただただ",
   robots: { index: true, follow: true },
   alternates: {
     canonical: "/privacy",
@@ -103,7 +103,7 @@ export default function PrivacyPage() {
             <section style={SECTION_STYLE}>
               <h2 style={H2_STYLE}>1. 基本情報</h2>
               <p style={P_STYLE}>
-                ただただ（TADATADA。以下「当サイト」）は、個人で運営する無料のウェブツール・コンテンツサイトです。
+                ただただ（以下「当サイト」）は、個人で運営する無料のウェブツール・コンテンツサイトです。
                 当サイトをご利用いただくすべての方（以下「ユーザー」）の個人情報・プライバシーを尊重し、
                 以下のとおりプライバシーポリシー（以下「本ポリシー」）を定めます。
               </p>
@@ -111,7 +111,7 @@ export default function PrivacyPage() {
                 <tbody>
                   <tr>
                     <th style={TH_STYLE} scope="row">サイト名</th>
-                    <td style={TD_STYLE}>ただただ（TADATADA）</td>
+                    <td style={TD_STYLE}>ただただ</td>
                   </tr>
                   <tr>
                     <th style={TH_STYLE} scope="row">URL</th>
@@ -119,11 +119,11 @@ export default function PrivacyPage() {
                   </tr>
                   <tr>
                     <th style={TH_STYLE} scope="row">運営者</th>
-                    <td style={TD_STYLE}>個人運営（氏名・住所は非開示）</td>
+                    <td style={TD_STYLE}>個人運営</td>
                   </tr>
                   <tr>
                     <th style={TH_STYLE} scope="row">連絡先</th>
-                    <td style={TD_STYLE}>genta0215suzuki@gmail.com</td>
+                    <td style={TD_STYLE}>info.tadatada@gmail.com</td>
                   </tr>
                 </tbody>
               </table>
@@ -250,14 +250,19 @@ export default function PrivacyPage() {
                     <td style={TD_STYLE}>アクセス解析（導入予定）</td>
                   </tr>
                   <tr>
-                    <td style={TD_STYLE}>忍者AdMax</td>
-                    <td style={TD_STYLE}>株式会社サムライファクトリー</td>
-                    <td style={TD_STYLE}>広告配信（導入予定）</td>
+                    <td style={TD_STYLE}>Amazonアソシエイト</td>
+                    <td style={TD_STYLE}>アマゾンジャパン合同会社</td>
+                    <td style={TD_STYLE}>アフィリエイト広告（導入予定）</td>
                   </tr>
                   <tr>
                     <td style={TD_STYLE}>Google AdSense</td>
                     <td style={TD_STYLE}>Google LLC</td>
-                    <td style={TD_STYLE}>広告配信（将来予定）</td>
+                    <td style={TD_STYLE}>広告配信（導入予定）</td>
+                  </tr>
+                  <tr>
+                    <td style={TD_STYLE}>楽天アフィリエイト</td>
+                    <td style={TD_STYLE}>楽天グループ株式会社</td>
+                    <td style={TD_STYLE}>アフィリエイト広告（将来予定）</td>
                   </tr>
                 </tbody>
               </table>
@@ -280,44 +285,134 @@ export default function PrivacyPage() {
                   <strong>ブラウザ設定</strong>：お使いのブラウザの設定画面から、Cookie の受け入れ可否を個別に設定できます。
                 </li>
               </ul>
+              <h3 style={H3_STYLE}>Google アナリティクス（GA4・導入予定）</h3>
               <p style={P_STYLE}>
-                アクセス解析・広告配信サービスの導入後は、各サービスのオプトアウト（収集拒否）方法を本ページに追記します。
+                当サイトでは、アクセス解析ツール「Google アナリティクス（GA4）」の導入を予定しています。
+                Google アナリティクスは、トラフィックデータの収集のために Cookie を使用します。
+                このデータは匿名で収集されており、個人を特定するものではありません。
+                収集を希望されない場合は、ブラウザの Cookie 設定のほか、{" "}
+                <a href="https://tools.google.com/dlpage/gaoptout?hl=ja" target="_blank" rel="noopener noreferrer" style={LINK_STYLE}>
+                  Google アナリティクス オプトアウト アドオン
+                </a>
+                {" "}を利用することでデータ収集を無効にできます。
+              </p>
+              <p style={P_STYLE}>
+                広告配信に関する Cookie の取り扱いとオプトアウト方法は、次条「広告配信・アフィリエイトプログラムについて」をご確認ください。
               </p>
             </section>
 
             <div style={DIVIDER} />
 
             <section style={SECTION_STYLE}>
-              <h2 style={H2_STYLE}>7. 免責事項</h2>
+              <h2 style={H2_STYLE}>7. 広告配信・アフィリエイトプログラムについて</h2>
+
+              <h3 style={H3_STYLE}>Google AdSense（導入予定）</h3>
+              <p style={P_STYLE}>
+                当サイトでは、第三者配信の広告サービス「Google AdSense」の導入を予定しています。
+                Google などの第三者配信事業者は Cookie を使用し、ユーザーの当サイトや他のウェブサイトへの過去のアクセス情報に基づいて広告を配信します。
+                この Cookie によって、氏名・住所・メールアドレス・電話番号などの個人を特定する情報が収集されることはありません。
+              </p>
+              <p style={P_STYLE}>
+                ユーザーは、{" "}
+                <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" style={LINK_STYLE}>
+                  Google の広告設定
+                </a>
+                {" "}でパーソナライズ広告を無効にできます。また、{" "}
+                <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" style={LINK_STYLE}>
+                  www.aboutads.info
+                </a>
+                {" "}にアクセスすることで、第三者配信事業者によるパーソナライズ広告の Cookie を無効にできます。
+                Google の広告における Cookie の取り扱いの詳細は、{" "}
+                <a href="https://policies.google.com/technologies/ads?hl=ja" target="_blank" rel="noopener noreferrer" style={LINK_STYLE}>
+                  Google のポリシーと規約（広告）
+                </a>
+                {" "}をご確認ください。
+              </p>
+
+              <h3 style={H3_STYLE}>Amazonアソシエイト・プログラム</h3>
+              <p style={P_STYLE}>
+                当サイトは、Amazon.co.jp を宣伝しリンクすることによってサイトが紹介料を獲得できる手段を提供することを目的に設定された
+                アフィリエイトプログラムである、Amazonアソシエイト・プログラムの参加者です。
+              </p>
+              <p style={P_STYLE}>
+                <strong>Amazonのアソシエイトとして、ただただは適格販売により収入を得ています。</strong>
+              </p>
+
+              <h3 style={H3_STYLE}>楽天アフィリエイト（将来予定）</h3>
+              <p style={P_STYLE}>
+                当サイトでは、楽天グループ株式会社が提供する「楽天アフィリエイト」の利用を予定しています。
+                導入後は、本ポリシーを更新のうえ当サイトでお知らせします。
+              </p>
+
+              <h3 style={H3_STYLE}>アフィリエイトリンクの表記について</h3>
+              <p style={P_STYLE}>
+                景品表示法にもとづき、アフィリエイトリンク（広告）を含むページには「PR」「広告」等の表記を行います。
+                アフィリエイトリンクを経由して商品・サービスをご購入された場合、当サイトに紹介料が支払われることがありますが、
+                ユーザーに追加の料金が発生することはありません。
+              </p>
+              <p style={P_STYLE}>
+                商品・サービスの購入は、ユーザーと各販売事業者との間の取引であり、当サイトはその取引内容について責任を負いかねます。
+                ご購入の際は、各販売事業者が定める利用規約・プライバシーポリシーをご確認ください。
+              </p>
+            </section>
+
+            <div style={DIVIDER} />
+
+            <section style={SECTION_STYLE}>
+              <h2 style={H2_STYLE}>8. 著作権について</h2>
+              <p style={P_STYLE}>
+                当サイトに掲載されているテキスト・画像・デザイン・プログラム等のコンテンツの著作権は、特に明示しない限り運営者に帰属します。
+                無断での転載・複製・改変等はご遠慮ください。
+              </p>
+            </section>
+
+            <div style={DIVIDER} />
+
+            <section style={SECTION_STYLE}>
+              <h2 style={H2_STYLE}>9. 免責事項</h2>
               <p style={P_STYLE}>
                 当サイトの情報は正確性を期しておりますが、内容の正確性・完全性・有用性等についていかなる保証も行いません。
                 当サイトの利用により生じた損害については責任を負いかねます。
               </p>
+              <p style={P_STYLE}>
+                当サイトからリンクする外部ウェブサイトの内容については、運営者は責任を負いかねます。
+                リンク先のサービス利用に際しては、各サービスの利用規約・プライバシーポリシーをご確認ください。
+              </p>
             </section>
 
             <div style={DIVIDER} />
 
             <section style={SECTION_STYLE}>
-              <h2 style={H2_STYLE}>8. お問い合わせ窓口</h2>
+              <h2 style={H2_STYLE}>10. 個人情報の開示・訂正・削除について</h2>
+              <p style={P_STYLE}>
+                ユーザーは、当サイトが保有するご自身の個人情報について、開示・訂正・利用停止・削除等を請求することができます。
+                ご請求の場合は、下記お問い合わせ窓口よりご連絡ください。合理的な期間内に対応いたします。
+              </p>
+            </section>
+
+            <div style={DIVIDER} />
+
+            <section style={SECTION_STYLE}>
+              <h2 style={H2_STYLE}>11. お問い合わせ窓口</h2>
               <p style={P_STYLE}>
                 本ポリシーに関するお問い合わせ、ご自身の情報の取り扱いに関するご請求は、以下の窓口までご連絡ください。
               </p>
               <ul style={UL_STYLE}>
-                <li>メールアドレス：genta0215suzuki@gmail.com</li>
+                <li>メールアドレス：info.tadatada@gmail.com</li>
                 <li>
                   お問い合わせフォーム：
                   <Link href="/contact" style={LINK_STYLE}>当サイトのお問い合わせページ</Link>
                 </li>
               </ul>
               <p style={P_STYLE}>
-                運営者は個人であり、氏名・住所は公開しておりません。ご連絡はメールまたはお問い合わせフォームにてお願いいたします。
+                当サイトは個人運営のため、ご連絡はメールまたはお問い合わせフォームにてお願いいたします。
               </p>
             </section>
 
             <div style={DIVIDER} />
 
             <section style={SECTION_STYLE}>
-              <h2 style={H2_STYLE}>9. 改定について</h2>
+              <h2 style={H2_STYLE}>12. 改定について</h2>
               <p style={P_STYLE}>
                 当サイトは、法令の改正やサービス内容の変更にともない、本ポリシーを予告なく変更することがあります。
                 変更後の本ポリシーは、当ページに掲載した時点から効力を生じるものとします。
