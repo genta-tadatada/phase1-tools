@@ -72,10 +72,9 @@ export function SlideBgTool() {
     const p = PALETTES[Math.floor(Math.random() * PALETTES.length)];
     const pickable = STYLES.filter((s) => s.key !== "solid");
     const s = pickable[Math.floor(Math.random() * pickable.length)].key;
-    const i = 0.6 + Math.random() * 0.4;
     applyPalette(p);
     setStyle(s);
-    setIntensity(Math.round(i * 100) / 100);
+    setIntensity(0.5); // スライダーはランダムにせず初期中央に戻す
   }, []);
 
   const downloadPng = useCallback(() => {
@@ -307,11 +306,27 @@ export function SlideBgTool() {
           </p>
         </Section>
 
-        {/* ── 文字プレビュー ── */}
-        <button type="button" onClick={() => setShowText((v) => !v)} className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground self-start">
-          <Type className="w-4 h-4" />
-          文字プレビュー：{showText ? "ON" : "OFF"}
-        </button>
+        {/* ── 文字プレビュー（スイッチ） ── */}
+        <div className="flex items-center justify-between rounded-xl border border-border px-3.5 py-2.5">
+          <span className="inline-flex items-center gap-2 text-sm font-bold text-foreground">
+            <Type className="w-4 h-4" />
+            文字プレビュー
+          </span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={showText}
+            aria-label="文字プレビューの表示切り替え"
+            onClick={() => setShowText((v) => !v)}
+            className="relative inline-flex items-center rounded-full transition-colors flex-shrink-0"
+            style={{ width: 50, height: 28, background: showText ? "#8b5cf6" : "var(--border)" }}
+          >
+            <span
+              className="absolute rounded-full bg-white shadow-sm transition-transform"
+              style={{ width: 22, height: 22, top: 3, left: 3, transform: showText ? "translateX(22px)" : "translateX(0)" }}
+            />
+          </button>
+        </div>
 
         {/* ── 使い方 ── */}
         <div className="mt-2 rounded-2xl bg-muted/50 p-4 text-sm leading-relaxed text-muted-foreground">
