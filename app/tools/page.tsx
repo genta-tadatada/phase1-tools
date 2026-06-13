@@ -8,8 +8,9 @@ import "../(portal)/portal.css";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
 import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
+import { RequestCTA } from "@/components/shared/RequestCTA";
 
-type Cat = "all" | "calc" | "text" | "play";
+type Cat = "all" | "calc" | "text" | "play" | "design";
 
 interface Tool {
   href: string;
@@ -17,9 +18,11 @@ interface Tool {
   name: string;
   desc: string;
   cat: Cat;
+  soon?: boolean;
 }
 
 const TOOLS: Tool[] = [
+  { href: "/tools/slide-bg",      icon: "/assets/icon-slide-bg.svg",      name: "プレゼン背景メーカー", desc: "スライド用の背景を原寸で作成",  cat: "design" },
   { href: "/tools/counter",       icon: "/assets/icon-counter.png",       name: "マルチカウンター",    desc: "複数項目を同時にカウント",      cat: "calc" },
   { href: "/tools/stopwatch",     icon: "/assets/icon-stopwatch.png",     name: "多列ストップウォッチ", desc: "ラップ計測対応・1/100秒精度",   cat: "calc" },
   { href: "/tools/timer",         icon: "/assets/icon-timer.png",         name: "タイマー",            desc: "カウントダウン・アラーム付き",  cat: "calc" },
@@ -35,6 +38,8 @@ const TOOLS: Tool[] = [
   { href: "/tools/amida",         icon: "/assets/icon-amida.png",         name: "あみだくじ",           desc: "自動生成あみだくじ",            cat: "play" },
   { href: "/tools/tournament",    icon: "/assets/icon-tournament.png",    name: "トーナメント表",       desc: "参加者入力で自動ブラケット",    cat: "play" },
 ];
+
+const LIVE_COUNT = TOOLS.filter((t) => !t.soon).length;
 
 const CAT_STYLE: Record<Cat, {
   iconGrad: string; iconShadow: string; cardBg: string; dot: string;
@@ -64,6 +69,14 @@ const CAT_STYLE: Record<Cat, {
     filterActive: "linear-gradient(135deg,#a78bfa,#f9a8d4)",
     filterShadow: "0 4px 14px -4px rgba(196,181,253,0.6)",
   },
+  design: {
+    iconGrad: "linear-gradient(135deg,#fbbf24,#f472b6)",
+    iconShadow: "0 6px 18px -6px rgba(251,191,36,0.6)",
+    cardBg: "var(--cat-all-card)",
+    dot: "#fbbf24",
+    filterActive: "linear-gradient(135deg,#fbbf24,#f472b6)",
+    filterShadow: "0 4px 14px -4px rgba(251,191,36,0.5)",
+  },
   all: {
     iconGrad: "linear-gradient(135deg,#7dd3fc,#c4b5fd)",
     iconShadow: "0 6px 18px -6px rgba(125,211,252,0.6)",
@@ -75,10 +88,11 @@ const CAT_STYLE: Record<Cat, {
 };
 
 const FILTERS: { cat: Cat; label: string }[] = [
-  { cat: "all",  label: "ぜんぶ" },
-  { cat: "calc", label: "計算・計測" },
-  { cat: "text", label: "テキスト" },
-  { cat: "play", label: "抽選" },
+  { cat: "all",    label: "ぜんぶ" },
+  { cat: "design", label: "デザイン" },
+  { cat: "calc",   label: "計算・計測" },
+  { cat: "text",   label: "テキスト" },
+  { cat: "play",   label: "抽選" },
 ];
 
 const MotionLink = motion(Link);
@@ -130,7 +144,12 @@ function ToolCard({ tool, index }: { tool: Tool; index: number }) {
         className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3"
         style={{ background: st.iconGrad, boxShadow: "0 4px 12px -4px rgba(0,0,0,0.15)" }}
       >
-        <Image src={tool.icon} alt="" width={46} height={46} style={{ objectFit: "contain", transform: "translateY(2px)" }} />
+        {tool.icon.endsWith(".svg") ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={tool.icon} alt="" width={46} height={46} style={{ objectFit: "contain", transform: "translateY(2px)" }} />
+        ) : (
+          <Image src={tool.icon} alt="" width={46} height={46} style={{ objectFit: "contain", transform: "translateY(2px)" }} />
+        )}
       </div>
 
       {/* テキスト */}
@@ -230,7 +249,7 @@ export default function ToolsPage() {
               <path d="M6 0L7.2 4.8L12 6L7.2 7.2L6 12L4.8 7.2L0 6L4.8 4.8Z" fill="#f472b6"/>
             </svg>
             FREE TOOLS
-            <span style={{ opacity: 0.5, fontWeight: 600, letterSpacing: 0 }}>· {TOOLS.length} tools</span>
+            <span style={{ opacity: 0.5, fontWeight: 600, letterSpacing: 0 }}>· {LIVE_COUNT} tools</span>
           </motion.div>
 
           {/* メインタイトル */}
@@ -289,7 +308,7 @@ export default function ToolsPage() {
               )}
               {f.label}
               {f.cat === "all" && (
-                <span style={{ fontFamily: "Quicksand, sans-serif", fontWeight: 800, fontSize: 10, opacity: 0.7, marginLeft: 2 }}>{TOOLS.length}</span>
+                <span style={{ fontFamily: "Quicksand, sans-serif", fontWeight: 800, fontSize: 10, opacity: 0.7, marginLeft: 2 }}>{LIVE_COUNT}</span>
               )}
             </motion.button>
           );
@@ -318,6 +337,8 @@ export default function ToolsPage() {
       </main>
 
       {/* ─── フッター ─── */}
+      <RequestCTA context="tools" />
+
       <footer style={{ borderTop: "1px solid var(--th-border)", padding: "28px 24px 40px" }}>
         <div style={{ maxWidth: 880, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 13 }}>

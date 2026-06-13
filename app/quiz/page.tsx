@@ -6,6 +6,7 @@ import "../(portal)/portal.css";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
 import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
+import { RequestCTA } from "@/components/shared/RequestCTA";
 
 interface QuizCategory {
   icon: string;
@@ -216,6 +217,8 @@ export default function QuizPage() {
           </p>
         </div>
       </main>
+
+      <RequestCTA context="quiz" />
 
       <footer style={{ borderTop: "1px solid var(--th-border)", padding: "28px 24px 40px" }}>
         <div style={{ maxWidth: 880, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>

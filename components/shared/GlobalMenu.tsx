@@ -12,6 +12,7 @@ interface GlobalMenuProps {
 }
 
 const TOOLS = [
+  { href: "/tools/slide-bg",      label: "プレゼン背景メーカー" },
   { href: "/tools/counter",       label: "マルチカウンター" },
   { href: "/tools/stopwatch",     label: "多列ストップウォッチ" },
   { href: "/tools/timer",         label: "タイマー" },
