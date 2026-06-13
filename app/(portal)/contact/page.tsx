@@ -33,7 +33,6 @@ export default function ContactPage() {
 
         <section className="p-contact-page-hero">
           <div className="p-container-xs">
-            <div className="p-eyebrow lav">CONTACT</div>
             <h1 className="p-page-title">お問い合わせ<span className="dot">.</span></h1>
             <p className="p-page-sub">ご質問・ご要望・不具合のご連絡など、<br />フォームからお気軽にどうぞ。ログイン不要・個人情報なし。</p>
           </div>

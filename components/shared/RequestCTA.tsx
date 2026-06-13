@@ -44,13 +44,27 @@ export function RequestCTA({ context = "tools" }: { context?: CtaContext }) {
           e.currentTarget.style.transform = "";
         }}
       >
-        <Image
-          src="/assets/kawaii-envelope.png"
-          alt=""
-          width={30}
-          height={30}
-          style={{ flexShrink: 0, objectFit: "contain" }}
-        />
+        <span
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: 14,
+            flexShrink: 0,
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "linear-gradient(135deg,#ede9fe,#fce7f3)",
+            boxShadow: "inset 0 0 0 1px rgba(167,139,250,0.25)",
+          }}
+        >
+          <Image
+            src="/assets/kawaii-envelope.png"
+            alt=""
+            width={34}
+            height={34}
+            style={{ objectFit: "contain" }}
+          />
+        </span>
         <span style={{ fontWeight: 800, fontSize: 14, color: "var(--th-text)" }}>
           {COPY[context]}
         </span>

@@ -136,19 +136,6 @@ export default function QuizPage() {
         <div className="relative max-w-3xl mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center gap-8 md:gap-6 text-center md:text-left">
             <div className="flex-1">
-              <motion.div
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest mb-7"
-                style={{ background: "linear-gradient(135deg, #ede9fe, #ddd6fe)", color: "#7c3aed", fontFamily: "Quicksand, sans-serif", border: "1.5px solid rgba(196,181,253,0.45)", backdropFilter: "blur(8px)", boxShadow: "0 3px 14px rgba(196,181,253,0.28), inset 0 1px 0 rgba(255,255,255,0.8)" }}
-              >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
-                  <path d="M6 0L7.2 4.8L12 6L7.2 7.2L6 12L4.8 7.2L0 6L4.8 4.8Z" fill="#a78bfa"/>
-                </svg>
-                QUIZ · 一問一答
-              </motion.div>
-
               <motion.h1
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}

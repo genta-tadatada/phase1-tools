@@ -10,8 +10,8 @@ import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 type Style =
-  | "gradient" | "blobs" | "corner" | "diagonal" | "sidebar"
-  | "dots" | "waves" | "frame" | "grid" | "stripes" | "solid";
+  | "gradient" | "blobs" | "corner" | "band" | "sidebar" | "glass"
+  | "waves" | "frame" | "dots" | "grid" | "scatter" | "solid";
 type AspectKey = "16:9" | "4:3" | "16:10";
 
 interface Palette {
@@ -43,13 +43,14 @@ const STYLES: { key: Style; label: string }[] = [
   { key: "gradient", label: "グラデ" },
   { key: "blobs",    label: "ふんわり" },
   { key: "corner",   label: "コーナー" },
-  { key: "diagonal", label: "斜め" },
+  { key: "band",     label: "帯" },
   { key: "sidebar",  label: "サイド" },
-  { key: "dots",     label: "ドット" },
+  { key: "glass",    label: "グラス" },
   { key: "waves",    label: "波" },
   { key: "frame",    label: "フレーム" },
+  { key: "dots",     label: "ドット" },
   { key: "grid",     label: "方眼" },
-  { key: "stripes",  label: "ストライプ" },
+  { key: "scatter",  label: "粒子" },
   { key: "solid",    label: "無地" },
 ];
 
@@ -194,40 +195,59 @@ function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: number, cfg
       ctx.fill();
     });
   } else if (style === "corner") {
-    // 角の大きな円（テンプレ的）。中央は空けて文字を乗せやすく
-    ctx.fillStyle = hexToRgba(accent, 0.5 + 0.45 * k);
+    // 四隅に寄せた小さめの円。中央は完全に空けて文字の視認性を確保
+    ctx.fillStyle = hexToRgba(accent, 0.5 + 0.4 * k);
     ctx.beginPath();
-    ctx.arc(w, h, w * 0.42, 0, Math.PI * 2);
+    ctx.arc(w, h, w * 0.24, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = hexToRgba(accent, 0.22 + 0.28 * k);
+    ctx.fillStyle = hexToRgba(accent, 0.28 + 0.22 * k);
     ctx.beginPath();
-    ctx.arc(0, 0, w * 0.26, 0, Math.PI * 2);
+    ctx.arc(0, 0, w * 0.15, 0, Math.PI * 2);
     ctx.fill();
-  } else if (style === "diagonal") {
-    // 下部の斜めバンド＋細い平行線（タイトルスライド向け）
-    ctx.fillStyle = hexToRgba(accent, 0.5 + 0.45 * k);
+    ctx.fillStyle = hexToRgba(accent, 0.2 * k);
     ctx.beginPath();
-    ctx.moveTo(0, h * 0.62);
-    ctx.lineTo(w, h * 0.32);
-    ctx.lineTo(w, h);
-    ctx.lineTo(0, h);
-    ctx.closePath();
+    ctx.arc(w * 0.85, h * 0.74, w * 0.055, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = hexToRgba(accent, 0.3 * k);
-    ctx.beginPath();
-    ctx.moveTo(0, h * 0.54);
-    ctx.lineTo(w, h * 0.24);
-    ctx.lineTo(w, h * 0.3);
-    ctx.lineTo(0, h * 0.6);
-    ctx.closePath();
-    ctx.fill();
+  } else if (style === "glass") {
+    // グラスモーフィズム（2025トレンド）：淡いアクセント地＋四隅の半透明フロストパネル。中央は空く
+    const bg = ctx.createLinearGradient(0, 0, w, h);
+    bg.addColorStop(0, hexToRgba(accent, 0.08 + 0.1 * k));
+    bg.addColorStop(1, hexToRgba(accent, 0.16 + 0.14 * k));
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+    const panel = (x: number, y: number, pw: number, ph: number) => {
+      const r = Math.min(pw, ph) * 0.14;
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + pw, y, x + pw, y + ph, r);
+      ctx.arcTo(x + pw, y + ph, x, y + ph, r);
+      ctx.arcTo(x, y + ph, x, y, r);
+      ctx.arcTo(x, y, x + pw, y, r);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(255,255,255,${0.18 + 0.16 * k})`;
+      ctx.fill();
+      ctx.lineWidth = Math.max(1, (w / 1920) * 2.5);
+      ctx.strokeStyle = "rgba(255,255,255,0.55)";
+      ctx.stroke();
+    };
+    panel(-w * 0.06, -h * 0.12, w * 0.36, h * 0.52);
+    panel(w * 0.72, h * 0.5, w * 0.4, h * 0.66);
   } else if (style === "sidebar") {
-    // 左の縦アクセント帯（コーポレート資料風）
+    // 左の縦アクセント帯（コーポレート資料風・中央は空く）
     const bw = w * 0.14;
     ctx.fillStyle = hexToRgba(accent, 0.5 + 0.45 * k);
     ctx.fillRect(0, 0, bw, h);
     ctx.fillStyle = hexToRgba(accent, 0.3 * k);
     ctx.fillRect(bw + w * 0.014, 0, w * 0.009, h);
+  } else if (style === "band") {
+    // 上下の帯（ヘッダー/フッター・コーポレート定番。中央は完全に空く）
+    const bh = h * 0.1;
+    ctx.fillStyle = hexToRgba(accent, 0.5 + 0.42 * k);
+    ctx.fillRect(0, 0, w, bh);
+    ctx.fillRect(0, h - bh, w, bh);
+    ctx.fillStyle = hexToRgba(accent, 0.32 * k);
+    ctx.fillRect(0, bh + h * 0.014, w, Math.max(2, h * 0.008));
+    ctx.fillRect(0, h - bh - h * 0.022, w, Math.max(2, h * 0.008));
   } else if (style === "frame") {
     // 内側に上品な二重枠（タイトル扉向け・中央は完全に空く）
     const inset = w * 0.045;
@@ -237,17 +257,28 @@ function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: number, cfg
     ctx.strokeStyle = hexToRgba(accent, 0.3 * k);
     ctx.lineWidth = Math.max(1, (w / 1920) * 2);
     ctx.strokeRect(inset * 1.6, inset * 1.6, w - inset * 3.2, h - inset * 3.2);
-  } else if (style === "stripes") {
-    // 45度の控えめな斜線テクスチャ
-    ctx.strokeStyle = hexToRgba(accent, 0.26 * k);
-    ctx.lineWidth = Math.max(2, (w / 1920) * 10);
-    const gap = w / 14;
-    ctx.beginPath();
-    for (let x = -h; x < w; x += gap) {
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x + h, h);
+  } else if (style === "scatter") {
+    // 縁・四隅に寄せた装飾ドット（中央は薄く空ける）。決定的配置でDL一致
+    const cols = 16;
+    const rows = 9;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const jx = Math.sin(r * 12.9 + c * 4.1) * 0.5;
+        const jy = Math.cos(r * 7.3 + c * 3.7) * 0.5;
+        const x = ((c + 0.5 + jx) / cols) * w;
+        const y = ((r + 0.5 + jy) / rows) * h;
+        const dx = (x / w - 0.5) * 2;
+        const dy = (y / h - 0.5) * 2;
+        const dist = Math.min(1, Math.sqrt(dx * dx + dy * dy) / 1.25);
+        if (dist < 0.5) continue; // 中央は空ける
+        const a = (dist - 0.5) * 0.85 * k;
+        const rad = (1.5 + dist * 5) * (w / 1920) * 3;
+        ctx.fillStyle = hexToRgba(accent, a);
+        ctx.beginPath();
+        ctx.arc(x, y, rad, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
-    ctx.stroke();
   }
 }
 

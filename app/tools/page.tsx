@@ -237,21 +237,6 @@ export default function ToolsPage() {
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle,var(--th-text-muted) 1px,transparent 1px)", backgroundSize: "28px 28px", opacity: "var(--tools-dot-opacity)" }} />
 
         <div className="relative max-w-3xl mx-auto px-6 text-center">
-          {/* バッジ */}
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest mb-7"
-            style={{ background: "var(--tools-badge-bg)", color: "var(--tools-badge-color)", fontFamily: "Quicksand, sans-serif", border: "1.5px solid var(--tools-badge-border)", backdropFilter: "blur(8px)", boxShadow: "0 3px 14px rgba(196,181,253,0.28), inset 0 1px 0 rgba(255,255,255,0.8)" }}
-          >
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
-              <path d="M6 0L7.2 4.8L12 6L7.2 7.2L6 12L4.8 7.2L0 6L4.8 4.8Z" fill="#f472b6"/>
-            </svg>
-            FREE TOOLS
-            <span style={{ opacity: 0.5, fontWeight: 600, letterSpacing: 0 }}>· {LIVE_COUNT} tools</span>
-          </motion.div>
-
           {/* メインタイトル */}
           <motion.h1
             initial={{ opacity: 0, y: 18 }}

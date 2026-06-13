@@ -29,7 +29,6 @@ export default function NewsPage() {
 
         <section className="p-page-hero">
           <div className="p-container-md">
-            <div className="p-eyebrow">NEWS</div>
             <h1 className="p-page-title">お知らせ<span className="dot">.</span></h1>
             <p className="p-page-sub">アップデート・リリース情報をお届けします。</p>
           </div>

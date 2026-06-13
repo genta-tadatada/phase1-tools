@@ -69,7 +69,7 @@ export function PWAInstallBanner() {
     >
       <div className="flex items-center gap-2 min-w-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/assets/kawaii-house.png" alt="" aria-hidden="true" className="shrink-0" style={{ width: 36, height: 36, objectFit: "contain" }} />
+        <img src="/icons/icon-192.png" alt="" aria-hidden="true" className="shrink-0" style={{ width: 40, height: 40, objectFit: "contain", borderRadius: 9 }} />
         <div className="text-sm leading-tight min-w-0" style={{ color: "#3d3550" }}>
           {showIOSHint ? (
             <>
