@@ -255,7 +255,7 @@ export function SlideBgTool() {
         </Section>
 
         {/* ── プレビューのフォント ── */}
-        <Section label="プレビューのフォント（PowerPoint標準・左ほど定番）">
+        <Section label="プレビューのフォント">
           <div className="flex gap-2 overflow-x-auto pb-1.5 -mx-1 px-1">
             {FONTS.map((f) => (
               <button

@@ -214,8 +214,8 @@ export function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: numb
     ctx.fillStyle = rgba(c2, 0.95);
     ctx.fillRect(0, bh, w, lw); ctx.fillRect(0, h - bh - lw, w, lw);
   } else if (style === "sidebar") {
-    // シンプル: 左縦帯＋境界線。スライダー＝サイドの広さ
-    const bw = w * (0.06 + 0.16 * k);
+    // シンプル: 左縦帯＋境界線。スライダー＝サイドの広さ（最大で色が反転するほど広く）
+    const bw = w * (0.06 + 0.82 * k * k);
     const lw = Math.max(2, w * 0.005);
     ctx.fillStyle = rgba(c1, 0.9);
     ctx.fillRect(0, 0, bw, h);
@@ -246,8 +246,10 @@ export function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: numb
     ctx.beginPath(); ctx.arc(w - r * 0.4, h - r * 0.4, r, 0, 7); ctx.fill();
     ctx.fillStyle = rgba(c2, 0.9);
     ctx.beginPath(); ctx.arc(w - r * 1.5, h - r * 0.15, r * 0.55, 0, 7); ctx.fill();
+    // 左上：角にアンカーした小さな丸（角から覗く形）
+    const rs = r * 0.6;
     ctx.fillStyle = rgba(c2, 0.85);
-    ctx.beginPath(); ctx.arc(r * 0.5, r * 0.5, r * 0.45, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(rs * 0.35, rs * 0.35, rs, 0, 7); ctx.fill();
   } else if (style === "grid") {
     // 汎用: 細グリッド。スライダー＝マスの大きさ
     const cols = Math.round(26 - 17 * k);  // k大=マス大（線少）
