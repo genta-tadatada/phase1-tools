@@ -67,11 +67,12 @@ console.log('✅ ogp-text-tagline.png（透過テキスト）生成')
 // ── 2. ベース画像に合成 ─────────────────────────────────────────────
 const bg = await sharp(BG_PATH).resize(OGP_W, OGP_H, { fit: 'fill' }).png().toBuffer()
 
-// 一目で読めるよう右側エリアいっぱいに大きく（マスコットと干渉しない範囲で最大化）
-const textBuf = await sharp(textPng).resize(650, null, { fit: 'inside' }).png().toBuffer()
+// 右側の余白（マスコットの右）に中央寄せ。キャラと被らず一目で読めるサイズに
+const textBuf = await sharp(textPng).resize(560, null, { fit: 'inside' }).png().toBuffer()
 const { width: tw, height: th } = await sharp(textBuf).metadata()
 
-const left = OGP_W - (tw ?? 650) - 26
+const rightCenter = Math.round(OGP_W * 0.74) // 右半分の中央あたり
+const left = Math.round(rightCenter - (tw ?? 560) / 2)
 const top = Math.round((OGP_H - (th ?? 300)) / 2)
 
 await sharp(bg)

@@ -10,7 +10,7 @@ import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 type Style =
-  | "gradient" | "blobs" | "corner" | "band" | "sidebar" | "glass"
+  | "gradient" | "blobs" | "corner" | "band" | "sidebar" | "bracket"
   | "waves" | "frame" | "dots" | "grid" | "scatter" | "solid";
 type AspectKey = "16:9" | "4:3" | "16:10";
 
@@ -45,7 +45,7 @@ const STYLES: { key: Style; label: string }[] = [
   { key: "corner",   label: "コーナー" },
   { key: "band",     label: "帯" },
   { key: "sidebar",  label: "サイド" },
-  { key: "glass",    label: "グラス" },
+  { key: "bracket",  label: "角線" },
   { key: "waves",    label: "波" },
   { key: "frame",    label: "フレーム" },
   { key: "dots",     label: "ドット" },
@@ -125,38 +125,49 @@ function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: number, cfg
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
   } else if (style === "gradient") {
-    const g = ctx.createLinearGradient(0, 0, w, h);
+    // base→accentの斜め3点グラデ。中央は明るく保ち右下に向け色づく＋左上に白い光で奥行き
+    const g = ctx.createLinearGradient(0, 0, w * 0.92, h);
     g.addColorStop(0, base);
-    g.addColorStop(1, hexToRgba(accent, 0.5 + 0.5 * k));
+    g.addColorStop(0.5, hexToRgba(accent, 0.1 + 0.12 * k));
+    g.addColorStop(1, hexToRgba(accent, 0.5 + 0.45 * k));
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
-    // 右下のやわらかな光
-    const glow = ctx.createRadialGradient(w * 0.82, h * 0.82, 0, w * 0.82, h * 0.82, w * 0.5);
-    glow.addColorStop(0, hexToRgba(accent, 0.25 * k));
-    glow.addColorStop(1, hexToRgba(accent, 0));
-    ctx.fillStyle = glow;
+    const hi = ctx.createRadialGradient(w * 0.16, h * 0.14, 0, w * 0.16, h * 0.14, w * 0.55);
+    hi.addColorStop(0, "rgba(255,255,255,0.2)");
+    hi.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = hi;
     ctx.fillRect(0, 0, w, h);
   } else if (style === "blobs") {
+    // やわらかなメッシュ。淡い地グラデ＋3つのソフトブロブ（中央は明るく＝最も無難で印象が良い既定）
+    const bgrad = ctx.createLinearGradient(0, 0, w, h);
+    bgrad.addColorStop(0, hexToRgba(accent, 0.05 * k));
+    bgrad.addColorStop(1, hexToRgba(accent, 0.11 * k));
+    ctx.fillStyle = bgrad;
+    ctx.fillRect(0, 0, w, h);
     const blobs: [number, number, number, number][] = [
-      [w * 0.85, h * 0.2, w * 0.42, 0.22],
-      [w * 0.12, h * 0.85, w * 0.4, 0.18],
-      [w * 0.5, h * 0.45, w * 0.5, 0.1],
+      [w * 0.86, h * 0.16, w * 0.52, 0.2 + 0.16 * k],
+      [w * 0.1, h * 0.9, w * 0.46, 0.16 + 0.14 * k],
+      [w * 0.52, h * 0.5, w * 0.62, 0.05 + 0.05 * k],
     ];
     for (const [cx, cy, r, a] of blobs) {
       const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-      g.addColorStop(0, hexToRgba(accent, a * (0.6 + k)));
+      g.addColorStop(0, hexToRgba(accent, a));
       g.addColorStop(1, hexToRgba(accent, 0));
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, w, h);
     }
   } else if (style === "dots") {
+    // 全面ドット。中央をわずかに薄くして文字を読みやすく
     const gap = w / 26;
-    const r = gap * 0.11 * (0.7 + k);
-    ctx.fillStyle = hexToRgba(accent, 0.55 * k);
+    const r0 = gap * 0.11 * (0.7 + k);
     for (let y = gap; y < h; y += gap) {
       for (let x = gap; x < w; x += gap) {
+        const dx = (x / w - 0.5) * 2;
+        const dy = (y / h - 0.5) * 2;
+        const d = Math.min(1, Math.sqrt(dx * dx + dy * dy));
+        ctx.fillStyle = hexToRgba(accent, (0.28 + 0.4 * d) * k * 0.9);
         ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.arc(x, y, r0, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -195,59 +206,72 @@ function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: number, cfg
       ctx.fill();
     });
   } else if (style === "corner") {
-    // 四隅に寄せた小さめの円。中央は完全に空けて文字の視認性を確保
+    // 四隅の同心円（塗り＋リング）。中央は空けて文字の視認性を確保
     ctx.fillStyle = hexToRgba(accent, 0.5 + 0.4 * k);
     ctx.beginPath();
-    ctx.arc(w, h, w * 0.24, 0, Math.PI * 2);
+    ctx.arc(w, h, w * 0.21, 0, Math.PI * 2);
     ctx.fill();
+    ctx.strokeStyle = hexToRgba(accent, 0.3 * k);
+    ctx.lineWidth = Math.max(2, (w / 1920) * 5);
+    ctx.beginPath();
+    ctx.arc(w, h, w * 0.29, 0, Math.PI * 2);
+    ctx.stroke();
     ctx.fillStyle = hexToRgba(accent, 0.28 + 0.22 * k);
     ctx.beginPath();
-    ctx.arc(0, 0, w * 0.15, 0, Math.PI * 2);
+    ctx.arc(0, 0, w * 0.13, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = hexToRgba(accent, 0.2 * k);
+  } else if (style === "bracket") {
+    // 角線：対角2隅のL字ライン（ミニマルで上品な定番）。中央は完全に空く
+    const m = w * 0.05;
+    const len = w * 0.12;
+    const lw = Math.max(2, (w / 1920) * 5);
+    ctx.strokeStyle = hexToRgba(accent, 0.5 + 0.4 * k);
+    ctx.lineWidth = lw;
+    ctx.lineCap = "round";
     ctx.beginPath();
-    ctx.arc(w * 0.85, h * 0.74, w * 0.055, 0, Math.PI * 2);
+    ctx.moveTo(m, m + len);
+    ctx.lineTo(m, m);
+    ctx.lineTo(m + len, m);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(w - m, h - m - len);
+    ctx.lineTo(w - m, h - m);
+    ctx.lineTo(w - m - len, h - m);
+    ctx.stroke();
+    ctx.lineCap = "butt";
+    ctx.fillStyle = hexToRgba(accent, 0.32 * k);
+    ctx.beginPath();
+    ctx.arc(w - m, m, lw * 1.3, 0, Math.PI * 2);
     ctx.fill();
-  } else if (style === "glass") {
-    // グラスモーフィズム（2025トレンド）：淡いアクセント地＋四隅の半透明フロストパネル。中央は空く
-    const bg = ctx.createLinearGradient(0, 0, w, h);
-    bg.addColorStop(0, hexToRgba(accent, 0.08 + 0.1 * k));
-    bg.addColorStop(1, hexToRgba(accent, 0.16 + 0.14 * k));
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, w, h);
-    const panel = (x: number, y: number, pw: number, ph: number) => {
-      const r = Math.min(pw, ph) * 0.14;
-      ctx.beginPath();
-      ctx.moveTo(x + r, y);
-      ctx.arcTo(x + pw, y, x + pw, y + ph, r);
-      ctx.arcTo(x + pw, y + ph, x, y + ph, r);
-      ctx.arcTo(x, y + ph, x, y, r);
-      ctx.arcTo(x, y, x + pw, y, r);
-      ctx.closePath();
-      ctx.fillStyle = `rgba(255,255,255,${0.18 + 0.16 * k})`;
-      ctx.fill();
-      ctx.lineWidth = Math.max(1, (w / 1920) * 2.5);
-      ctx.strokeStyle = "rgba(255,255,255,0.55)";
-      ctx.stroke();
-    };
-    panel(-w * 0.06, -h * 0.12, w * 0.36, h * 0.52);
-    panel(w * 0.72, h * 0.5, w * 0.4, h * 0.66);
+    ctx.beginPath();
+    ctx.arc(m, h - m, lw * 1.3, 0, Math.PI * 2);
+    ctx.fill();
   } else if (style === "sidebar") {
-    // 左の縦アクセント帯（コーポレート資料風・中央は空く）
-    const bw = w * 0.14;
-    ctx.fillStyle = hexToRgba(accent, 0.5 + 0.45 * k);
+    // 左の縦グラデ帯＋細い差し色（コーポレート資料風・中央は空く）
+    const bw = w * 0.13;
+    const sg = ctx.createLinearGradient(0, 0, bw, 0);
+    sg.addColorStop(0, hexToRgba(accent, 0.55 + 0.4 * k));
+    sg.addColorStop(1, hexToRgba(accent, 0.4 + 0.32 * k));
+    ctx.fillStyle = sg;
     ctx.fillRect(0, 0, bw, h);
     ctx.fillStyle = hexToRgba(accent, 0.3 * k);
-    ctx.fillRect(bw + w * 0.014, 0, w * 0.009, h);
+    ctx.fillRect(bw + w * 0.014, 0, Math.max(2, w * 0.006), h);
   } else if (style === "band") {
-    // 上下の帯（ヘッダー/フッター・コーポレート定番。中央は完全に空く）
+    // 上下のグラデ帯＋細い差し色ライン（コーポレート定番・中央は完全に空く）
     const bh = h * 0.1;
-    ctx.fillStyle = hexToRgba(accent, 0.5 + 0.42 * k);
+    const tg = ctx.createLinearGradient(0, 0, 0, bh);
+    tg.addColorStop(0, hexToRgba(accent, 0.55 + 0.4 * k));
+    tg.addColorStop(1, hexToRgba(accent, 0.4 + 0.32 * k));
+    ctx.fillStyle = tg;
     ctx.fillRect(0, 0, w, bh);
+    const bg2 = ctx.createLinearGradient(0, h - bh, 0, h);
+    bg2.addColorStop(0, hexToRgba(accent, 0.4 + 0.32 * k));
+    bg2.addColorStop(1, hexToRgba(accent, 0.55 + 0.4 * k));
+    ctx.fillStyle = bg2;
     ctx.fillRect(0, h - bh, w, bh);
-    ctx.fillStyle = hexToRgba(accent, 0.32 * k);
-    ctx.fillRect(0, bh + h * 0.014, w, Math.max(2, h * 0.008));
-    ctx.fillRect(0, h - bh - h * 0.022, w, Math.max(2, h * 0.008));
+    ctx.fillStyle = hexToRgba(accent, 0.3 * k);
+    ctx.fillRect(0, bh + h * 0.016, w, Math.max(2, h * 0.006));
+    ctx.fillRect(0, h - bh - h * 0.022, w, Math.max(2, h * 0.006));
   } else if (style === "frame") {
     // 内側に上品な二重枠（タイトル扉向け・中央は完全に空く）
     const inset = w * 0.045;
@@ -294,7 +318,7 @@ export function SlideBgTool() {
   const [intensity, setIntensity] = useState<number>(0.7);
   const [showText, setShowText] = useState<boolean>(true);
   const [exporting, setExporting] = useState<"png" | "pptx" | null>(null);
-  const [fontKey, setFontKey] = useState<string>("yugo");
+  const [fontKey, setFontKey] = useState<string>("meiryo");
   const [slideCount, setSlideCount] = useState<number>(1);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
