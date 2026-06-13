@@ -13,6 +13,7 @@ interface GlobalMenuProps {
 
 const TOOLS = [
   { href: "/tools/slide-bg",      label: "プレゼン背景メーカー" },
+  { href: "/tools/preset-bg",     label: "プリセット背景ギャラリー" },
   { href: "/tools/counter",       label: "マルチカウンター" },
   { href: "/tools/stopwatch",     label: "多列ストップウォッチ" },
   { href: "/tools/timer",         label: "タイマー" },
@@ -47,11 +48,11 @@ const NAV: NavItem[] = [
   { href: "/news",    iconImg: "/assets/kawaii-bell.png",     iconBg: "#fce7f3", label: "お知らせ",
     iconCover: true, iconScale: 2.3 },
   {
-    href: "/tools",   iconImg: "/assets/kawaii-tools.png",    iconBg: "#d1fae5", label: "タダtools",
+    href: "/tools",   iconImg: "/assets/kawaii-tools-clean.png",    iconBg: "#d1fae5", label: "タダtools",
     section: "tools", children: TOOLS, iconScale: 1.2,
   },
   {
-    href: "/quiz",    iconImg: "/assets/kawaii-book.png",     iconBg: "#ede9fe", label: "ただただ一問一答",
+    href: "/quiz",    iconImg: "/assets/kawaii-book-clean.png",     iconBg: "#ede9fe", label: "ただただ一問一答",
     soon: true,       section: "quiz",  iconScale: 1.2,
     children: [
       { href: "#", label: "地理", soon: true },
@@ -63,7 +64,7 @@ const NAV: NavItem[] = [
     ],
   },
   {
-    href: "/games",   iconImg: "/assets/kawaii-controller.png", iconBg: "#fce7f3", label: "ただタダgames",
+    href: "/games",   iconImg: "/assets/kawaii-controller-clean.png", iconBg: "#fce7f3", label: "ただタダgames",
     soon: true,       section: "games", iconScale: 1.2,
     children: [
       { href: "#", label: "高校サッカー育成シミュレーション", soon: true },

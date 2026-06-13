@@ -75,9 +75,23 @@ const rightCenter = Math.round(OGP_W * 0.74) // 右半分の中央あたり
 const left = Math.round(rightCenter - (tw ?? 560) / 2)
 const top = Math.round((OGP_H - (th ?? 300)) / 2)
 
-await sharp(bg)
+const composed = await sharp(bg)
   .composite([{ input: textBuf, left, top }])
+  .png()
+  .toBuffer()
+
+// ベース画像は角丸カード（四隅が黒）。他セクションOGPと揃え、四隅をクリームで埋め完全な四角にする。
+const CREAM = { r: 253, g: 246, b: 238 }
+const R = 52  // 角丸＋枠ストロークを完全にクリームで覆える半径（四隅は無地なので安全）
+const roundMask = Buffer.from(
+  `<svg width="${OGP_W}" height="${OGP_H}"><rect x="0" y="0" width="${OGP_W}" height="${OGP_H}" rx="${R}" ry="${R}" fill="#fff"/></svg>`
+)
+const masked = await sharp(composed).ensureAlpha()
+  .composite([{ input: roundMask, blend: 'dest-in' }])  // 角丸の外側を透明化
+  .png().toBuffer()
+await sharp({ create: { width: OGP_W, height: OGP_H, channels: 3, background: CREAM } })
+  .composite([{ input: masked }])  // クリーム地に重ねる → 四隅がクリームの四角に
   .jpeg({ quality: 90 })
   .toFile(path.join(assetsDir, 'ogp-default.jpg'))
 
-console.log('🎉 ogp-default.jpg（共通OGP）生成完了')
+console.log('🎉 ogp-default.jpg（共通OGP・四角）生成完了')

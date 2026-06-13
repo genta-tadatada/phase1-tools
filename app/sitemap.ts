@@ -20,6 +20,7 @@ const TOOL_SLUGS = [
   "amida",
   "tournament",
   "slide-bg",
+  "preset-bg",
   // "pomodoro" はリダイレクト専用ページのため sitemap から除外
 ];
 

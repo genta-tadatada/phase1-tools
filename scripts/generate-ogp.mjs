@@ -28,7 +28,7 @@ const TEXT_MAX_W = 520  // 右エリア幅
 const tools = [
   'counter', 'stopwatch', 'timer', 'bpm', 'calculator',
   'word-count', 'random-number', 'dice', 'roulette', 'janken',
-  'lot', 'group', 'amida', 'tournament',
+  'lot', 'group', 'amida', 'tournament', 'slide-bg', 'preset-bg',
 ]
 
 const bg = await sharp(BG_PATH)

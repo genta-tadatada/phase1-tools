@@ -46,9 +46,9 @@ export function RequestCTA({ context = "tools" }: { context?: CtaContext }) {
       >
         <span
           style={{
-            width: 48,
-            height: 48,
-            borderRadius: 14,
+            width: 52,
+            height: 52,
+            borderRadius: 15,
             flexShrink: 0,
             display: "inline-flex",
             alignItems: "center",
@@ -58,10 +58,10 @@ export function RequestCTA({ context = "tools" }: { context?: CtaContext }) {
           }}
         >
           <Image
-            src="/assets/kawaii-envelope.png"
+            src="/assets/kawaii-envelope-tight.png"
             alt=""
-            width={34}
-            height={34}
+            width={46}
+            height={46}
             style={{ objectFit: "contain" }}
           />
         </span>
