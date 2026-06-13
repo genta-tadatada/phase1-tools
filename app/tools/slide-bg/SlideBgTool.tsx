@@ -48,6 +48,13 @@ export function SlideBgTool() {
   // 選択スタイルの雰囲気(cute/premium)に合わせて配色の並び順を変える
   const palettes = sortPalettesForStyle(style);
 
+  // スライダーの初期値（サイドのみ狭め0.35・他は中央0.5）
+  const styleDefaultK = (s: Style) => (s === "sidebar" ? 0.35 : 0.5);
+  function selectStyle(s: Style) {
+    setStyle(s);
+    setIntensity(styleDefaultK(s));
+  }
+
   function applyPalette(p: Palette) {
     setPaletteKey(p.key);
     setBase(p.base);
@@ -74,7 +81,7 @@ export function SlideBgTool() {
     const s = pickable[Math.floor(Math.random() * pickable.length)].key;
     applyPalette(p);
     setStyle(s);
-    setIntensity(0.5); // スライダーはランダムにせず初期中央に戻す
+    setIntensity(styleDefaultK(s)); // スライダーはランダムにせず各スタイルの初期値に
   }, []);
 
   const downloadPng = useCallback(() => {
@@ -187,7 +194,7 @@ export function SlideBgTool() {
               <button
                 key={s.key}
                 type="button"
-                onClick={() => setStyle(s.key)}
+                onClick={() => selectStyle(s.key)}
                 className="flex flex-col items-center gap-1 py-2 rounded-xl border-2 transition-colors"
                 style={{
                   borderColor: style === s.key ? "#8b5cf6" : "var(--border)",
