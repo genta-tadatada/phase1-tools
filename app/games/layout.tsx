@@ -10,7 +10,9 @@ export const metadata: Metadata = {
     siteName: "ただただ",
     locale: "ja_JP",
     type: "website",
+    images: [{ url: "/assets/ogp-games.jpg", width: 1200, height: 630, alt: "ただタダgames." }],
   },
+  twitter: { card: "summary_large_image", images: ["/assets/ogp-games.jpg"] },
 };
 
 export default function GamesLayout({ children }: { children: React.ReactNode }) {
