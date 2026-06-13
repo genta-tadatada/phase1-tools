@@ -23,7 +23,6 @@ interface Tool {
 
 const TOOLS: Tool[] = [
   { href: "/tools/slide-bg",      icon: "/assets/icon-slide-bg.svg",      name: "プレゼン背景メーカー", desc: "スライド用の背景を原寸で作成",  cat: "design" },
-  { href: "/tools/preset-bg",     icon: "/assets/icon-preset-bg.svg",     name: "プリセット背景ギャラリー", desc: "用途で選ぶだけの完成背景集",  cat: "design" },
   { href: "/tools/counter",       icon: "/assets/icon-counter.png",       name: "マルチカウンター",    desc: "複数項目を同時にカウント",      cat: "calc" },
   { href: "/tools/stopwatch",     icon: "/assets/icon-stopwatch.png",     name: "多列ストップウォッチ", desc: "ラップ計測対応・1/100秒精度",   cat: "calc" },
   { href: "/tools/timer",         icon: "/assets/icon-timer.png",         name: "タイマー",            desc: "カウントダウン・アラーム付き",  cat: "calc" },
