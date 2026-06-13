@@ -44,6 +44,20 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  openGraph: {
+    type: "website",
+    siteName: "ただただ",
+    title: "ただただ — すべて、タダで。いますぐ、使える。",
+    description: "便利なツール・一問一答クイズ・ブラウザゲームを、タダで、いますぐ。ログイン不要・広告控えめ・完全無料。",
+    url: "https://tadatada.net",
+    images: [{ url: "/assets/ogp-default.jpg", width: 1200, height: 630, alt: "ただただ" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ただただ — すべて、タダで。いますぐ、使える。",
+    description: "便利なツール・一問一答クイズ・ブラウザゲームを、タダで、いますぐ。",
+    images: ["/assets/ogp-default.jpg"],
+  },
 };
 
 export const viewport: Viewport = {

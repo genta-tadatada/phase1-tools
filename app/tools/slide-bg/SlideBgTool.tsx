@@ -10,8 +10,8 @@ import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 type Style =
-  | "gradient" | "blobs" | "corner" | "band" | "sidebar" | "bracket"
-  | "waves" | "frame" | "dots" | "grid" | "scatter" | "solid";
+  | "blobs" | "band" | "sidebar" | "corner" | "bracket" | "waves" | "scatter" | "frame"
+  | "mesh" | "grain" | "gradient" | "dots" | "grid" | "solid";
 type AspectKey = "16:9" | "4:3" | "16:10";
 
 interface Palette {
@@ -38,19 +38,22 @@ const ASPECTS: { key: AspectKey; label: string; sub: string; w: number; h: numbe
   { key: "16:10", label: "16:10", sub: "ワイド広め",   w: 1920, h: 1200, inW: 13.333, inH: 8.333 },
 ];
 
-// 利用頻度が高そうな順（左→右）。無地は「こだわり派向け」なので最後＋ランダム除外。
+// 左ほどおすすめ。前半＝PowerPointでは作りにくい独自スタイル、後半＝PPでも作れる重複系（グラデ/ドット/方眼/無地）。
+// 無地はランダム除外。横スクロール表示で数を減らさず視認性を確保。
 const STYLES: { key: Style; label: string }[] = [
-  { key: "gradient", label: "グラデ" },
   { key: "blobs",    label: "ふんわり" },
-  { key: "corner",   label: "コーナー" },
   { key: "band",     label: "帯" },
   { key: "sidebar",  label: "サイド" },
+  { key: "corner",   label: "コーナー" },
   { key: "bracket",  label: "角線" },
   { key: "waves",    label: "波" },
+  { key: "scatter",  label: "粒子" },
   { key: "frame",    label: "フレーム" },
+  { key: "mesh",     label: "メッシュ" },
+  { key: "grain",    label: "グレイン" },
+  { key: "gradient", label: "グラデ" },
   { key: "dots",     label: "ドット" },
   { key: "grid",     label: "方眼" },
-  { key: "scatter",  label: "粒子" },
   { key: "solid",    label: "無地" },
 ];
 
@@ -303,6 +306,37 @@ function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: number, cfg
         ctx.fill();
       }
     }
+  } else if (style === "mesh") {
+    // 多点メッシュグラデ（PowerPointでは作れない・全面に溶け合う色）
+    const pts: [number, number, number][] = [
+      [w * 0.05, h * 0.1, 0.3],
+      [w * 0.95, h * 0.0, 0.24],
+      [w * 0.0, h * 0.95, 0.28],
+      [w * 1.0, h * 1.0, 0.42],
+      [w * 0.5, h * 0.5, 0.1],
+    ];
+    for (const [cx, cy, a] of pts) {
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, w * 0.7);
+      g.addColorStop(0, hexToRgba(accent, a * (0.6 + k)));
+      g.addColorStop(1, hexToRgba(accent, 0));
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+    }
+  } else if (style === "grain") {
+    // 微粒子ノイズ（フィルムグレイン質感・PowerPointでは不可）。決定的シードで描画
+    let s = 1234567;
+    const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    const n = Math.floor((w * h) / 700);
+    for (let i = 0; i < n; i++) {
+      const x = rnd() * w;
+      const y = rnd() * h;
+      const a = rnd() * 0.07 * k;
+      const rr = (0.4 + rnd() * 1.6) * (w / 1920) * 2;
+      ctx.fillStyle = hexToRgba(accent, a);
+      ctx.beginPath();
+      ctx.arc(x, y, rr, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 }
 
@@ -521,14 +555,14 @@ export function SlideBgTool() {
         </Section>
 
         {/* ── スタイル ── */}
-        <Section label="スタイル">
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+        <Section label="スタイル（左ほどおすすめ・横スクロール）">
+          <div className="flex gap-2 overflow-x-auto pb-1.5 -mx-1 px-1">
             {STYLES.map((s) => (
               <button
                 key={s.key}
                 type="button"
                 onClick={() => setStyle(s.key)}
-                className="flex flex-col items-center gap-1.5 py-2.5 rounded-xl border-2 transition-colors"
+                className="flex-shrink-0 flex flex-col items-center gap-1.5 py-2 px-2.5 rounded-xl border-2 transition-colors"
                 style={{
                   borderColor: style === s.key ? "#8b5cf6" : "var(--border)",
                   background: style === s.key ? "rgba(139,92,246,0.08)" : "transparent",
