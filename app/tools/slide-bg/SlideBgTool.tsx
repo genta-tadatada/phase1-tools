@@ -13,6 +13,7 @@ import {
   type Palette,
   ASPECTS,
   STYLES,
+  STYLE_ADJUST,
   FONTS,
   PALETTES,
   SLIDE_COUNTS,
@@ -34,7 +35,7 @@ export function SlideBgTool() {
   const [c1, setC1] = useState<string>(PALETTES[0].c1);
   const [c2, setC2] = useState<string>(PALETTES[0].c2);
   const [dark, setDark] = useState<boolean>(false);
-  const [intensity, setIntensity] = useState<number>(0.8);
+  const [intensity, setIntensity] = useState<number>(0.5);
   const [showText, setShowText] = useState<boolean>(true);
   const [exporting, setExporting] = useState<"png" | "pptx" | null>(null);
   const [fontKey, setFontKey] = useState<string>("meiryo");
@@ -248,9 +249,9 @@ export function SlideBgTool() {
           </div>
         </Section>
 
-        {/* ── 濃さ ── */}
-        <Section label={`装飾の濃さ　${Math.round(intensity * 100)}%`}>
-          <input type="range" min={0.2} max={1} step={0.01} value={intensity} onChange={(e) => setIntensity(parseFloat(e.target.value))} className="w-full accent-violet-500" aria-label="装飾の濃さ" />
+        {/* ── スタイル別の調整スライダー（選んだスタイルで対象が変わる） ── */}
+        <Section label={STYLE_ADJUST[style]}>
+          <input type="range" min={0} max={1} step={0.01} value={intensity} onChange={(e) => setIntensity(parseFloat(e.target.value))} className="w-full accent-violet-500" aria-label={STYLE_ADJUST[style]} />
         </Section>
 
         {/* ── プレビューのフォント ── */}
@@ -366,7 +367,7 @@ function StylePreview({ styleKey, base, c1, c2 }: { styleKey: Style; base: strin
     c.width = 56; c.height = 36;
     const ctx = c.getContext("2d");
     if (!ctx) return;
-    drawBackground(ctx, 56, 36, { style: styleKey, base, c1, c2, intensity: 0.9 });
+    drawBackground(ctx, 56, 36, { style: styleKey, base, c1, c2, intensity: 0.5 });
   }, [styleKey, base, c1, c2]);
   return <canvas ref={ref} className="rounded-md ring-1 ring-black/5" style={{ width: 40, height: 26 }} />;
 }

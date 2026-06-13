@@ -61,6 +61,20 @@ export function styleMood(key: Style): Mood {
   return STYLES.find((s) => s.key === key)?.mood ?? "universal";
 }
 
+// スタイルごとに intensity スライダーが調整する対象（UIのラベル）
+export const STYLE_ADJUST: Record<Style, string> = {
+  blobs:    "色の広がり",
+  gradient: "色の強さ",
+  waves:    "波の大きさ",
+  band:     "帯の広さ",
+  sidebar:  "サイドの広さ",
+  frame:    "枠の位置",
+  bracket:  "線の長さ",
+  corner:   "丸の大きさ",
+  grid:     "マスの大きさ",
+  solid:    "色の濃さ",
+};
+
 // 配色（系統別に厳選）。slide-bg のビルダーで使用。
 export const PALETTES: Palette[] = [
   // ── かわいい（パステル2色） ──
@@ -155,60 +169,61 @@ export function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: numb
   ctx.fillStyle = base;
   ctx.fillRect(0, 0, w, h);
 
+  // k = intensity スライダー(0..1)。各スタイルで「1つの専用パラメータ」を動かす（STYLE_ADJUST参照）
   if (style === "blobs") {
-    // かわいい: パステルの丸い玉2つだけ・控えめ・隅。中央は空ける（グラデと差別化＝丸い玉感）
-    softBlob(ctx, w, h, w * 0.87, h * 0.15, w * 0.38, c1, 0.32 + 0.16 * k);
-    softBlob(ctx, w, h, w * 0.11, h * 0.88, w * 0.34, c2, 0.3 + 0.16 * k);
+    // かわいい: 丸い玉2つ。スライダー＝色の広がり（半径）
+    const r1 = w * (0.26 + 0.28 * k), r2 = w * (0.22 + 0.26 * k);
+    softBlob(ctx, w, h, w * 0.87, h * 0.15, r1, c1, 0.42);
+    softBlob(ctx, w, h, w * 0.11, h * 0.88, r2, c2, 0.4);
+    softBlob(ctx, w, h, w * 0.86, h * 0.16, r1 * 0.5, "#ffffff", 0.2);
     clearCenter(ctx, w, h, base, 0.28);
   } else if (style === "gradient") {
-    // 汎用: base→c1 の淡い斜めグラデ（2色・ハイライト最小）。文字くっきり優先で薄め
+    // 汎用: base→c1 グラデ。スライダー＝色の強さ
     const g = ctx.createLinearGradient(0, 0, w * 0.9, h);
     g.addColorStop(0, rgba(c1, 0));
-    g.addColorStop(1, rgba(c1, 0.2 + 0.16 * k));
+    g.addColorStop(1, rgba(c1, 0.06 + 0.42 * k));
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
     clearCenter(ctx, w, h, base, 0.22);
   } else if (style === "waves") {
-    // 汎用: 白＋同系1色のモノトーン波を上下に。左右は途切れず全幅・中央は空ける
+    // 汎用: 上下モノトーン波・全幅。スライダー＝波の大きさ（高さ・振幅）
+    const grow = 0.55 + 1.1 * k;          // 振幅倍率
+    const reach = h * (0.09 + 0.11 * k);  // 端から中央へ伸びる量
     const layers: [number, number, number][] = [
       [0, h * 0.03, 0.14], [h * 0.045, h * 0.04, 0.24], [h * 0.085, h * 0.028, 0.4],
     ];
-    // 下の波
     layers.forEach(([off, amp, a], i) => {
-      const by = h * 0.84 + off;
-      ctx.fillStyle = rgba(c1, a * (0.7 + 0.4 * k));
+      const by = h - reach + off * grow;
+      ctx.fillStyle = rgba(c1, a);
       ctx.beginPath(); ctx.moveTo(0, h); ctx.lineTo(0, by);
-      for (let x = 0; x <= w; x += w / 80) ctx.lineTo(x, by + Math.sin((x / w) * 6.28 + i * 1.1) * amp);
+      for (let x = 0; x <= w; x += w / 80) ctx.lineTo(x, by + Math.sin((x / w) * 6.28 + i * 1.1) * amp * grow);
       ctx.lineTo(w, h); ctx.closePath(); ctx.fill();
     });
-    // 上の波（上下対称）
     layers.forEach(([off, amp, a], i) => {
-      const by = h * 0.16 - off;
-      ctx.fillStyle = rgba(c1, a * (0.7 + 0.4 * k));
+      const by = reach - off * grow;
+      ctx.fillStyle = rgba(c1, a);
       ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, by);
-      for (let x = 0; x <= w; x += w / 80) ctx.lineTo(x, by - Math.sin((x / w) * 6.28 + i * 1.1) * amp);
+      for (let x = 0; x <= w; x += w / 80) ctx.lineTo(x, by - Math.sin((x / w) * 6.28 + i * 1.1) * amp * grow);
       ctx.lineTo(w, 0); ctx.closePath(); ctx.fill();
     });
   } else if (style === "band") {
-    // シンプル(硬): 直線の上下帯（c1）＋境界に別色(c2)のライン
-    const bh = h * 0.1;
+    // シンプル: 上下帯＋境界線。スライダー＝帯の広さ
+    const bh = h * (0.05 + 0.16 * k);
     const lw = Math.max(2, h * 0.007);
     ctx.fillStyle = rgba(c1, 0.92);
-    ctx.fillRect(0, 0, w, bh);
-    ctx.fillRect(0, h - bh, w, bh);
+    ctx.fillRect(0, 0, w, bh); ctx.fillRect(0, h - bh, w, bh);
     ctx.fillStyle = rgba(c2, 0.95);
-    ctx.fillRect(0, bh, w, lw);
-    ctx.fillRect(0, h - bh - lw, w, lw);
+    ctx.fillRect(0, bh, w, lw); ctx.fillRect(0, h - bh - lw, w, lw);
   } else if (style === "sidebar") {
-    // シンプル(軟): 直線の左縦帯（c1）＋右端の境界に別色(c2)のライン
-    const bw = w * 0.13;
+    // シンプル: 左縦帯＋境界線。スライダー＝サイドの広さ
+    const bw = w * (0.06 + 0.16 * k);
     const lw = Math.max(2, w * 0.005);
     ctx.fillStyle = rgba(c1, 0.9);
     ctx.fillRect(0, 0, bw, h);
     ctx.fillStyle = rgba(c2, 0.95);
     ctx.fillRect(bw, 0, lw, h);
   } else if (style === "frame") {
-    // シンプル: 端寄りの枠（細すぎない）＋四隅の点。2色＋白
-    const ins = w * 0.035;
+    // シンプル: 枠＋四隅の点。スライダー＝枠の位置（内外）
+    const ins = w * (0.02 + 0.07 * k);
     ctx.strokeStyle = rgba(c1, 0.85); ctx.lineWidth = Math.max(2.5, U * 5);
     ctx.strokeRect(ins, ins, w - ins * 2, h - ins * 2);
     ctx.fillStyle = rgba(c2, 0.95);
@@ -216,8 +231,8 @@ export function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: numb
       ctx.beginPath(); ctx.arc(x, y, Math.max(4, U * 6), 0, 7); ctx.fill();
     }
   } else if (style === "bracket") {
-    // シンプル(かわいい寄り): 対角L字・太め・端寄り＋点
-    const m = w * 0.04, len = w * 0.13, lw = Math.max(3, U * 7);
+    // シンプル(かわいい寄り): 対角L字＋点。スライダー＝線の長さ
+    const m = w * 0.04, len = w * (0.06 + 0.16 * k), lw = Math.max(3, U * 7);
     ctx.strokeStyle = rgba(c1, 0.9); ctx.lineWidth = lw; ctx.lineCap = "round"; ctx.lineJoin = "round";
     ctx.beginPath(); ctx.moveTo(m, m + len); ctx.lineTo(m, m); ctx.lineTo(m + len, m); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(w - m, h - m - len); ctx.lineTo(w - m, h - m); ctx.lineTo(w - m - len, h - m); ctx.stroke();
@@ -225,26 +240,28 @@ export function drawBackground(ctx: CanvasRenderingContext2D, w: number, h: numb
     ctx.beginPath(); ctx.arc(w - m, m, lw * 0.85, 0, 7); ctx.fill();
     ctx.beginPath(); ctx.arc(m, h - m, lw * 0.85, 0, 7); ctx.fill();
   } else if (style === "corner") {
-    // かわいい: 白地＋くっきりした2色の丸を角に（ぼかし無し）。中央は空ける
+    // かわいい: くっきりした2色の丸（角アンカー）。スライダー＝丸の大きさ
+    const r = w * (0.06 + 0.13 * k);
     ctx.fillStyle = rgba(c1, 0.9);
-    ctx.beginPath(); ctx.arc(w - w * 0.05, h - w * 0.05, w * 0.12, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(w - r * 0.4, h - r * 0.4, r, 0, 7); ctx.fill();
     ctx.fillStyle = rgba(c2, 0.9);
-    ctx.beginPath(); ctx.arc(w - w * 0.17, h - w * 0.03, w * 0.065, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(w - r * 1.5, h - r * 0.15, r * 0.55, 0, 7); ctx.fill();
     ctx.fillStyle = rgba(c2, 0.85);
-    ctx.beginPath(); ctx.arc(w * 0.04, h * 0.07, w * 0.05, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(r * 0.5, r * 0.5, r * 0.45, 0, 7); ctx.fill();
   } else if (style === "grid") {
-    // 汎用: 細グリッド・線を少しだけ強調（やや太く）。中央は空ける
-    const gap = w / 16;
-    ctx.strokeStyle = rgba(c1, 0.22 * k + 0.14); ctx.lineWidth = Math.max(1.2, U * 2);
+    // 汎用: 細グリッド。スライダー＝マスの大きさ
+    const cols = Math.round(26 - 17 * k);  // k大=マス大（線少）
+    const gap = w / cols;
+    ctx.strokeStyle = rgba(c1, 0.2); ctx.lineWidth = Math.max(1.2, U * 2);
     ctx.beginPath();
     for (let x = gap; x < w; x += gap) { ctx.moveTo(x, 0); ctx.lineTo(x, h); }
     for (let y = gap; y < h; y += gap) { ctx.moveTo(0, y); ctx.lineTo(w, y); }
     ctx.stroke();
     clearCenter(ctx, w, h, base, 0.3);
   } else {
-    // 無地: 淡い2色ビネット（変更なし）
+    // 無地: 淡い2色ビネット。スライダー＝色の濃さ
     const g = ctx.createRadialGradient(w * 0.5, h * 0.4, h * 0.1, w * 0.5, h * 0.5, w * 0.8);
-    g.addColorStop(0, rgba(c2, 0.05)); g.addColorStop(1, rgba(c1, 0.14 * k + 0.05));
+    g.addColorStop(0, rgba(c2, 0.04)); g.addColorStop(1, rgba(c1, 0.04 + 0.22 * k));
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
   }
 }
