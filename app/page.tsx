@@ -90,27 +90,27 @@ export default function PortalPage() {
                 style={{ position: "absolute", top: 20, left: "50%", width: 60, opacity: 0.6, animation: "p-float 6s ease-in-out 1.4s infinite" }} />
               <img src="/uploads/kawaii-sparkle-accent.svg" alt="" aria-hidden="true"
                 style={{ position: "absolute", bottom: 30, left: 10, width: 24, opacity: 0.75, animation: "p-float 3.8s ease-in-out 0.4s infinite" }} />
-              {/* 3D PNGs: アニメーション用wrapperとclip+scale用imgを分離
-                  (animationがtransformを上書きするため、同要素に両方書いてもscaleが効かない) */}
+              {/* 3D PNGs: wrapperにふわっと浮遊アニメ。新素材は枠なし・絵柄が枠いっぱいのため
+                  画像側は object-fit: contain のみ（旧来のclip/scale補正は撤去・端の見切れ防止） */}
               <div style={{ position: "absolute", top: 18, right: 50, width: 170, height: 170,
                 animation: "p-float 4.6s ease-in-out infinite" }}>
                 <Image src="/assets/kawaii-tools-clean.png" alt="" width={170} height={170} priority
                   style={{ objectFit: "contain",
-                    clipPath: "inset(6% round 6px)", transform: "scale(1.14)" }} />
+                    }} />
               </div>
               <div style={{ position: "absolute", top: "42%", left: 0, transform: "translateY(-50%)" }}>
                 <div style={{ width: 148, height: 148,
                   animation: "p-float 5.4s ease-in-out 0.9s infinite" }}>
                   <Image src="/assets/kawaii-book-clean.png" alt="" width={148} height={148}
                     style={{ objectFit: "contain",
-                      clipPath: "inset(6% round 6px)", transform: "scale(1.14)" }} />
+                      }} />
                 </div>
               </div>
               <div style={{ position: "absolute", bottom: 28, right: 10, width: 158, height: 158,
                 animation: "p-float 5.0s ease-in-out 1.7s infinite" }}>
                 <Image src="/assets/kawaii-controller-clean.png" alt="" width={158} height={158}
                   style={{ objectFit: "contain",
-                    clipPath: "inset(6% round 6px)", transform: "scale(1.14)" }} />
+                    }} />
               </div>
             </div>
           </div>
