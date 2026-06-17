@@ -95,22 +95,19 @@ export default function PortalPage() {
               <div style={{ position: "absolute", top: 18, right: 50, width: 170, height: 170,
                 animation: "p-float 4.6s ease-in-out infinite" }}>
                 <Image src="/assets/kawaii-tools-clean.png" alt="" width={170} height={170} priority
-                  style={{ objectFit: "contain",
-                    }} />
+                  style={{ objectFit: "contain", transform: "scale(1.14)" }} />
               </div>
               <div style={{ position: "absolute", top: "42%", left: 0, transform: "translateY(-50%)" }}>
                 <div style={{ width: 148, height: 148,
                   animation: "p-float 5.4s ease-in-out 0.9s infinite" }}>
                   <Image src="/assets/kawaii-book-clean.png" alt="" width={148} height={148}
-                    style={{ objectFit: "contain",
-                      }} />
+                    style={{ objectFit: "contain", transform: "scale(1.14)" }} />
                 </div>
               </div>
               <div style={{ position: "absolute", bottom: 28, right: 10, width: 158, height: 158,
                 animation: "p-float 5.0s ease-in-out 1.7s infinite" }}>
                 <Image src="/assets/kawaii-controller-clean.png" alt="" width={158} height={158}
-                  style={{ objectFit: "contain",
-                    }} />
+                  style={{ objectFit: "contain", transform: "scale(1.14)" }} />
               </div>
             </div>
           </div>
