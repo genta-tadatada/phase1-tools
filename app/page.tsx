@@ -267,35 +267,22 @@ export default function PortalPage() {
       </section>
 
       {/* BOTTOM CTA */}
+      {/* BOTTOM CTA — 枠なしのやわらかい全幅帯＋ボタン（Plan B） */}
       <section className="p-bottom-cta">
+        <span className="p-cta-spark" style={{ top: "34%", left: "16%", width: 16, height: 16, background: "#f9a8d4" }} />
+        <span className="p-cta-spark" style={{ top: "28%", right: "17%", width: 13, height: 13, background: "#6ee7b7", animationDelay: "0.8s" }} />
+        <span className="p-cta-spark" style={{ bottom: "28%", left: "24%", width: 10, height: 10, background: "#c4b5fd", animationDelay: "1.4s" }} />
+        <span className="p-cta-spark" style={{ bottom: "32%", right: "23%", width: 11, height: 11, background: "#f9a8d4", animationDelay: "2s" }} />
         <div className="p-container">
-          <div className="p-cta-card">
-            {/* 左側 装飾 */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/uploads/kawaii-star.svg" alt="" aria-hidden="true" className="p-cta-mascot" style={{ top: "8%", left: "4%", width: 50, animation: "p-float 4s ease-in-out infinite" }} />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/uploads/kawaii-rainbow.svg" alt="" aria-hidden="true" className="p-cta-mascot" style={{ top: "50%", left: "2%", width: 36, opacity: 0.6, animation: "p-float 6s ease-in-out 1.4s infinite" }} />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/uploads/kawaii-sparkle-accent.svg" alt="" aria-hidden="true" className="p-cta-mascot" style={{ top: "78%", left: "8%", width: 22, opacity: 0.7, animation: "p-float 5.2s ease-in-out 0.8s infinite" }} />
-            {/* 右側 装飾 */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/uploads/kawaii-heart.svg" alt="" aria-hidden="true" className="p-cta-mascot" style={{ top: "12%", right: "4%", width: 46, animation: "p-float 5s ease-in-out 0.4s infinite" }} />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/uploads/kawaii-cloud-small.svg" alt="" aria-hidden="true" className="p-cta-mascot" style={{ top: "48%", right: "2%", width: 38, opacity: 0.6, animation: "p-float 4.8s ease-in-out 1s infinite" }} />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/uploads/kawaii-flower.svg" alt="" aria-hidden="true" className="p-cta-mascot" style={{ top: "76%", right: "7%", width: 28, opacity: 0.8, animation: "p-float 4.6s ease-in-out 1.6s infinite" }} />
-            <div className="p-cta-title">さあ、タダで、使ってみよう。</div>
-            <p className="p-cta-sub">使う・学ぶ・遊ぶ、あなたの今日にひとつだけ。</p>
-            <Link href="#services" className="p-cta-primary">
-              <svg className="p-spark-svg" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-                <path d="M6.5 0L7.9 5.1L13 6.5L7.9 7.9L6.5 13L5.1 7.9L0 6.5L5.1 5.1Z" fill="white"/>
-              </svg>
-              いますぐ使ってみる
-              <svg className="p-arrow-svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M5.5 3L10.5 8L5.5 13" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </Link>
-          </div>
+          <Link href="#services" className="p-cta-primary">
+            <svg className="p-spark-svg" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M6.5 0L7.9 5.1L13 6.5L7.9 7.9L6.5 13L5.1 7.9L0 6.5L5.1 5.1Z" fill="white"/>
+            </svg>
+            いますぐ使ってみる
+            <svg className="p-arrow-svg" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M5.5 3L10.5 8L5.5 13" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </Link>
         </div>
       </section>
 
