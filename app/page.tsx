@@ -260,13 +260,20 @@ export default function PortalPage() {
 
         <div className="p-wave" aria-hidden="true">
           <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
-            <path d="M0,46 C240,76 480,16 720,40 C960,64 1200,12 1440,40 L1440,80 L0,80 Z" fill="#ffffff" opacity="0.55"/>
-            <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#ffffff"/>
+            {/* 次セクション(ボトムCTA帯)の色で波を塗り、他セクションと同じ波つなぎにする */}
+            <defs>
+              <linearGradient id="cta-wave-grad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#fbf3fb" />
+                <stop offset="50%" stopColor="#f6f2ff" />
+                <stop offset="100%" stopColor="#f1fbf6" />
+              </linearGradient>
+            </defs>
+            <path d="M0,46 C240,76 480,16 720,40 C960,64 1200,12 1440,40 L1440,80 L0,80 Z" fill="url(#cta-wave-grad)" opacity="0.55"/>
+            <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="url(#cta-wave-grad)"/>
           </svg>
         </div>
       </section>
 
-      {/* BOTTOM CTA */}
       {/* BOTTOM CTA — 枠なしのやわらかい全幅帯＋ボタン（Plan B） */}
       <section className="p-bottom-cta">
         <span className="p-cta-spark" style={{ top: "34%", left: "16%", width: 16, height: 16, background: "#f9a8d4" }} />
