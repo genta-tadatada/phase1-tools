@@ -33,6 +33,17 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# Cloudflare Wrangler local secrets (Discord webhook 等の実値が入る・絶対にコミットしない)
+.dev.vars
+.dev.vars.*
+.wrangler/
+
+# secrets / keys (保険として一般的な鍵ファイルパターンを除外)
+*.key
+*.pfx
+*-credentials.json
+secrets.*
+
 # backup / temp files
 *.bak
 ss-temp.cjs
