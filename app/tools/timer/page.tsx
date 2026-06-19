@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { TimerTool } from "./TimerTool";
 
 const TOOL_NAME = "タイマー";
-const TITLE = "無料タイマー｜ポモドーロ対応のシンプルタイマー - ただただ";
+const TITLE = "タイマー｜無料・オンライン・ポモドーロ機能 - ただただ";
 const DESCRIPTION =
-  "作業や勉強に集中できる無料タイマー。ポモドーロ・テクニックにも対応し、25分集中＋休憩のサイクルを自動管理。インストール不要でスマホからもすぐ使えます。";
+  "無料のwebタイマー。広告控えめ・ログイン不要で、ポモドーロ・全画面表示・アラーム通知に対応。勉強・作業・料理・筋トレの時間管理などに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,

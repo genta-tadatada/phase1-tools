@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "全ツール一覧 | ただただ",
+  title: "タダtools｜日常で使える無料Webツール集 - ただただ",
   description:
-    "広告控えめ・登録不要で今すぐ使えるシンプルツール集。カウンター・タイマー・BPMメトロノーム・あみだくじ・電卓など15種類以上。",
+    "完全無料のWebツール集。広告控えめ・ログイン不要で、いますぐ使える。",
   alternates: { canonical: "https://tadatada.net/tools" },
   openGraph: {
     url: "https://tadatada.net/tools",
-    title: "全ツール一覧 | ただただ",
-    description: "広告控えめ・登録不要で今すぐ使えるシンプルツール集。",
+    title: "タダtools｜日常で使える無料Webツール集 - ただただ",
+    description: "完全無料のWebツール集。広告控えめ・ログイン不要で、いますぐ使える。",
     type: "website",
     images: [{ url: "/assets/ogp-tools.jpg", width: 1200, height: 630, alt: "タダtools." }],
   },

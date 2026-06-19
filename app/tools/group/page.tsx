@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { GroupTool } from "./GroupTool";
 
 const TOOL_NAME = "グループ分け";
-const TITLE = "無料グループ分け｜名前を入れて自動でチーム分け - ただただ";
+const TITLE = "班分け・チーム分け｜無料で名前を入れて自動グループ分け - ただただ";
 const DESCRIPTION =
-  "メンバーの名前を入れるだけで自動的にグループ分けできる無料ツール。班分け・チーム分け・席替えに便利。インストール不要でスマホからもすぐ使えます。";
+  "無料のwebグループ分け。広告控えめ・ログイン不要で、グループ数か1グループあたりの人数でランダムに振り分け。班決め・席替え・チーム編成などに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,

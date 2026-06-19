@@ -5,8 +5,8 @@ import { GlobalMenu } from "@/components/shared/GlobalMenu";
 import { ContactForm } from "@/components/portal/ContactForm";
 
 export const metadata: Metadata = {
-  title: "お問い合わせ | ただただ",
-  description: "ただただへのお問い合わせ・ご要望はこちらから。返信にお時間をいただく場合があります。",
+  title: "お問い合わせ - ただただ",
+  description: "「ただただ」へのお問い合わせ・ご意見・ご要望・不具合報告はこちら。",
   robots: { index: true, follow: true },
 };
 

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { TournamentTool } from "./TournamentTool";
 
 const TOOL_NAME = "トーナメント表";
-const TITLE = "無料トーナメント表メーカー｜対戦表をかんたん作成 - ただただ";
+const TITLE = "トーナメント表｜無料・自動作成・シード/ランダム対応 - ただただ";
 const DESCRIPTION =
-  "参加者を入れるだけで対戦表が完成する無料のトーナメント表メーカー。大会・ゲーム・スポーツの組み合わせ作成に。インストール不要でスマホからもすぐ使えます。";
+  "無料のwebトーナメント表。広告控えめ・ログイン不要で、勝者クリックで対戦が進行。3位決定戦にも対応。スポーツ大会・ゲーム大会・部活の試合などに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,

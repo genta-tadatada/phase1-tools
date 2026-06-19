@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { JankenTool } from "./JankenTool";
 
 const TOOL_NAME = "じゃんけん";
-const TITLE = "無料じゃんけん｜ひとりでも遊べるオンラインじゃんけん - ただただ";
+const TITLE = "じゃんけん｜無料・ひとりプレイ・多人数対応 - ただただ";
 const DESCRIPTION =
-  "相手がいなくても遊べる無料のオンラインじゃんけん。順番決めや勝負ごとの判定にぴったり。インストール不要でスマホからもPCからもブラウザですぐ遊べます。";
+  "無料のwebじゃんけん。広告控えめ・ログイン不要で、ひとりでCPUと、みんなで大人数でも遊べます。順番決め・担当者決め・勝負ごとなどに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,

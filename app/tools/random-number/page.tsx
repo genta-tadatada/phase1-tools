@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { RandomNumberTool } from "./RandomNumberTool";
 
 const TOOL_NAME = "ランダム数字";
-const TITLE = "無料の乱数生成｜範囲を指定して数字をランダム表示 - ただただ";
+const TITLE = "ランダム数字｜無料・範囲指定・重複なし機能・複数生成 - ただただ";
 const DESCRIPTION =
-  "指定した範囲からランダムに数字を選ぶ無料の乱数生成ツール。抽選・順番決め・席替えなどに便利。インストール不要でスマホからもPCからもすぐ使えます。";
+  "無料のweb乱数メーカー。広告控えめ・ログイン不要で、範囲や個数を指定でき、重複なしにも対応。ビンゴ・抽選・席替えなどに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,

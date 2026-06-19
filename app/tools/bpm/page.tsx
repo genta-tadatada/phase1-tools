@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { BpmTool } from "./BpmTool";
 
 const TOOL_NAME = "BPMメトロノーム";
-const TITLE = "無料メトロノーム｜タップでBPMを測れるオンラインメトロノーム - ただただ";
+const TITLE = "BPMメトロノーム｜無料・オンライン・タップ計測機能 - ただただ";
 const DESCRIPTION =
-  "テンポを刻む無料オンラインメトロノーム。タップでBPMを測定でき、楽器練習やリズム確認に便利。アプリ不要でスマホからもPCからもブラウザですぐ使えます。";
+  "無料のwebメトロノーム。広告控えめ・ログイン不要で、テンポや拍子を設定でき、タップで曲のBPMも計測。ギター・ピアノ・ドラム練習やバンドのテンポ合わせに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,

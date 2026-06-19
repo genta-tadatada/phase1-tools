@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { DiceTool } from "./DiceTool";
 
 const TOOL_NAME = "サイコロ";
-const TITLE = "無料サイコロ｜ブラウザで振れるデジタルサイコロ - ただただ";
+const TITLE = "サイコロ｜無料・複数個・面数切替 - ただただ";
 const DESCRIPTION =
-  "ボタンを押すだけで振れる無料のデジタルサイコロ。複数個の同時振りにも対応し、ボードゲームや順番決めに便利。インストール不要でスマホからもすぐ使えます。";
+  "無料のサイコロ。広告控えめ・ログイン不要で、複数個まとめて振れて多面ダイスにも対応。ボードゲーム・TRPG・罰ゲーム決めなどに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,

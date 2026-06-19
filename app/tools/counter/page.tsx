@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { CounterTool } from "./CounterTool";
 
 const TOOL_NAME = "マルチカウンター";
-const TITLE = "無料カウンターアプリ｜複数を同時に数える多機能カウンター - ただただ";
+const TITLE = "マルチカウンター｜無料で複数のカウントを同時管理 - ただただ";
 const DESCRIPTION =
-  "複数のカウントを同時に管理できる無料カウンターアプリ。在庫数え・人数カウント・読書記録などに。インストール不要、スマホでもPCでもブラウザですぐ使えます。";
+  "無料のwebマルチカウンター（数取り器）。広告控えめ・ログイン不要で、複数項目を同時カウント。在庫数え・人数カウント・スポーツの審判・周回カウントなどに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,

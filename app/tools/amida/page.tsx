@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { AmidaTool } from "./AmidaTool";
 
 const TOOL_NAME = "あみだくじ";
-const TITLE = "無料あみだくじ｜名前を入れて作れるオンラインあみだ - ただただ";
+const TITLE = "あみだくじ｜無料で作成・順番決めや役割分担に - ただただ";
 const DESCRIPTION =
-  "紙がなくても作れる無料のオンラインあみだくじ。名前と結果を入れるだけで線を自動生成し、順番決めや係決めに。インストール不要でスマホからもすぐ使えます。";
+  "無料のwebあみだくじ。広告控えめ・ログイン不要で、線をたどる演出で1人ずつ結果を発表。係決め・宴会の余興・プレゼント交換などに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,

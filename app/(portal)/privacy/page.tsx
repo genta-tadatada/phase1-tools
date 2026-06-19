@@ -4,7 +4,9 @@ import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import { GlobalMenu } from "@/components/shared/GlobalMenu";
 
 export const metadata: Metadata = {
-  title: "プライバシーポリシー | ただただ",
+  title: "プライバシーポリシー - ただただ",
+  description:
+    "「ただただ」のプライバシーポリシー。個人情報・Cookie・広告・アクセス解析の取り扱い。",
   robots: { index: true, follow: true },
   alternates: {
     canonical: "/privacy",

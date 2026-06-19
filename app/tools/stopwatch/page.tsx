@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { StopwatchTool } from "./StopwatchTool";
 
 const TOOL_NAME = "多列ストップウォッチ";
-const TITLE = "無料ストップウォッチ｜複数同時に計測できる多列タイマー - ただただ";
+const TITLE = "ストップウォッチ｜無料・オンラインで複数タイムを同時計測 - ただただ";
 const DESCRIPTION =
-  "複数のタイムを同時に計測できる無料ストップウォッチ。スポーツ・実験・作業時間の比較計測に最適。インストール不要でスマホからもPCからもすぐ使えます。";
+  "無料のwebストップウォッチ。広告控えめ・ログイン不要で、複数のタイムを同時に計測できます。スポーツや部活のタイム測定・実験・勉強時間の記録などに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,

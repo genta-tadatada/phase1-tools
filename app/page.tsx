@@ -8,17 +8,17 @@ import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import "./(portal)/portal.css";
 
 export const metadata: Metadata = {
-  title: "ただただ（タダtools）｜無料で使える便利ツール集",
+  title: "ただただ｜すべてタダで、いますぐ使える。- 無料のツール・一問一答・ゲーム",
   description:
-    "カウンター・タイマー・サイコロ・あみだくじなど、無料で使える便利ツールを集めたサイト「ただただ」。インストール不要でスマホからもPCからもすぐ使えます。",
+    "便利ツール・一問一答・ゲームを集めた完全無料サイト。広告控えめで、いますぐ使える。",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     url: "https://tadatada.net/",
-    title: "ただただ（タダtools）｜無料で使える便利ツール集",
+    title: "ただただ｜すべてタダで、いますぐ使える。- 無料のツール・一問一答・ゲーム",
     description:
-      "カウンター・タイマー・サイコロ・あみだくじなど、無料で使える便利ツールを集めたサイト「ただただ」。インストール不要でスマホからもPCからもすぐ使えます。",
+      "便利ツール・一問一答・ゲームを集めた完全無料サイト。広告控えめで、いますぐ使える。",
     type: "website",
   },
 };

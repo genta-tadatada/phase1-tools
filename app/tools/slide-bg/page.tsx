@@ -4,7 +4,7 @@ import { SlideBgTool } from "./SlideBgTool";
 const TOOL_NAME = "プレゼン背景メーカー";
 const TITLE = "プレゼン背景メーカー｜スライド用の背景画像を無料作成 - ただただ";
 const DESCRIPTION =
-  "スライドに敷ける背景画像を原寸（16:9・4:3）で無料作成。グラデーション・ドット・波などの上品な背景をブラウザで作ってPNG保存。インストール不要、商用利用OK。パワーポイント・Googleスライド・Keynoteの背景に。";
+  "無料のwebプレゼン背景メーカー。広告控えめ・ログイン不要で、シンプル・かわいい・高級感のスライド背景を生成。会議資料・授業スライド・卒論発表に使える。";
 
 export const metadata: Metadata = {
   title: TITLE,

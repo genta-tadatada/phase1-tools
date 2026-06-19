@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { LotTool } from "./LotTool";
 
 const TOOL_NAME = "くじ引き";
-const TITLE = "無料くじ引き｜あたり・はずれを決めるオンライン抽選 - ただただ";
+const TITLE = "くじ引き｜無料・あたり本数を設定して当選者決め - ただただ";
 const DESCRIPTION =
-  "あたり・はずれの数を決めて引くだけの無料くじ引きツール。順番決めや当選者選びに便利。インストール不要でスマホからもPCからもブラウザですぐ使えます。";
+  "無料のwebくじ引き。広告控えめ・ログイン不要で、あたり本数を設定でき、公平に抽選。順番決め・係決め・イベント抽選などに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,

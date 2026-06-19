@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { CalculatorTool } from "./CalculatorTool";
 
 const TOOL_NAME = "履歴付き電卓";
-const TITLE = "無料電卓｜計算履歴が残るブラウザ電卓 - ただただ";
+const TITLE = "電卓｜無料・計算履歴・消費税・関数 - ただただ";
 const DESCRIPTION =
-  "計算の履歴がそのまま残る無料のブラウザ電卓。前の計算を見返しながら作業でき、家計簿や仕事の集計に便利。インストール不要でスマホからもすぐ使えます。";
+  "無料のweb電卓。広告控えめ・ログイン不要で、計算履歴が残り、税込・割引や関数にも対応。家計簿・仕事の集計・数学や理科の課題などに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,

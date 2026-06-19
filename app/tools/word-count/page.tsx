@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { WordCountTool } from "./WordCountTool";
 
 const TOOL_NAME = "文字数カウント";
-const TITLE = "無料文字数カウント｜文字数・行数を即チェック - ただただ";
+const TITLE = "文字数カウント｜無料・字数制限チェック・原稿用紙換算 - ただただ";
 const DESCRIPTION =
-  "貼り付けるだけで文字数を瞬時にカウントする無料ツール。原稿・レポート・SNS投稿の文字数チェックに。インストール不要でスマホからもPCからもすぐ使えます。";
+  "無料のweb文字数カウント。広告控えめ・ログイン不要で、字数制限の残りもバーで確認できます。レポート・小論文・X投稿(140字)・原稿用紙の換算などに使えます。";
 
 export const metadata: Metadata = {
   title: TITLE,
