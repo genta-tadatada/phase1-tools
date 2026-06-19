@@ -84,7 +84,6 @@ export default function PrivacyPage() {
 
         <section className="p-contact-page-hero">
           <div className="p-container-xs">
-            <div className="p-eyebrow lav">PRIVACY POLICY</div>
             <h1 className="p-page-title">プライバシーポリシー<span className="dot">.</span></h1>
             <p className="p-page-sub">当サイトにおける個人情報の取り扱いについて<br />ご説明します。</p>
           </div>
