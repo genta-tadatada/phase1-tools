@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "ただタダgames | TADATADA",
-  description: "ブラウザで遊べる、ログイン不要のゲーム集。高校サッカー育成シミュレーターなどを開発中。すべて無料。",
+  title: "ただタダ games｜無料で遊べるブラウザゲーム集。- ただただ",
+  description: "無料で遊べるブラウザゲーム集。高校サッカー育成シミュレーターなどを開発中。",
   openGraph: {
-    title: "ただタダgames | TADATADA",
-    description: "ブラウザで遊べる、ログイン不要のゲーム集。すべて無料。",
+    title: "ただタダ games｜無料で遊べるブラウザゲーム集。- ただただ",
+    description: "無料で遊べるブラウザゲーム集。",
     url: "https://tadatada.net/games",
     siteName: "ただただ",
     locale: "ja_JP",

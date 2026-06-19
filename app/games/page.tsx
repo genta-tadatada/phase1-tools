@@ -184,7 +184,7 @@ export default function GamesPage() {
                 transition={{ duration: 0.5, delay: 0.22 }}
                 style={{ fontSize: 15, color: "var(--th-text-muted)", fontFamily: "'M PLUS Rounded 1c', sans-serif", lineHeight: 1.9, marginBottom: 0 }}
               >
-                ブラウザで遊べる、ログイン不要のゲーム集。
+                無料で遊べる、ブラウザゲーム集。
               </motion.p>
             </div>
 

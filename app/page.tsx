@@ -57,7 +57,7 @@ export default function PortalPage() {
               <p className="p-hero-sub">
                 便利なツールや楽しいコンテンツを、<br />
                 タダで、いますぐ。<br />
-                <span style={{ fontSize: "0.88em", opacity: 0.8 }}>ログイン不要・広告控えめ・完全無料。</span>
+                <span style={{ fontSize: "0.88em", opacity: 0.8 }}>広告控えめ・完全無料。</span>
               </p>
               <Link href="#services" className="p-cta-primary">
                 <svg className="p-spark-svg" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
@@ -238,8 +238,8 @@ export default function PortalPage() {
               <div className="p-feat-icon i-2">
                 <Image src="/uploads/kawaii-padlock.svg" alt="" width={52} height={52} className="blend" style={{ objectFit: "contain" }} />
               </div>
-              <div className="p-feat-name">ログイン不要</div>
-              <p className="p-feat-desc">アカウント作成なしで、<br />すぐに使い始められます。</p>
+              <div className="p-feat-name">個人情報は最小限</div>
+              <p className="p-feat-desc">必要以上の情報は集めません。<br />安心して使えます。</p>
             </div>
             <div className="p-feat-card">
               <div className="p-feat-icon i-3">

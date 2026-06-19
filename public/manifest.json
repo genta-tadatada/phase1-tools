@@ -1,7 +1,7 @@
 {
   "name": "ただただ",
   "short_name": "ただただ",
-  "description": "便利なツール・一問一答・ゲームを、タダで、いますぐ。ログイン不要・完全無料。",
+  "description": "便利なツール・一問一答・ゲームを、タダで、いますぐ。広告控えめ・完全無料。",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#151b26",
