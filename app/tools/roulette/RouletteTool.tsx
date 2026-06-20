@@ -169,12 +169,13 @@ export function RouletteTool() {
       <div className="flex flex-col gap-5">
 
         {/* ヘッダービジュアル */}
-        <div className="relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-pink-50 to-orange-50 dark:from-pink-950/30 dark:to-orange-950/20 border border-pink-200/60 dark:border-pink-700/30">
-          <img src="/uploads/kawaii-blob-pink.svg" alt="" aria-hidden="true" className="absolute -right-6 -bottom-6 w-28 h-28 opacity-20 pointer-events-none select-none" />
+        <div className="relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-pink-50 via-sky-50 to-emerald-50 dark:from-pink-950/30 dark:via-sky-950/20 dark:to-emerald-950/20 border border-sky-200/60 dark:border-sky-700/30">
+          <img src="/uploads/kawaii-blob-mint.svg" alt="" aria-hidden="true" className="absolute -right-6 -bottom-6 w-28 h-28 opacity-25 pointer-events-none select-none" />
+          <img src="/uploads/kawaii-blob-pink.svg" alt="" aria-hidden="true" className="absolute -left-8 -top-6 w-24 h-24 opacity-20 pointer-events-none select-none" />
           <img src="/assets/icon-roulette.png" alt="" aria-hidden="true" className="w-16 h-16 object-contain flex-shrink-0 relative z-10" />
           <div className="relative z-10">
-            <p className="text-sm font-bold text-pink-700 dark:text-pink-300">ルーレット</p>
-            <p className="text-xs text-pink-600/70 dark:text-pink-400/70 mt-0.5">選択肢を追加してスタート！針が止まった項目が当選。</p>
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">ルーレット</p>
+            <p className="text-xs text-slate-600/80 dark:text-slate-300/70 mt-0.5">選択肢を追加してスタート！針が止まった項目が当選。</p>
           </div>
         </div>
 
@@ -186,10 +187,10 @@ export function RouletteTool() {
             onChange={(e) => setNewLabel(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addItem()}
             placeholder="選択肢を入力..."
-            className="flex-1 h-10 px-3 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-pink-400/50"
+            className="flex-1 h-10 px-3 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-sky-400/50"
           />
           <motion.button whileTap={{ scale: 0.95 }} onClick={addItem}
-            className="h-10 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-pink-400 to-rose-400 text-white shadow-sm">
+            className="h-10 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-sky-400 to-pink-400 text-white shadow-sm">
             追加
           </motion.button>
         </div>
@@ -231,9 +232,9 @@ export function RouletteTool() {
                 );
               })}
               {/* 外周リング */}
-              <circle cx={CX} cy={CY} r={R + 1} fill="none" stroke="#fbcfe8" strokeWidth={2} />
-              {/* 中心下地（シンプル） */}
-              <circle cx={CX} cy={CY} r={18} fill="white" stroke="#f9a8d4" strokeWidth={1.5} />
+              <circle cx={CX} cy={CY} r={R + 1} fill="none" stroke="#e2e8f0" strokeWidth={1.5} />
+              {/* 中心下地（白プレートのみ・ストロークなし） */}
+              <circle cx={CX} cy={CY} r={20} fill="white" />
             </svg>
 
             {/* 回転ポインター（針） */}
@@ -264,9 +265,8 @@ export function RouletteTool() {
               />
               {/* 先端ハイライト */}
               <circle cx={CX} cy={CY - 94} r={2.5} fill="rgba(255,255,255,0.95)" />
-              {/* 中心ピン（シンプル） */}
-              <circle cx={CX} cy={CY} r={5} fill="white" stroke="#f9a8d4" strokeWidth={1.5} />
-              <circle cx={CX} cy={CY} r={2} fill="#f9a8d4" />
+              {/* 中心ピン（単一ドット） */}
+              <circle cx={CX} cy={CY} r={3.5} fill="#f9a8d4" />
             </svg>
           </div>
         </div>
@@ -317,7 +317,7 @@ export function RouletteTool() {
           disabled={spinning || items.length < 2}
           whileTap={{ scale: 0.96 }}
           whileHover={{ scale: 1.02 }}
-          className="w-full sm:w-64 mx-auto h-14 rounded-2xl text-xl font-bold bg-gradient-to-r from-pink-400 to-rose-400 text-white shadow-lg disabled:opacity-50 transition-opacity"
+          className="w-full sm:w-64 mx-auto h-14 rounded-2xl text-xl font-bold bg-gradient-to-r from-pink-400 via-amber-300 to-sky-400 text-white shadow-lg disabled:opacity-50 transition-opacity"
         >
           {spinning
             ? <motion.span animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 0.6, ease: "linear" }} className="inline-block">🎡</motion.span>
@@ -332,7 +332,7 @@ export function RouletteTool() {
               onClick={() => setShowWeights(v => !v)}
               className={`text-xs px-2.5 py-1 rounded-md border transition-colors ${
                 showWeights
-                  ? "border-pink-400 text-pink-500 bg-pink-50 dark:bg-pink-950/30"
+                  ? "border-sky-400 text-sky-500 bg-sky-50 dark:bg-sky-950/30"
                   : "border-border text-muted-foreground hover:bg-muted"
               }`}
             >
@@ -355,7 +355,7 @@ export function RouletteTool() {
                       min={1} max={99}
                       value={item.weight}
                       onChange={(e) => updateWeight(i, Number(e.target.value))}
-                      className="w-14 h-7 px-2 rounded-md border border-border bg-background text-xs text-center tabular-nums focus:outline-none focus:ring-1 focus:ring-pink-400/50"
+                      className="w-14 h-7 px-2 rounded-md border border-border bg-background text-xs text-center tabular-nums focus:outline-none focus:ring-1 focus:ring-sky-400/50"
                     />
                     <span className="text-xs text-muted-foreground w-9 tabular-nums text-right">{pct}%</span>
                   </div>
@@ -381,7 +381,7 @@ export function RouletteTool() {
             aria-checked={cumulativeMode}
             onClick={() => { setCumulativeMode(!cumulativeMode); setSelectedIndex(null); }}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
-              cumulativeMode ? "bg-gradient-to-r from-pink-400 to-rose-400" : "bg-muted border border-border"
+              cumulativeMode ? "bg-gradient-to-r from-sky-400 to-emerald-400" : "bg-muted border border-border"
             }`}
           >
             <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 ${cumulativeMode ? "translate-x-6" : "translate-x-1"}`} />
