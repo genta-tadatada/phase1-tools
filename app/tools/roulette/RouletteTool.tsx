@@ -13,13 +13,13 @@ interface RouletteItem {
 
 const SECTOR_COLORS = [
   "#fda4af", // soft pink
-  "#fdba74", // peach
-  "#fde68a", // butter yellow
-  "#a7f3d0", // mint
   "#bae6fd", // sky
+  "#a7f3d0", // mint
+  "#fdba74", // peach
+  "#ddd6fe", // light lavender
+  "#fde68a", // butter yellow
   "#fbcfe8", // sakura
   "#fecaca", // coral
-  "#ddd6fe", // light lavender
 ];
 const SECTOR_TEXT_COLOR = "#3f3f46"; // zinc-700 — pastelに合わせて濃色テキスト
 
@@ -250,23 +250,24 @@ export function RouletteTool() {
                   : "none",
               }}
             >
-              {/* 針の影 */}
+              {/* 針の影（中央まで延長） */}
               <polygon
-                points={`${CX},${CY - 96} ${CX + 6},${CY - 58} ${CX + 3},${CY - 20} ${CX - 3},${CY - 20} ${CX - 6},${CY - 58}`}
+                points={`${CX},${CY - 96} ${CX + 6},${CY - 58} ${CX + 4},${CY} ${CX - 4},${CY} ${CX - 6},${CY - 58}`}
                 fill="rgba(0,0,0,0.18)"
                 transform="translate(2,4)"
               />
-              {/* 針本体（テーパー形状） */}
+              {/* 針本体（中央まで延長して連結） */}
               <polygon
-                points={`${CX},${CY - 96} ${CX + 6},${CY - 58} ${CX + 3},${CY - 20} ${CX - 3},${CY - 20} ${CX - 6},${CY - 58}`}
+                points={`${CX},${CY - 96} ${CX + 6},${CY - 58} ${CX + 4},${CY} ${CX - 4},${CY} ${CX - 6},${CY - 58}`}
                 fill="white"
                 stroke="#f9a8d4"
                 strokeWidth={1}
               />
               {/* 先端ハイライト */}
               <circle cx={CX} cy={CY - 94} r={2.5} fill="rgba(255,255,255,0.95)" />
-              {/* 中心ピン（単一ドット） */}
-              <circle cx={CX} cy={CY} r={3.5} fill="#f9a8d4" />
+              {/* 根本ノブ（針と中央円を留めるピン） */}
+              <circle cx={CX} cy={CY} r={6} fill="#f9a8d4" />
+              <circle cx={CX} cy={CY} r={2.5} fill="white" />
             </svg>
           </div>
         </div>
@@ -317,7 +318,7 @@ export function RouletteTool() {
           disabled={spinning || items.length < 2}
           whileTap={{ scale: 0.96 }}
           whileHover={{ scale: 1.02 }}
-          className="w-full sm:w-64 mx-auto h-14 rounded-2xl text-xl font-bold bg-gradient-to-r from-pink-400 via-amber-300 to-sky-400 text-white shadow-lg disabled:opacity-50 transition-opacity"
+          className="w-full sm:w-64 mx-auto h-14 rounded-2xl text-xl font-bold bg-gradient-to-r from-sky-400 to-pink-400 text-white shadow-lg disabled:opacity-50 transition-opacity"
         >
           {spinning
             ? <motion.span animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 0.6, ease: "linear" }} className="inline-block">🎡</motion.span>
