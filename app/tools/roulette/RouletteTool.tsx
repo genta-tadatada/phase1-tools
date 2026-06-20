@@ -190,7 +190,7 @@ export function RouletteTool() {
             className="flex-1 h-10 px-3 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-sky-400/50"
           />
           <motion.button whileTap={{ scale: 0.95 }} onClick={addItem}
-            className="h-10 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-sky-400 to-pink-400 text-white shadow-sm">
+            className="h-10 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-pink-400 to-pink-500 text-white shadow-sm">
             追加
           </motion.button>
         </div>
@@ -318,7 +318,7 @@ export function RouletteTool() {
           disabled={spinning || items.length < 2}
           whileTap={{ scale: 0.96 }}
           whileHover={{ scale: 1.02 }}
-          className="w-full sm:w-64 mx-auto h-14 rounded-2xl text-xl font-bold bg-gradient-to-r from-sky-400 to-pink-400 text-white shadow-lg disabled:opacity-50 transition-opacity"
+          className="w-full sm:w-64 mx-auto h-14 rounded-2xl text-xl font-bold bg-gradient-to-r from-pink-400 to-pink-500 text-white shadow-lg disabled:opacity-50 transition-opacity"
         >
           {spinning
             ? <motion.span animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 0.6, ease: "linear" }} className="inline-block">🎡</motion.span>
