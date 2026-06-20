@@ -12,9 +12,16 @@ interface RouletteItem {
 }
 
 const SECTOR_COLORS = [
-  "#f43f5e", "#8b5cf6", "#0ea5e9", "#10b981",
-  "#f97316", "#d946ef", "#eab308", "#14b8a6",
+  "#fda4af", // soft pink
+  "#fdba74", // peach
+  "#fde68a", // butter yellow
+  "#a7f3d0", // mint
+  "#bae6fd", // sky
+  "#fbcfe8", // sakura
+  "#fecaca", // coral
+  "#ddd6fe", // light lavender
 ];
+const SECTOR_TEXT_COLOR = "#3f3f46"; // zinc-700 — pastelに合わせて濃色テキスト
 
 const DEFAULT_ITEMS: RouletteItem[] = [
   { label: "りんご", weight: 1 },
@@ -162,12 +169,12 @@ export function RouletteTool() {
       <div className="flex flex-col gap-5">
 
         {/* ヘッダービジュアル */}
-        <div className="relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/20 border border-violet-200/60 dark:border-violet-700/30">
-          <img src="/uploads/kawaii-blob-lavender.svg" alt="" aria-hidden="true" className="absolute -right-6 -bottom-6 w-28 h-28 opacity-20 pointer-events-none select-none" />
+        <div className="relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-pink-50 to-orange-50 dark:from-pink-950/30 dark:to-orange-950/20 border border-pink-200/60 dark:border-pink-700/30">
+          <img src="/uploads/kawaii-blob-pink.svg" alt="" aria-hidden="true" className="absolute -right-6 -bottom-6 w-28 h-28 opacity-20 pointer-events-none select-none" />
           <img src="/assets/icon-roulette.png" alt="" aria-hidden="true" className="w-16 h-16 object-contain flex-shrink-0 relative z-10" />
           <div className="relative z-10">
-            <p className="text-sm font-bold text-violet-700 dark:text-violet-300">ルーレット</p>
-            <p className="text-xs text-violet-600/70 dark:text-violet-400/70 mt-0.5">選択肢を追加してスタート！針が止まった項目が当選。</p>
+            <p className="text-sm font-bold text-pink-700 dark:text-pink-300">ルーレット</p>
+            <p className="text-xs text-pink-600/70 dark:text-pink-400/70 mt-0.5">選択肢を追加してスタート！針が止まった項目が当選。</p>
           </div>
         </div>
 
@@ -179,10 +186,10 @@ export function RouletteTool() {
             onChange={(e) => setNewLabel(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addItem()}
             placeholder="選択肢を入力..."
-            className="flex-1 h-10 px-3 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-violet-400/50"
+            className="flex-1 h-10 px-3 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-pink-400/50"
           />
           <motion.button whileTap={{ scale: 0.95 }} onClick={addItem}
-            className="h-10 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-violet-400 to-purple-400 text-white shadow-sm">
+            className="h-10 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-pink-400 to-rose-400 text-white shadow-sm">
             追加
           </motion.button>
         </div>
@@ -215,7 +222,7 @@ export function RouletteTool() {
                       dominantBaseline="central"
                       fontSize={fontSize}
                       fontWeight="bold"
-                      fill="white"
+                      fill={SECTOR_TEXT_COLOR}
                       style={{ userSelect: "none", pointerEvents: "none" }}
                     >
                       {labelText}
@@ -224,9 +231,9 @@ export function RouletteTool() {
                 );
               })}
               {/* 外周リング */}
-              <circle cx={CX} cy={CY} r={R + 1} fill="none" stroke="#e2e8f0" strokeWidth={2} />
-              {/* 中心下地 */}
-              <circle cx={CX} cy={CY} r={20} fill="white" stroke="#e2e8f0" strokeWidth={2} />
+              <circle cx={CX} cy={CY} r={R + 1} fill="none" stroke="#fbcfe8" strokeWidth={2} />
+              {/* 中心下地（シンプル） */}
+              <circle cx={CX} cy={CY} r={18} fill="white" stroke="#f9a8d4" strokeWidth={1.5} />
             </svg>
 
             {/* 回転ポインター（針） */}
@@ -245,24 +252,21 @@ export function RouletteTool() {
               {/* 針の影 */}
               <polygon
                 points={`${CX},${CY - 96} ${CX + 6},${CY - 58} ${CX + 3},${CY - 20} ${CX - 3},${CY - 20} ${CX - 6},${CY - 58}`}
-                fill="rgba(0,0,0,0.22)"
+                fill="rgba(0,0,0,0.18)"
                 transform="translate(2,4)"
               />
               {/* 針本体（テーパー形状） */}
               <polygon
                 points={`${CX},${CY - 96} ${CX + 6},${CY - 58} ${CX + 3},${CY - 20} ${CX - 3},${CY - 20} ${CX - 6},${CY - 58}`}
                 fill="white"
-                stroke="rgba(255,255,255,0.6)"
-                strokeWidth={0.5}
+                stroke="#f9a8d4"
+                strokeWidth={1}
               />
               {/* 先端ハイライト */}
               <circle cx={CX} cy={CY - 94} r={2.5} fill="rgba(255,255,255,0.95)" />
-              {/* 中心ハブ（同心円デザイン） */}
-              <circle cx={CX} cy={CY} r={22} fill="#6d28d9" />
-              <circle cx={CX} cy={CY} r={16} fill="white" />
-              <circle cx={CX} cy={CY} r={10} fill="#8b5cf6" />
-              <circle cx={CX} cy={CY} r={5}  fill="white" />
-              <circle cx={CX} cy={CY} r={2.5} fill="#6d28d9" />
+              {/* 中心ピン（シンプル） */}
+              <circle cx={CX} cy={CY} r={5} fill="white" stroke="#f9a8d4" strokeWidth={1.5} />
+              <circle cx={CX} cy={CY} r={2} fill="#f9a8d4" />
             </svg>
           </div>
         </div>
@@ -278,10 +282,13 @@ export function RouletteTool() {
               className="flex flex-col items-center gap-3"
             >
               <div
-                className="w-full py-4 rounded-2xl text-white text-center shadow-lg"
-                style={{ backgroundColor: SECTOR_COLORS[selectedIndex % SECTOR_COLORS.length] }}
+                className="w-full py-4 rounded-2xl text-center shadow-lg"
+                style={{
+                  backgroundColor: SECTOR_COLORS[selectedIndex % SECTOR_COLORS.length],
+                  color: SECTOR_TEXT_COLOR,
+                }}
               >
-                <p className="text-xs font-medium opacity-80 mb-1">🎉 当選</p>
+                <p className="text-xs font-medium opacity-70 mb-1">🎉 当選</p>
                 <p className="text-4xl sm:text-5xl font-black">{items[selectedIndex].label}</p>
               </div>
               {!cumulativeMode && (
@@ -310,7 +317,7 @@ export function RouletteTool() {
           disabled={spinning || items.length < 2}
           whileTap={{ scale: 0.96 }}
           whileHover={{ scale: 1.02 }}
-          className="w-full sm:w-64 mx-auto h-14 rounded-2xl text-xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 text-white shadow-lg disabled:opacity-50 transition-opacity"
+          className="w-full sm:w-64 mx-auto h-14 rounded-2xl text-xl font-bold bg-gradient-to-r from-pink-400 to-rose-400 text-white shadow-lg disabled:opacity-50 transition-opacity"
         >
           {spinning
             ? <motion.span animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 0.6, ease: "linear" }} className="inline-block">🎡</motion.span>
@@ -325,7 +332,7 @@ export function RouletteTool() {
               onClick={() => setShowWeights(v => !v)}
               className={`text-xs px-2.5 py-1 rounded-md border transition-colors ${
                 showWeights
-                  ? "border-violet-400 text-violet-500 bg-violet-50 dark:bg-violet-950/30"
+                  ? "border-pink-400 text-pink-500 bg-pink-50 dark:bg-pink-950/30"
                   : "border-border text-muted-foreground hover:bg-muted"
               }`}
             >
@@ -348,7 +355,7 @@ export function RouletteTool() {
                       min={1} max={99}
                       value={item.weight}
                       onChange={(e) => updateWeight(i, Number(e.target.value))}
-                      className="w-14 h-7 px-2 rounded-md border border-border bg-background text-xs text-center tabular-nums focus:outline-none focus:ring-1 focus:ring-violet-400/50"
+                      className="w-14 h-7 px-2 rounded-md border border-border bg-background text-xs text-center tabular-nums focus:outline-none focus:ring-1 focus:ring-pink-400/50"
                     />
                     <span className="text-xs text-muted-foreground w-9 tabular-nums text-right">{pct}%</span>
                   </div>
@@ -374,7 +381,7 @@ export function RouletteTool() {
             aria-checked={cumulativeMode}
             onClick={() => { setCumulativeMode(!cumulativeMode); setSelectedIndex(null); }}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
-              cumulativeMode ? "bg-gradient-to-r from-violet-400 to-purple-400" : "bg-muted border border-border"
+              cumulativeMode ? "bg-gradient-to-r from-pink-400 to-rose-400" : "bg-muted border border-border"
             }`}
           >
             <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 ${cumulativeMode ? "translate-x-6" : "translate-x-1"}`} />
