@@ -227,8 +227,8 @@ export default function PrivacyPage() {
                 当サイトは、法令に基づく場合を除き、ユーザーの個人情報を第三者に提供・販売することはありません。
               </p>
               <p style={P_STYLE}>
-                ただし、お問い合わせ対応のために以下の外部サービスを利用しています。
-                また、アクセス解析・広告配信のための外部サービスを今後導入する予定です。
+                ただし、お問い合わせ対応・アクセス解析のために以下の外部サービスを利用しています。
+                また、広告配信・アフィリエイトのための外部サービスを今後導入する予定です。
                 これらのサービスにおける情報の取り扱いは、各社のプライバシーポリシーに従います。
               </p>
               <table style={TABLE_STYLE}>
@@ -243,12 +243,12 @@ export default function PrivacyPage() {
                   <tr>
                     <td style={TD_STYLE}>Discord</td>
                     <td style={TD_STYLE}>Discord Inc.</td>
-                    <td style={TD_STYLE}>お問い合わせフォーム（利用中）</td>
+                    <td style={TD_STYLE}>お問い合わせフォーム</td>
                   </tr>
                   <tr>
                     <td style={TD_STYLE}>Google アナリティクス（GA4）</td>
                     <td style={TD_STYLE}>Google LLC</td>
-                    <td style={TD_STYLE}>アクセス解析（導入予定）</td>
+                    <td style={TD_STYLE}>アクセス解析</td>
                   </tr>
                   <tr>
                     <td style={TD_STYLE}>Amazonアソシエイト</td>
@@ -263,7 +263,7 @@ export default function PrivacyPage() {
                 </tbody>
               </table>
               <p style={P_STYLE}>
-                アクセス解析・広告配信サービスの導入時には、本ポリシーを更新のうえ当サイトでお知らせします。
+                広告配信・アフィリエイトサービス（Google AdSense・Amazonアソシエイト）の導入時には、本ポリシーを更新のうえ当サイトでお知らせします。
               </p>
             </section>
 
@@ -281,9 +281,9 @@ export default function PrivacyPage() {
                   <strong>ブラウザ設定</strong>：お使いのブラウザの設定画面から、Cookie の受け入れ可否を個別に設定できます。
                 </li>
               </ul>
-              <h3 style={H3_STYLE}>Google アナリティクス（GA4・導入予定）</h3>
+              <h3 style={H3_STYLE}>Google アナリティクス（GA4）</h3>
               <p style={P_STYLE}>
-                当サイトでは、アクセス解析ツール「Google アナリティクス（GA4）」の導入を予定しています。
+                当サイトでは、アクセス解析ツール「Google アナリティクス（GA4）」を利用しています。
                 Google アナリティクスは、トラフィックデータの収集のために Cookie を使用します。
                 このデータは匿名で収集されており、個人を特定するものではありません。
                 収集を希望されない場合は、ブラウザの Cookie 設定のほか、{" "}
@@ -410,7 +410,7 @@ export default function PrivacyPage() {
 
             <p style={{ color: "#9a96a8", fontSize: "0.8rem" }}>
               制定日: 2026年6月8日<br />
-              最終改定日: 2026年6月12日
+              最終改定日: 2026年6月21日
             </p>
           </div>
         </div>
