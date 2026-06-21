@@ -6,6 +6,7 @@ import { Download, Shuffle, Type, Palette as PaletteIcon, Presentation } from "l
 import { Button } from "@/components/ui/button";
 import { ToolLayout } from "@/components/tool-layout/ToolLayout";
 import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
+import { TrademarkNotice } from "@/components/shared/TrademarkNotice";
 import {
   type Style,
   type AspectKey,
@@ -347,6 +348,14 @@ export function SlideBgTool() {
             生成した背景はすべてこのツール内で作られたオリジナルです。商用・私用問わず自由に使えます（クレジット表記も不要）。
           </p>
         </div>
+
+        <TrademarkNotice
+          marks={[
+            { name: "Microsoft、Microsoft PowerPoint", owner: "Microsoft Corporation" },
+            { name: "Google および Google スライド（Google Slides）", owner: "Google LLC" },
+            { name: "Apple、Keynote", owner: "Apple Inc." },
+          ]}
+        />
       </div>
     </ToolLayout>
   );
