@@ -161,7 +161,7 @@ function ToolCard({ tool, index }: { tool: Tool; index: number }) {
           {tool.name}
         </div>
         <div
-          className="text-[11px] leading-relaxed"
+          className="text-[12px] leading-relaxed"
           style={{ color: "var(--th-text-muted)", fontFamily: "'M PLUS Rounded 1c', sans-serif",
             display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
         >
@@ -278,9 +278,10 @@ export default function ToolsPage() {
               type="button"
               onClick={() => setActiveCat(f.cat)}
               whileTap={{ scale: 0.94 }}
-              className="tools-filter-btn relative flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-bold transition-colors duration-200"
+              className="tools-filter-btn relative flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-bold transition-colors duration-200"
               style={{
                 fontFamily: "'M PLUS Rounded 1c', sans-serif",
+                minHeight: 44,
                 background: isActive ? st.filterActive : "var(--tools-filter-inactive-bg)",
                 color: isActive ? "#fff" : "var(--tools-filter-inactive-color)",
                 border: isActive ? "1.5px solid transparent" : "1.5px solid var(--tools-filter-inactive-border)",
@@ -331,7 +332,7 @@ export default function ToolsPage() {
               タダ<span style={{ color: "#0ea5e9" }}>tools</span><span style={{ color: "#f9a8d4" }}>.</span>
             </Link>
             <span style={{ color: "var(--th-border)" }}>—</span>
-            <Link href="/" style={{ color: "var(--th-text-muted)", textDecoration: "none", fontSize: 12 }}>ポータルへ</Link>
+            <Link href="/" style={{ color: "var(--th-text-muted)", textDecoration: "none", fontSize: 12 }}>ただただのトップへ</Link>
             <span style={{ color: "var(--th-border)" }}>·</span>
             <Link href="/privacy" style={{ color: "var(--th-text-muted)", textDecoration: "none", fontSize: 12 }}>プライバシー</Link>
           </div>
