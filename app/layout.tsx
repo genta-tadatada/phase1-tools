@@ -3,6 +3,7 @@ import { Inter, Noto_Sans_JP, Space_Grotesk, M_PLUS_Rounded_1c, Quicksand } from
 import Script from "next/script";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/components/shared/AuthProvider";
 import { PWAInstallBanner } from "@/components/shared/PWAInstallBanner";
 import "./globals.css";
 
@@ -101,9 +102,11 @@ export default function RootLayout({
           </>
         )}
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          {children}
-          <Toaster />
-          <PWAInstallBanner />
+          <AuthProvider>
+            {children}
+            <Toaster />
+            <PWAInstallBanner />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

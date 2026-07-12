@@ -4,7 +4,11 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { toast } from "sonner";
 import { TOOL_CATALOG } from "@/lib/tools-catalog";
+import { loginUrl, NICKNAME_MAX, normalizeNickname } from "@/lib/auth";
+import { useAuth } from "./AuthProvider";
 
 type Section = "tools" | "quiz" | "games" | null;
 
@@ -343,34 +347,361 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                   ✕
                 </button>
 
-                <div style={{ width:68, height:68, margin:"0 auto 16px", borderRadius:"50%", background:"linear-gradient(160deg, #ddd6fe, #c4b5fd)", display:"flex", alignItems:"center", justifyContent:"center", position:"relative", zIndex:1 }}>
-                  <PersonSVG size={36} color="#ffffff" />
-                </div>
-
-                <h3 style={{ textAlign:"center", fontFamily:"'M PLUS Rounded 1c', sans-serif", fontWeight:900, fontSize:22, color:"var(--drawer-text)", marginBottom:8, position:"relative", zIndex:1 }}>
-                  アカウント
-                </h3>
-
-                <p style={{ textAlign:"center", fontSize:13, color:"var(--drawer-text-muted)", lineHeight:1.7, marginBottom:24, position:"relative", zIndex:1 }}>
-                  ツール履歴の保存・デバイス間の同期など、<br />
-                  アカウント機能を準備中です。
-                </p>
-
-                <div style={{ padding:"20px", borderRadius:16, background:"linear-gradient(135deg, #ede9fe, #fce7f3)", textAlign:"center", marginBottom:16, position:"relative", zIndex:1 }}>
-                  <p style={{ fontFamily:"Quicksand, sans-serif", fontWeight:800, fontSize:13, letterSpacing:"0.08em", color:"#8b5cf6", marginBottom:6 }}>COMING SOON</p>
-                  <p style={{ fontSize:12, color:"#6b6779", lineHeight:1.6 }}>
-                    基本機能はそのまま無料で<br />ご利用いただけます。
-                  </p>
-                </div>
-
-                <p style={{ textAlign:"center", fontSize:11.5, color:"var(--drawer-text-subtle)", lineHeight:1.6, position:"relative", zIndex:1 }}>
-                  <span style={{ color:"#f9a8d4" }}>♥</span> 登録なしでも全ツール使えます
-                </p>
+                <AuthModalBody />
               </div>
             </div>
           )}
         </>,
         document.body
+      )}
+    </>
+  );
+}
+
+// ── 認証モーダルの中身（guest / needsNickname / member の3状態） ──────────────
+
+const authTitleStyle: React.CSSProperties = {
+  textAlign: "center", fontFamily: "'M PLUS Rounded 1c', sans-serif",
+  fontWeight: 900, fontSize: 22, color: "var(--drawer-text)",
+  marginBottom: 8, position: "relative", zIndex: 1,
+};
+
+const authDescStyle: React.CSSProperties = {
+  textAlign: "center", fontSize: 13, color: "var(--drawer-text-muted)",
+  lineHeight: 1.7, marginBottom: 20, position: "relative", zIndex: 1,
+};
+
+const authNoteStyle: React.CSSProperties = {
+  textAlign: "center", fontSize: 11.5, color: "var(--drawer-text-subtle)",
+  lineHeight: 1.6, position: "relative", zIndex: 1,
+};
+
+const authErrorStyle: React.CSSProperties = {
+  textAlign: "center", fontSize: 11.5, color: "#ef4444", fontWeight: 700,
+  lineHeight: 1.6, marginTop: 8, position: "relative", zIndex: 1,
+};
+
+const authInputStyle: React.CSSProperties = {
+  width: "100%", padding: "11px 14px", borderRadius: 14,
+  border: "2px solid var(--drawer-border)", background: "var(--drawer-bg)",
+  color: "var(--drawer-text)", fontFamily: "'M PLUS Rounded 1c', sans-serif",
+  fontWeight: 700, fontSize: 14.5, outline: "none",
+  transition: "border-color 0.2s ease", boxSizing: "border-box",
+};
+
+const authBtnPrimaryStyle: React.CSSProperties = {
+  padding: "12px 16px", borderRadius: 14, border: "none",
+  background: "#8b5cf6", color: "#ffffff",
+  fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 800, fontSize: 14,
+  letterSpacing: "0.02em", cursor: "pointer", transition: "all 0.2s ease",
+};
+
+const authBtnSecondaryStyle: React.CSSProperties = {
+  padding: "12px 16px", borderRadius: 14,
+  border: "2px solid var(--drawer-border)", background: "var(--drawer-bg)",
+  color: "var(--drawer-text)",
+  fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 800, fontSize: 14,
+  letterSpacing: "0.02em", cursor: "pointer", transition: "all 0.2s ease",
+};
+
+const googleBtnStyle: React.CSSProperties = {
+  width: "100%", padding: "13px 16px", borderRadius: 16,
+  border: "2px solid #e2ddea", background: "#ffffff", color: "#1f1d2b",
+  fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 800, fontSize: 14.5,
+  letterSpacing: "0.02em", cursor: "pointer", transition: "all 0.2s ease",
+  boxShadow: "0 2px 12px rgba(120,80,140,0.1)",
+  marginBottom: 16, position: "relative", zIndex: 1,
+};
+
+/** 丸いグラデ枠のユーザーアイコン（アイコン画像アップロードは未実装＝PersonSVGのまま） */
+function AuthAvatar({ label }: { label?: string }) {
+  return (
+    <div style={{ marginBottom: 16, position: "relative", zIndex: 1 }}>
+      <div style={{ width: 68, height: 68, margin: "0 auto", borderRadius: "50%", background: "linear-gradient(160deg, #ddd6fe, #c4b5fd)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <PersonSVG size={36} color="#ffffff" />
+      </div>
+      {label && (
+        <p style={{ textAlign: "center", fontSize: 10.5, color: "var(--drawer-text-subtle)", marginTop: 6 }}>
+          {label}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** ニックネーム入力（needsNicknameの初回設定と、memberのインライン変更の両方で使う） */
+function NicknameEditor({
+  initial,
+  submitLabel,
+  onDone,
+  showCancel,
+}: {
+  initial: string;
+  submitLabel: string;
+  onDone?: () => void;
+  showCancel?: boolean;
+}) {
+  const { saveNickname } = useAuth();
+  const [value, setValue] = useState(initial);
+  const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const normalized = normalizeNickname(value);
+  const showInvalid = value.trim().length > 0 && !normalized;
+
+  async function submit() {
+    if (!normalized || busy) return;
+    setBusy(true);
+    setFailed(false);
+    try {
+      await saveNickname(normalized);
+      toast("ニックネームを保存しました");
+      onDone?.();
+    } catch {
+      setFailed(true);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const disabled = !normalized || busy;
+
+  return (
+    <div style={{ position: "relative", zIndex: 1, marginBottom: 16 }}>
+      <input
+        type="text"
+        value={value}
+        maxLength={NICKNAME_MAX}
+        placeholder="ニックネーム（1〜20文字）"
+        aria-label="ニックネーム"
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+            e.preventDefault();
+            void submit();
+          }
+        }}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        style={{ ...authInputStyle, borderColor: focused ? "#c4b5fd" : "var(--drawer-border)" }}
+      />
+      {showInvalid && <p style={authErrorStyle}>1〜20文字で入力してください</p>}
+      {failed && <p style={authErrorStyle}>うまくいきませんでした。時間をおいて試してください</p>}
+      <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+        <button
+          type="button"
+          onClick={() => void submit()}
+          disabled={disabled}
+          style={{ ...authBtnPrimaryStyle, flex: 1, opacity: disabled ? 0.5 : 1, cursor: disabled ? "default" : "pointer" }}
+          onMouseEnter={(e) => { if (!disabled) e.currentTarget.style.transform = "translateY(-1px)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}
+        >
+          {busy ? "保存中…" : submitLabel}
+        </button>
+        {showCancel && (
+          <button
+            type="button"
+            onClick={() => onDone?.()}
+            disabled={busy}
+            style={{ ...authBtnSecondaryStyle, flex: "0 0 auto", padding: "12px 18px" }}
+          >
+            やめる
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function AuthModalBody() {
+  const { status, nickname, logout, deleteAccount } = useAuth();
+  const pathname = usePathname();
+  const [editing, setEditing] = useState(false);
+  const [busy, setBusy] = useState<"logout" | "delete" | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [deleteArmed, setDeleteArmed] = useState(false);
+
+  async function handleLogout() {
+    if (busy) return;
+    setBusy("logout");
+    setFailed(false);
+    try {
+      await logout();
+      toast("ログアウトしました");
+      setEditing(false);
+      setDeleteArmed(false);
+    } catch {
+      setFailed(true);
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function handleDelete() {
+    if (busy) return;
+    setBusy("delete");
+    setFailed(false);
+    try {
+      await deleteAccount();
+      toast("アカウントを削除しました");
+      setEditing(false);
+      setDeleteArmed(false);
+    } catch {
+      setFailed(true);
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  // ── loading: /api/auth/me 応答待ち（初回のみ・すぐ切り替わる） ──
+  if (status === "loading") {
+    return (
+      <>
+        <AuthAvatar />
+        <p style={{ ...authDescStyle, marginBottom: 8 }}>確認中…</p>
+      </>
+    );
+  }
+
+  // ── guest: 未ログイン ──
+  if (status === "guest") {
+    return (
+      <>
+        <AuthAvatar />
+        <h3 style={authTitleStyle}>アカウント</h3>
+        <p style={authDescStyle}>
+          ログインすると、ツールの履歴やゲームのデータを保存して、別の端末とも同期できます。
+        </p>
+        <button
+          type="button"
+          onClick={() => { window.location.href = loginUrl(pathname || "/"); }}
+          style={googleBtnStyle}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "#c4b5fd";
+            e.currentTarget.style.transform = "translateY(-1px)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "#e2ddea";
+            e.currentTarget.style.transform = "";
+          }}
+        >
+          Googleでログイン
+        </button>
+        <p style={authNoteStyle}>
+          <span style={{ color: "#f9a8d4" }}>♥</span> 登録なしでも全ツール使えます
+        </p>
+      </>
+    );
+  }
+
+  // ── needsNickname: ログイン済み・ニックネーム未設定（初回） ──
+  if (status === "needsNickname") {
+    return (
+      <>
+        <AuthAvatar />
+        <h3 style={authTitleStyle}>ようこそ！</h3>
+        <p style={authDescStyle}>
+          ただただで表示する名前を決めてください（あとで変更できます）。
+        </p>
+        <NicknameEditor initial="" submitLabel="決定" />
+        {failed && <p style={authErrorStyle}>うまくいきませんでした。時間をおいて試してください</p>}
+        <p style={{ ...authNoteStyle, marginTop: 4 }}>
+          <button
+            type="button"
+            onClick={() => void handleLogout()}
+            disabled={busy !== null}
+            style={{ background: "none", border: "none", padding: 4, cursor: "pointer", fontSize: 11, color: "var(--drawer-text-subtle)", textDecoration: "underline", textUnderlineOffset: 3, fontFamily: "inherit" }}
+          >
+            {busy === "logout" ? "ログアウト中…" : "ログアウトする"}
+          </button>
+        </p>
+      </>
+    );
+  }
+
+  // ── member: ログイン済み＋ニックネームあり ──
+  return (
+    <>
+      <AuthAvatar label="アイコン画像は準備中" />
+
+      {editing ? (
+        <NicknameEditor
+          initial={nickname ?? ""}
+          submitLabel="保存"
+          showCancel
+          onDone={() => setEditing(false)}
+        />
+      ) : (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 14, position: "relative", zIndex: 1 }}>
+          <span style={{ fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 900, fontSize: 19, color: "var(--drawer-text)", overflowWrap: "anywhere", minWidth: 0 }}>
+            {nickname}
+          </span>
+          <button
+            type="button"
+            onClick={() => { setEditing(true); setFailed(false); setDeleteArmed(false); }}
+            style={{ flexShrink: 0, padding: "5px 14px", borderRadius: 999, border: "2px solid var(--drawer-border)", background: "var(--drawer-bg)", color: "var(--drawer-text-muted)", fontFamily: "'M PLUS Rounded 1c', sans-serif", fontWeight: 800, fontSize: 11.5, cursor: "pointer", transition: "all 0.2s ease" }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#c4b5fd"; e.currentTarget.style.color = "#8b5cf6"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--drawer-border)"; e.currentTarget.style.color = "var(--drawer-text-muted)"; }}
+          >
+            変更
+          </button>
+        </div>
+      )}
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "8px 12px", borderRadius: 12, background: "#ecfdf5", marginBottom: 16, position: "relative", zIndex: 1 }}>
+        <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: "50%", background: "#34d399", flexShrink: 0 }} />
+        <span style={{ fontSize: 11.5, fontWeight: 700, color: "#059669" }}>
+          ツールの履歴をこの端末と同期しています
+        </span>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => void handleLogout()}
+        disabled={busy !== null}
+        style={{ ...authBtnSecondaryStyle, width: "100%", position: "relative", zIndex: 1, opacity: busy !== null ? 0.6 : 1 }}
+        onMouseEnter={(e) => { if (!busy) e.currentTarget.style.borderColor = "#c4b5fd"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--drawer-border)"; }}
+      >
+        {busy === "logout" ? "ログアウト中…" : "ログアウト"}
+      </button>
+
+      {failed && <p style={authErrorStyle}>うまくいきませんでした。時間をおいて試してください</p>}
+
+      {deleteArmed ? (
+        <div style={{ marginTop: 14, padding: "12px 14px", borderRadius: 14, background: "#fef2f2", position: "relative", zIndex: 1 }}>
+          <p style={{ textAlign: "center", fontSize: 12, fontWeight: 700, color: "#b91c1c", lineHeight: 1.6, marginBottom: 10 }}>
+            本当に削除しますか？<br />保存したデータはすべて消えます。
+          </p>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              type="button"
+              onClick={() => void handleDelete()}
+              disabled={busy !== null}
+              style={{ ...authBtnPrimaryStyle, flex: 1, background: "#ef4444", opacity: busy !== null ? 0.6 : 1 }}
+            >
+              {busy === "delete" ? "削除中…" : "削除する"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setDeleteArmed(false)}
+              disabled={busy !== null}
+              style={{ ...authBtnSecondaryStyle, flex: "0 0 auto", padding: "12px 18px" }}
+            >
+              やめる
+            </button>
+          </div>
+        </div>
+      ) : (
+        <p style={{ textAlign: "center", marginTop: 14, position: "relative", zIndex: 1 }}>
+          <button
+            type="button"
+            onClick={() => { setDeleteArmed(true); setFailed(false); }}
+            style={{ background: "none", border: "none", padding: 4, cursor: "pointer", fontSize: 11, color: "var(--drawer-text-subtle)", textDecoration: "underline", textUnderlineOffset: 3, fontFamily: "inherit" }}
+          >
+            アカウントを削除する
+          </button>
+        </p>
       )}
     </>
   );
