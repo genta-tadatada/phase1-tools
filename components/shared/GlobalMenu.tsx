@@ -616,7 +616,8 @@ function AuthModalBody() {
         <AuthAvatar />
         <h3 style={authTitleStyle}>ようこそ！</h3>
         <p style={authDescStyle}>
-          ただただで表示する名前を決めてください（あとで変更できます）。
+          ただただで表示する名前を決めてください。<br />
+          （あとで変更できます。）
         </p>
         <NicknameEditor initial="" submitLabel="決定" />
         {failed && <p style={authErrorStyle}>うまくいきませんでした。時間をおいて試してください</p>}
