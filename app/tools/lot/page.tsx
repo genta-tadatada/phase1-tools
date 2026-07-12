@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LotTool } from "./LotTool";
+import { ToolJsonLd } from "@/components/tool-layout/ToolJsonLd";
 
 const TOOL_NAME = "くじ引き";
 const TITLE = "くじ引き｜無料・あたり本数を設定して当選者決め - ただただ";
@@ -41,35 +42,11 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  name: TOOL_NAME,
-  url: "https://tadatada.net/tools/lot",
-  description: DESCRIPTION,
-  applicationCategory: "UtilityApplication",
-  operatingSystem: "Web Browser",
-  inLanguage: "ja",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "JPY",
-  },
-  provider: {
-    "@type": "Organization",
-    name: "ただただ",
-    url: "https://tadatada.net",
-  },
-};
-
 export default function LotPage() {
   return (
     <>
       <LotTool />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <ToolJsonLd slug="lot" description={DESCRIPTION} />
     </>
   );
 }

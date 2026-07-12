@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { TournamentTool } from "./TournamentTool";
+import { ToolJsonLd } from "@/components/tool-layout/ToolJsonLd";
 
 const TOOL_NAME = "トーナメント表";
 const TITLE = "トーナメント表｜無料・自動作成・シード/ランダム対応 - ただただ";
@@ -41,35 +42,11 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  name: TOOL_NAME,
-  url: "https://tadatada.net/tools/tournament",
-  description: DESCRIPTION,
-  applicationCategory: "UtilityApplication",
-  operatingSystem: "Web Browser",
-  inLanguage: "ja",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "JPY",
-  },
-  provider: {
-    "@type": "Organization",
-    name: "ただただ",
-    url: "https://tadatada.net",
-  },
-};
-
 export default function TournamentPage() {
   return (
     <>
       <TournamentTool />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <ToolJsonLd slug="tournament" description={DESCRIPTION} />
     </>
   );
 }

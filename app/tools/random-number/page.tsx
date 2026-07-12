@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { RandomNumberTool } from "./RandomNumberTool";
+import { ToolJsonLd } from "@/components/tool-layout/ToolJsonLd";
 
 const TOOL_NAME = "ランダム数字";
 const TITLE = "ランダム数字｜無料・範囲指定・重複なし機能・複数生成 - ただただ";
@@ -41,35 +42,11 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  name: TOOL_NAME,
-  url: "https://tadatada.net/tools/random-number",
-  description: DESCRIPTION,
-  applicationCategory: "UtilityApplication",
-  operatingSystem: "Web Browser",
-  inLanguage: "ja",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "JPY",
-  },
-  provider: {
-    "@type": "Organization",
-    name: "ただただ",
-    url: "https://tadatada.net",
-  },
-};
-
 export default function RandomNumberPage() {
   return (
     <>
       <RandomNumberTool />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <ToolJsonLd slug="random-number" description={DESCRIPTION} />
     </>
   );
 }

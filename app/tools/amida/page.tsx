@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AmidaTool } from "./AmidaTool";
+import { ToolJsonLd } from "@/components/tool-layout/ToolJsonLd";
 
 const TOOL_NAME = "あみだくじ";
 const TITLE = "あみだくじ｜無料で作成・順番決めや役割分担に - ただただ";
@@ -41,35 +42,11 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  name: TOOL_NAME,
-  url: "https://tadatada.net/tools/amida",
-  description: DESCRIPTION,
-  applicationCategory: "UtilityApplication",
-  operatingSystem: "Web Browser",
-  inLanguage: "ja",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "JPY",
-  },
-  provider: {
-    "@type": "Organization",
-    name: "ただただ",
-    url: "https://tadatada.net",
-  },
-};
-
 export default function AmidaPage() {
   return (
     <>
       <AmidaTool />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <ToolJsonLd slug="amida" description={DESCRIPTION} />
     </>
   );
 }

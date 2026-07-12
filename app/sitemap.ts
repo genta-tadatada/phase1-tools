@@ -1,28 +1,14 @@
 import type { MetadataRoute } from "next";
+import { TOOL_CATALOG } from "@/lib/tools-catalog";
+import { NEWS_DATA } from "@/lib/news-data";
 
 export const dynamic = "force-static";
 
 const BASE_URL = "https://tadatada.net";
 
-const TOOL_SLUGS = [
-  "counter",
-  "stopwatch",
-  "timer",
-  "bpm",
-  "calculator",
-  "word-count",
-  "random-number",
-  "dice",
-  "roulette",
-  "janken",
-  "lot",
-  "group",
-  "amida",
-  "tournament",
-  "slide-bg",
-  // "preset-bg" は完成度が低いため一旦非公開（リダイレクト）。再公開時に戻す
-  // "pomodoro" はリダイレクト専用ページのため sitemap から除外
-];
+// 公開ツール一覧は lib/tools-catalog.ts が単一情報源
+// "preset-bg" は完成度が低いため一旦非公開（リダイレクト）。再公開時にカタログへ戻す
+// "pomodoro" はリダイレクト専用ページのため sitemap から除外
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -38,8 +24,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
-    ...TOOL_SLUGS.map((slug) => ({
-      url: `${BASE_URL}/tools/${slug}`,
+    ...TOOL_CATALOG.map((tool) => ({
+      url: `${BASE_URL}${tool.path}`,
       lastModified: new Date("2026-06-08"),
       changeFrequency: "monthly" as const,
       priority: 0.8,
@@ -62,6 +48,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.7,
     },
+    ...NEWS_DATA.map((item) => ({
+      url: `${BASE_URL}/news/${item.id}`,
+      lastModified: new Date(item.date),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    })),
     {
       url: `${BASE_URL}/contact`,
       lastModified: new Date("2026-06-09"),

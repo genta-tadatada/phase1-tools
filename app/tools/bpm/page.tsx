@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BpmTool } from "./BpmTool";
+import { ToolJsonLd } from "@/components/tool-layout/ToolJsonLd";
 
 const TOOL_NAME = "BPMメトロノーム";
 const TITLE = "BPMメトロノーム｜無料・オンライン・タップ計測機能 - ただただ";
@@ -44,35 +45,11 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  name: TOOL_NAME,
-  url: "https://tadatada.net/tools/bpm",
-  description: DESCRIPTION,
-  applicationCategory: "UtilityApplication",
-  operatingSystem: "Web Browser",
-  inLanguage: "ja",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "JPY",
-  },
-  provider: {
-    "@type": "Organization",
-    name: "ただただ",
-    url: "https://tadatada.net",
-  },
-};
-
 export default function BpmPage() {
   return (
     <>
       <BpmTool />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <ToolJsonLd slug="bpm" description={DESCRIPTION} />
     </>
   );
 }

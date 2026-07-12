@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
+import { TOOL_CATALOG } from "@/lib/tools-catalog";
 
 type Section = "tools" | "quiz" | "games" | null;
 
@@ -11,23 +12,8 @@ interface GlobalMenuProps {
   activeSection?: Section;
 }
 
-const TOOLS = [
-  { href: "/tools/slide-bg",      label: "プレゼン背景メーカー" },
-  { href: "/tools/counter",       label: "マルチカウンター" },
-  { href: "/tools/stopwatch",     label: "多列ストップウォッチ" },
-  { href: "/tools/timer",         label: "タイマー" },
-  { href: "/tools/bpm",           label: "BPMメトロノーム" },
-  { href: "/tools/calculator",    label: "履歴付き電卓" },
-  { href: "/tools/word-count",    label: "文字数カウント" },
-  { href: "/tools/random-number", label: "ランダム数字" },
-  { href: "/tools/dice",          label: "サイコロ" },
-  { href: "/tools/roulette",      label: "ルーレット" },
-  { href: "/tools/janken",        label: "じゃんけん" },
-  { href: "/tools/lot",           label: "くじ引き" },
-  { href: "/tools/group",         label: "グループ分け" },
-  { href: "/tools/amida",         label: "あみだくじ" },
-  { href: "/tools/tournament",    label: "トーナメント表" },
-];
+// ツール一覧は lib/tools-catalog.ts が単一情報源
+const TOOLS = TOOL_CATALOG.map((t) => ({ href: t.path, label: t.name }));
 
 interface NavItem {
   href: string;

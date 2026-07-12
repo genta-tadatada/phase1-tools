@@ -252,8 +252,8 @@ export default function PortalPage() {
               <div className="p-feat-icon i-4">
                 <Image src="/uploads/kawaii-desktop-screen.svg" alt="" width={52} height={52} className="blend" style={{ objectFit: "contain" }} />
               </div>
-              <div className="p-feat-name">広告は控えめに</div>
-              <p className="p-feat-desc">ツール使用中は広告を非表示。<br />使うことだけに集中できます。</p>
+              <div className="p-feat-name">いまは広告なし</div>
+              <p className="p-feat-desc">まだ広告は表示していません。<br />使うことだけに集中できます。</p>
             </div>
           </div>
         </div>

@@ -9,6 +9,8 @@ import { GlobalMenu } from "@/components/shared/GlobalMenu";
 import { TadatadaLogo } from "@/components/shared/TadatadaLogo";
 import { DarkModeToggle } from "@/components/tool-layout/DarkModeToggle";
 import { RequestCTA } from "@/components/shared/RequestCTA";
+import { TOOL_CATALOG } from "@/lib/tools-catalog";
+import { ToolsGuide } from "./ToolsGuide";
 
 type Cat = "all" | "calc" | "text" | "play" | "design";
 
@@ -21,23 +23,32 @@ interface Tool {
   soon?: boolean;
 }
 
-const TOOLS: Tool[] = [
-  { href: "/tools/slide-bg",      icon: "/assets/icon-slide-bg.svg",      name: "プレゼン背景メーカー", desc: "スライド用の背景を原寸で作成",  cat: "design" },
-  { href: "/tools/counter",       icon: "/assets/icon-counter.png",       name: "マルチカウンター",    desc: "複数項目を同時にカウント",      cat: "calc" },
-  { href: "/tools/stopwatch",     icon: "/assets/icon-stopwatch.png",     name: "多列ストップウォッチ", desc: "ラップ計測対応・1/100秒精度",   cat: "calc" },
-  { href: "/tools/timer",         icon: "/assets/icon-timer.png",         name: "タイマー",            desc: "カウントダウン・アラーム付き",  cat: "calc" },
-  { href: "/tools/bpm",           icon: "/assets/icon-bpm.png",           name: "BPMメトロノーム",     desc: "40〜240 BPM・拍子設定可",      cat: "calc" },
-  { href: "/tools/calculator",    icon: "/assets/icon-calculator.png",    name: "履歴付き電卓",        desc: "計算履歴表示・税込割引特化",    cat: "calc" },
-  { href: "/tools/word-count",    icon: "/assets/icon-word-count.png",    name: "文字数カウント",       desc: "文字・単語・行数を瞬時に集計",  cat: "text" },
-  { href: "/tools/random-number", icon: "/assets/icon-random-number.png", name: "ランダム数字",         desc: "範囲指定・重複なし対応",        cat: "play" },
-  { href: "/tools/dice",          icon: "/assets/icon-dice.png",          name: "サイコロ",             desc: "最大10個まで同時に振れる",      cat: "play" },
-  { href: "/tools/roulette",      icon: "/assets/icon-roulette.png",      name: "ルーレット",           desc: "選択肢を入れて回すだけ",        cat: "play" },
-  { href: "/tools/janken",        icon: "/assets/icon-janken.png",        name: "じゃんけん",            desc: "CPU対戦・多人数モード対応",     cat: "play" },
-  { href: "/tools/lot",           icon: "/assets/icon-lot.png",           name: "くじ引き",             desc: "名前リストから公平に抽選",      cat: "play" },
-  { href: "/tools/group",         icon: "/assets/icon-group.png",         name: "グループ分け",         desc: "均等グループを自動生成",        cat: "play" },
-  { href: "/tools/amida",         icon: "/assets/icon-amida.png",         name: "あみだくじ",           desc: "自動生成あみだくじ",            cat: "play" },
-  { href: "/tools/tournament",    icon: "/assets/icon-tournament.png",    name: "トーナメント表",       desc: "参加者入力で自動ブラケット",    cat: "play" },
-];
+// カード表示用のUIメタ（短いキャッチ・フィルター分類）。名称・パス・アイコンは lib/tools-catalog.ts が単一情報源
+const CARD_META: Record<string, { desc: string; cat: Cat }> = {
+  "slide-bg":      { desc: "スライド用の背景を原寸で作成",  cat: "design" },
+  counter:         { desc: "複数項目を同時にカウント",      cat: "calc" },
+  stopwatch:       { desc: "ラップ計測対応・1/100秒精度",   cat: "calc" },
+  timer:           { desc: "カウントダウン・アラーム付き",  cat: "calc" },
+  bpm:             { desc: "40〜240 BPM・拍子設定可",      cat: "calc" },
+  calculator:      { desc: "計算履歴表示・税込割引特化",    cat: "calc" },
+  "word-count":    { desc: "文字・単語・行数を瞬時に集計",  cat: "text" },
+  "random-number": { desc: "範囲指定・重複なし対応",        cat: "play" },
+  dice:            { desc: "最大10個まで同時に振れる",      cat: "play" },
+  roulette:        { desc: "選択肢を入れて回すだけ",        cat: "play" },
+  janken:          { desc: "CPU対戦・多人数モード対応",     cat: "play" },
+  lot:             { desc: "名前リストから公平に抽選",      cat: "play" },
+  group:           { desc: "均等グループを自動生成",        cat: "play" },
+  amida:           { desc: "自動生成あみだくじ",            cat: "play" },
+  tournament:      { desc: "参加者入力で自動ブラケット",    cat: "play" },
+};
+
+const TOOLS: Tool[] = TOOL_CATALOG.map((t) => ({
+  href: t.path,
+  icon: t.icon,
+  name: t.name,
+  desc: CARD_META[t.slug]?.desc ?? t.summary,
+  cat: CARD_META[t.slug]?.cat ?? "play",
+}));
 
 const LIVE_COUNT = TOOLS.filter((t) => !t.soon).length;
 
@@ -205,6 +216,7 @@ export default function ToolsPage() {
         .dark .tools-dark-mode .p-header { background: var(--th-bg) !important; }
         .tool-filter-bar { background: rgba(255,255,255,0.82); }
         .dark .tool-filter-bar { background: rgba(15,16,26,0.88); }
+        .tools-guide-row:hover { border-color: #0ea5e9 !important; box-shadow: 0 6px 20px -8px rgba(180,140,200,0.3); }
         @media (max-width: 480px) {
           .tools-filter-btn { flex: 1 1 calc(50% - 4px); justify-content: center; }
         }
@@ -260,6 +272,26 @@ export default function ToolsPage() {
             style={{ fontSize: 15, color: "var(--th-text-muted)", fontFamily: "'M PLUS Rounded 1c', sans-serif", lineHeight: 1.9, marginBottom: 0 }}
           >
             日常で使える無料Webツール集。<br />広告控えめ、使いたいものだけを。
+          </motion.p>
+
+          {/* サイト概要（リソースハブ導入文） */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.32 }}
+            style={{
+              fontSize: 13,
+              color: "var(--th-text-muted)",
+              fontFamily: "'M PLUS Rounded 1c', sans-serif",
+              lineHeight: 2,
+              marginTop: 20,
+              marginLeft: "auto",
+              marginRight: "auto",
+              maxWidth: 560,
+              textAlign: "left",
+            }}
+          >
+            タダtoolsは、日常のちょっとした作業をさっとすませるための無料Webツール集です。タイマーやストップウォッチなどの計測系、あみだくじ・ルーレットなどの抽選系、文字数カウントや電卓、プレゼン背景メーカーまで全{LIVE_COUNT}種類。どれもログイン不要・インストール不要で、ページを開いたらそのまま使えます。いまは広告も表示していないので、使いたいものだけに集中できます。スマホでもPCでも同じように動くので、教室でも職場でも、いつでもすぐに使えます。
           </motion.p>
         </div>
       </section>
@@ -321,6 +353,9 @@ export default function ToolsPage() {
           </motion.div>
         </div>
       </main>
+
+      {/* ─── ツールガイド（用途別・リソースハブ層） ─── */}
+      <ToolsGuide />
 
       {/* ─── フッター ─── */}
       <RequestCTA context="tools" />

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SlideBgTool } from "./SlideBgTool";
+import { ToolJsonLd } from "@/components/tool-layout/ToolJsonLd";
 
 const TOOL_NAME = "プレゼン背景メーカー";
 const TITLE = "プレゼン背景メーカー｜スライド用の背景画像を無料作成 - ただただ";
@@ -48,35 +49,11 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  name: TOOL_NAME,
-  url: "https://tadatada.net/tools/slide-bg",
-  description: DESCRIPTION,
-  applicationCategory: "DesignApplication",
-  operatingSystem: "Web Browser",
-  inLanguage: "ja",
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "JPY",
-  },
-  provider: {
-    "@type": "Organization",
-    name: "ただただ",
-    url: "https://tadatada.net",
-  },
-};
-
 export default function SlideBgPage() {
   return (
     <>
       <SlideBgTool />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <ToolJsonLd slug="slide-bg" description={DESCRIPTION} />
     </>
   );
 }
