@@ -83,11 +83,23 @@ const iconBtnBase: React.CSSProperties = {
 };
 
 export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
+  const { status } = useAuth();
   const [drawerOpen, setDrawerOpen]   = useState(false);
   const [authOpen, setAuthOpen]       = useState(false);
   const [openGroups, setOpenGroups]   = useState<Record<number, boolean>>({});
   const [mounted, setMounted]         = useState(false);
   useEffect(() => setMounted(true), []);
+
+  // ログイン直後（ニックネーム未設定）はニックネーム設定を必須にする。
+  // モーダルを自動で開き、設定完了 or ログアウトするまで閉じられない（＝ログイン状態で
+  // 名前未設定のまま操作できてしまう違和感の解消）。
+  const lockedForNickname = status === "needsNickname";
+  useEffect(() => {
+    if (status === "needsNickname") {
+      setDrawerOpen(false);
+      setAuthOpen(true);
+    }
+  }, [status]);
 
   function closeAll() {
     setDrawerOpen(false);
@@ -95,6 +107,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
   }
 
   function handleDrawerOpen() {
+    if (lockedForNickname) return; // ニックネーム設定中はメニューを開かせない（モーダル優先）
     const init: Record<number, boolean> = {};
     NAV.forEach((item, idx) => {
       if (item.section && item.section === activeSection) init[idx] = true;
@@ -180,7 +193,7 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
           {/* バックドロップ */}
           {showBackdrop && (
             <div
-              onClick={closeAll}
+              onClick={lockedForNickname ? undefined : closeAll}
               aria-hidden="true"
               style={{
                 position: "fixed", inset: 0,
@@ -336,16 +349,18 @@ export function GlobalMenu({ activeSection = null }: GlobalMenuProps) {
                 <div style={{ position:"absolute", top:-50, right:-50, width:180, height:180, background:"radial-gradient(circle, #fbcfe8, transparent 70%)", opacity:0.3, pointerEvents:"none" }} />
                 <div style={{ position:"absolute", bottom:-40, left:-40, width:160, height:160, background:"radial-gradient(circle, #a7f3d0, transparent 70%)", opacity:0.25, pointerEvents:"none" }} />
 
-                <button
-                  type="button"
-                  onClick={() => setAuthOpen(false)}
-                  aria-label="閉じる"
-                  style={{ position:"absolute", top:18, right:18, width:32, height:32, borderRadius:"50%", border:"2px solid var(--drawer-border)", background:"var(--drawer-bg)", cursor:"pointer", color:"var(--drawer-text-muted)", fontSize:16, display:"inline-flex", alignItems:"center", justifyContent:"center", zIndex:2, padding:0, transition:"all 0.2s ease" }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#f9a8d4"; e.currentTarget.style.color = "#ec4899"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--drawer-border)"; e.currentTarget.style.color = "var(--drawer-text-muted)"; }}
-                >
-                  ✕
-                </button>
+                {!lockedForNickname && (
+                  <button
+                    type="button"
+                    onClick={() => setAuthOpen(false)}
+                    aria-label="閉じる"
+                    style={{ position:"absolute", top:18, right:18, width:32, height:32, borderRadius:"50%", border:"2px solid var(--drawer-border)", background:"var(--drawer-bg)", cursor:"pointer", color:"var(--drawer-text-muted)", fontSize:16, display:"inline-flex", alignItems:"center", justifyContent:"center", zIndex:2, padding:0, transition:"all 0.2s ease" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#f9a8d4"; e.currentTarget.style.color = "#ec4899"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--drawer-border)"; e.currentTarget.style.color = "var(--drawer-text-muted)"; }}
+                  >
+                    ✕
+                  </button>
+                )}
 
                 <AuthModalBody />
               </div>
